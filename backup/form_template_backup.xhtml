@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="id"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+  <h:head>
+    <title>SIDEKAP</title>
+    <link rel="icon" type="image/x-icon" href="#{resource['img/favicon.ico']}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <h:outputStylesheet  library="libs" name="css/new_layout.css"/>
+    <h:outputStylesheet library="libs" name="font-awesome/css/all.css"/>
+    <h:outputStylesheet library="libs" name="sweetalert2/sweetalert2.css"/>
+    <h:outputStylesheet library="libs" name="datatables.net-dt/css/jquery.dataTables.css"/>
+    <ui:insert name="jquery-header"/>
+    <h:outputScript library="libs" name="font-awesome/js/all.js"/>
+    <h:outputScript library="libs" name="sweetalert2/sweetalert2.js"/>
+    <h:outputScript library="libs" name="datatables.net/jquery.dataTables.js"/>
+    <h:outputScript library="libs" name="datatables.net-responsive/dataTables.responsive.js"/>
+    <h:outputScript library="libs" name="js/main.js"/>
+  </h:head>
+  <h:body>
+    <div id="ajaxLoader" class="p-loading">
+      <img src="#{resource['img/loading-kayu-128.gif']}" class="loading"/>
+    </div>
+    <menu id="menu">
+      <button class="menu-close-button" onclick="main.hideMenu();">
+        <i class="fas fa-close"/>
+      </button>
+      <div class="logo">
+        <h:graphicImage library="img" name="sidekap.png" width="200"/>
+        <h:outputText value="#{navController.user}" rendered="#{navController.authorization != null}"/>
+      </div>
+      <nav>
+        <ul>
+          <h1>Beranda</h1>
+          <li><h:link outcome="index">Dashboard</h:link></li>
+          <li><h:link outcome="login" rendered="#{navController.authorization == null}">Masuk Sistem</h:link></li>
+          <ui:fragment rendered="#{navController.authorization != null}">
+            <h:form>
+              <li><h:commandLink actionListener="#{loginController.keluarSistem}">Keluar Sistem</h:commandLink></li>
+            </h:form>
+          </ui:fragment>
+        </ul>
+        <!--Render jika admin yang login-->
+        <ui:fragment rendered="#{navController.authorization != null}">
+          <ui:include src="./nav_admin.xhtml"/>
+        </ui:fragment>
+        <!--Render jika bukan admin-->
+        <ul>
+          <h1>Formulir</h1>
+          <li><h:link outcome="formpelaporan">Pelaporan Insiden</h:link></li>
+          <li><h:link outcome="formpelaporan?j=kpcs">Pelaporan Insiden Tanpa Pasien</h:link></li>
+        </ul>
+      </nav>
+    </menu>
+    <container id="container">
+      <header>
+        <button class="menu-open-button" onclick="main.showMenu();">
+          <i class="fas fa-bars"/>
+        </button>
+        <h1><ui:insert name="header"/></h1>
+      </header>
+      <main>
+        <ui:insert name="content"/>
+      </main>
+      <footer>&copy;2025&nbsp;~&nbsp;Winds Soft Innovation</footer>
+    </container>
+    <script>
+      // <![CDATA[
+      if (typeof jsf !== 'undefined') {
+        jsf.ajax.addOnEvent((data) => {
+          var ajaxStatus = data.status;
+          var ajaxLoader = document.getElementById("ajaxLoader");
+
+          switch (ajaxStatus) {
+            case "begin":
+              ajaxLoader.style.display = 'block';
+              break;
+            case "complete":
+              ajaxLoader.style.display = 'none';
+              break;
+            case "success":
+              break;
+          }
+        });
+      }
+      // ]]>
+    </script>
+  </h:body>
+</html>
