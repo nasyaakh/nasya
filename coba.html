@@ -7,7 +7,8 @@
   <title>SIDEKAP — Sistem Pelaporan Insiden Keselamatan Pasien</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <style>
     /* ══════════════════════════════════════
@@ -21,24 +22,15 @@
       --danger: #ef4444;
       --success: #10b981;
       --warn: #f59e0b;
-      --bg: #0f172a;
-      /* Slate 900 */
-      --bg2: #1e293b;
-      /* Slate 800 */
-      --card: #1e293b;
-      /* Slate 800 */
-      --card2: #334155;
-      /* Slate 700 */
-      --text: #f8fafc;
-      /* Slate 50 */
-      --text2: #cbd5e1;
-      /* Slate 300 */
-      --muted: #94a3b8;
-      /* Slate 400 */
-      --border: #334155;
-      /* Slate 700 */
-      --border2: #475569;
-      /* Slate 600 */
+      --bg: #0f172a; /* Slate 900 */
+      --bg2: #1e293b; /* Slate 800 */
+      --card: #1e293b; /* Slate 800 */
+      --card2: #334155; /* Slate 700 */
+      --text: #f8fafc; /* Slate 50 */
+      --text2: #cbd5e1; /* Slate 300 */
+      --muted: #94a3b8; /* Slate 400 */
+      --border: #334155; /* Slate 700 */
+      --border2: #475569; /* Slate 600 */
       --sb-bg: #0f172a;
       --sb-text: #94a3b8;
       --sb-active-bg: #1e293b;
@@ -89,24 +81,15 @@
       --danger: #ef4444;
       --success: #10b981;
       --warn: #f59e0b;
-      --bg: #f1f5f9;
-      /* Slate 100 */
-      --bg2: #e2e8f0;
-      /* Slate 200 */
-      --card: #ffffff;
-      /* Pure White */
-      --card2: #f8fafc;
-      /* Slate 50 */
-      --text: #0f172a;
-      /* Slate 900 */
-      --text2: #334155;
-      /* Slate 700 */
-      --muted: #64748b;
-      /* Slate 500 */
-      --border: #e2e8f0;
-      /* Slate 200 */
-      --border2: #cbd5e1;
-      /* Slate 300 */
+      --bg: #f1f5f9; /* Slate 100 */
+      --bg2: #e2e8f0; /* Slate 200 */
+      --card: #ffffff; /* Pure White */
+      --card2: #f8fafc; /* Slate 50 */
+      --text: #0f172a; /* Slate 900 */
+      --text2: #334155; /* Slate 700 */
+      --muted: #64748b; /* Slate 500 */
+      --border: #e2e8f0; /* Slate 200 */
+      --border2: #cbd5e1; /* Slate 300 */
       --sb-bg: #f8fafc;
       --sb-text: #64748b;
       --sb-active-bg: #e2e8f0;
@@ -259,15 +242,6 @@
       border-radius: 99px;
       font-size: 11px;
       font-weight: 700
-    }
-
-    .matrix-badge {
-      display: inline-block;
-      padding: 3px 9px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1.2;
     }
 
     [data-theme="dark"] .badge-s {
@@ -671,7 +645,7 @@
     }
 
     .hero-wrapper {
-      max-width: 1200px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 50px 48px 40px;
       display: flex;
@@ -717,7 +691,7 @@
       font-size: 48px;
       color: var(--landing-hero-h1);
       line-height: 1.15;
-      max-width: 900px;
+      max-width: 650px;
       margin-bottom: 18px;
       transition: color .25s;
     }
@@ -730,7 +704,7 @@
     .hero p {
       color: var(--landing-hero-p);
       font-size: 15px;
-      max-width: 800px;
+      max-width: 450px;
       margin-bottom: 26px;
       line-height: 1.75;
       transition: color .25s
@@ -1372,13 +1346,6 @@
       gap: 8px;
       padding-top: 10px;
       height: 230px
-    }
-
-    .donut-wrapper {
-      display: flex;
-      justify-content: space-around;
-      gap: 10px;
-      height: 110px;
     }
 
     .donut-box {
@@ -2717,8 +2684,7 @@
       padding: 5px 10px;
       border: 1px solid #cbd5e1;
       font-size: 12px;
-      vertical-align: top;
-      color: #000;
+      vertical-align: top
     }
 
     .print-table .lbl {
@@ -2760,16 +2726,6 @@
       margin-bottom: 20px;
       padding: 12px 0;
       border-bottom: 1px solid #e2e8f0
-    }
-
-    .print-btn-bar .btn-ghost {
-      color: #334155 !important;
-      border-color: #94a3b8 !important;
-    }
-
-    .print-btn-bar .btn-ghost:hover {
-      background: #cbd5e1 !important;
-      color: #0f172a !important;
     }
 
     /* ── TOAST ── */
@@ -2995,22 +2951,12 @@
       }
 
       .chart-grid {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: 1fr;
         gap: 9px
       }
 
       .chart-card canvas {
         max-height: 190px
-      }
-
-      .donut-wrapper {
-        flex-wrap: wrap;
-        height: auto !important;
-      }
-      
-      .donut-box {
-        flex: 1 1 40%;
-        margin-bottom: 8px;
       }
 
       .daily-alert {
@@ -3019,36 +2965,11 @@
       }
 
       .desktop-table {
-        display: table !important;
-        width: 100%;
-        table-layout: fixed;
-      }
-
-      .desktop-table th, .desktop-table td {
-        padding: 6px 3px !important;
-        font-size: 9px !important;
-        white-space: normal !important;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-      }
-      
-      .desktop-table .badge, .matrix-badge {
-        font-size: 7.5px !important;
-        padding: 3px 2px !important;
-        white-space: normal;
-        text-align: center;
-        letter-spacing: -0.5px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      .mobile-list {
         display: none !important
       }
 
-      .table-card {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch
+      .mobile-list {
+        display: block !important
       }
 
       .pgn {
@@ -3097,6 +3018,19 @@
 
       .inv-grid {
         grid-template-columns: 1fr 1fr
+      }
+
+      #pengguna .desktop-table {
+        display: table !important
+      }
+
+      #pengguna .mobile-list {
+        display: none !important
+      }
+
+      #pengguna .table-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch
       }
 
       .hamburger-btn {
@@ -3175,6 +3109,7 @@
     </nav>
     <div class="hero-wrapper">
       <div class="hero">
+        <div class="hero-tag">🛡️ Sistem Keselamatan Pasien</div>
         <h1 style="margin-top:0;">Pelaporan Insiden <em>Cepat</em> &amp; Transparan</h1>
         <p>Platform digital pelaporan insiden keselamatan pasien yang terintegrasi untuk RSUD Dokter Soedarso.</p>
         <div class="hero-actions">
@@ -3185,7 +3120,7 @@
     </div>
 
     <!-- LANDING CHARTS -->
-    <div style="max-width:1200px; margin: 0 auto; padding: 0 48px 80px; width: 100%;">
+    <div style="max-width:900px; margin: 0 auto; padding: 0 48px 80px;">
       <div class="chart-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:18px">
         <div class="chart-card">
           <div class="chart-head">
@@ -3193,16 +3128,13 @@
           </div>
           <div style="height:220px; position:relative"><canvas id="c1-land"></canvas></div>
         </div>
-
+        
         <div class="chart-card">
           <div class="chart-head">
-            <h3>Jumlah Laporan per Unit</h3>
+            <h3>Unit Insiden Tertinggi (Top 5)</h3>
           </div>
-          <div class="bar-scroll-container"
-            style="height:220px; overflow-y:auto; overflow-x:hidden; padding-right:5px;">
-            <div id="bar-inner-land" style="position:relative; width:100%;">
-              <canvas id="c-unit-land"></canvas>
-            </div>
+          <div style="height:220px; position:relative">
+            <canvas id="c-unit-land"></canvas>
           </div>
         </div>
       </div>
@@ -3211,23 +3143,11 @@
         <div class="chart-head" style="margin-bottom:8px">
           <h3>Verifikasi per Kategori</h3><span class="pill">Tahun Berjalan</span>
         </div>
-        <div class="donut-wrapper">
-          <div class="donut-box">
-            <div style="height:80px;width:100%;position:relative"><canvas id="d-knc-land"></canvas></div>
-            <div class="donut-lbl" style="color:#0ea5e9">KNC</div>
-          </div>
-          <div class="donut-box">
-            <div style="height:80px;width:100%;position:relative"><canvas id="d-ktd-land"></canvas></div>
-            <div class="donut-lbl" style="color:#10b981">KTD</div>
-          </div>
-          <div class="donut-box">
-            <div style="height:80px;width:100%;position:relative"><canvas id="d-ktc-land"></canvas></div>
-            <div class="donut-lbl" style="color:#f59e0b">KTC</div>
-          </div>
-          <div class="donut-box">
-            <div style="height:80px;width:100%;position:relative"><canvas id="d-kpcs-land"></canvas></div>
-            <div class="donut-lbl" style="color:#ef4444">KPCS</div>
-          </div>
+        <div style="display:flex; justify-content:space-around; gap:10px; height:110px">
+          <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-knc-land"></canvas></div><div class="donut-lbl" style="color:#0ea5e9">KNC</div></div>
+          <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-ktd-land"></canvas></div><div class="donut-lbl" style="color:#10b981">KTD</div></div>
+          <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-ktc-land"></canvas></div><div class="donut-lbl" style="color:#f59e0b">KTC</div></div>
+          <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-kpcs-land"></canvas></div><div class="donut-lbl" style="color:#ef4444">KPCS</div></div>
         </div>
       </div>
     </div>
@@ -3245,11 +3165,9 @@
         </div>
         <h2>Selamat Datang</h2>
         <p>Masuk dengan akun yang telah diberikan administrator.</p>
-        <div class="fg"><label>Username</label><input type="text" id="login-user" placeholder="Masukkan username..."
-            onkeypress="if(event.key==='Enter') doLogin()">
+        <div class="fg"><label>Username</label><input type="text" id="login-user" placeholder="Masukkan username...">
         </div>
-        <div class="fg"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"
-            onkeypress="if(event.key==='Enter') doLogin()"></div>
+        <div class="fg"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"></div>
         <button class="btn-block" onclick="doLogin()">Masuk ke Sistem</button>
       </div>
       <div class="login-back"><a onclick="showPage('landing')">← Kembali ke Beranda</a></div>
@@ -3291,41 +3209,26 @@
               </div>
               <div style="height:220px; position:relative"><canvas id="c1"></canvas></div>
             </div>
-
+            
             <div class="chart-card">
               <div class="chart-head">
-                <h3>Jumlah Laporan per Unit</h3>
+                <h3>Unit Insiden Tertinggi (Top 5)</h3>
               </div>
-              <div class="bar-scroll-container"
-                style="height:220px; overflow-y:auto; overflow-x:hidden; padding-right:5px;">
-                <div id="bar-inner" style="position:relative; width:100%;">
-                  <canvas id="c-unit"></canvas>
-                </div>
+              <div style="height:220px; position:relative">
+                <canvas id="c-unit"></canvas>
               </div>
             </div>
           </div>
-
+          
           <div class="chart-card" style="margin-bottom:18px">
             <div class="chart-head" style="margin-bottom:8px">
               <h3>Verifikasi per Kategori</h3><span class="pill">Tahun Berjalan</span>
             </div>
-            <div class="donut-wrapper">
-              <div class="donut-box">
-                <div style="height:80px;width:100%;position:relative"><canvas id="d-knc"></canvas></div>
-                <div class="donut-lbl" style="color:#0ea5e9">KNC</div>
-              </div>
-              <div class="donut-box">
-                <div style="height:80px;width:100%;position:relative"><canvas id="d-ktd"></canvas></div>
-                <div class="donut-lbl" style="color:#10b981">KTD</div>
-              </div>
-              <div class="donut-box">
-                <div style="height:80px;width:100%;position:relative"><canvas id="d-ktc"></canvas></div>
-                <div class="donut-lbl" style="color:#f59e0b">KTC</div>
-              </div>
-              <div class="donut-box">
-                <div style="height:80px;width:100%;position:relative"><canvas id="d-kpcs"></canvas></div>
-                <div class="donut-lbl" style="color:#ef4444">KPCS</div>
-              </div>
+            <div style="display:flex; justify-content:space-around; gap:10px; height:110px">
+              <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-knc"></canvas></div><div class="donut-lbl" style="color:#0ea5e9">KNC</div></div>
+              <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-ktd"></canvas></div><div class="donut-lbl" style="color:#10b981">KTD</div></div>
+              <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-ktc"></canvas></div><div class="donut-lbl" style="color:#f59e0b">KTC</div></div>
+              <div class="donut-box"><div style="height:80px;width:100%;position:relative"><canvas id="d-kpcs"></canvas></div><div class="donut-lbl" style="color:#ef4444">KPCS</div></div>
             </div>
           </div>
           <div class="table-card">
@@ -3501,26 +3404,6 @@
   </div>
 
   <!-- ══════════════════════════
-     MASTER DATA DINAMIS
-     ══════════════════════════ -->
-  <div id="masterDataDynamic" class="page">
-    <div class="admin-layout">
-      <aside class="sidebar" id="sb-masterDataDynamic"></aside>
-      <div class="main-area">
-        <div class="topbar">
-          <div class="topbar-title">Master Data <span id="mdd-title" style="color:var(--muted);font-weight:600"></span>
-          </div>
-          <div class="topbar-right">
-            <div class="theme-toggle-wrap"><button class="theme-toggle" onclick="toggleTheme()"></button></div>
-            <div class="topbar-avatar">A</div>
-          </div>
-        </div>
-        <div class="content" id="mdd-content"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════
      PENGGUNA
      ══════════════════════════ -->
   <div id="pengguna" class="page">
@@ -3565,60 +3448,14 @@
                     placeholder="Cari nama, username..." oninput="renderUserTable()"></div>
                 <select class="flt" id="user-unit-filter" onchange="renderUserTable()">
                   <option value="">Semua Unit</option>
-                  <option>CASE MANAGER</option>
-                  <option>FISIOTERAPI</option>
-                  <option>HHPO</option>
                   <option>IGD</option>
-                  <option>IKFM</option>
-                  <option>INSTALASI BEDAH SENTRAL</option>
-                  <option>INSTALASI FARMASI</option>
-                  <option>INSTALASI GIZI</option>
-                  <option>INSTALASI PKRS</option>
-                  <option>INSTALASI RADIOLOGI</option>
-                  <option>INSTALASI RADIONUKLIR</option>
-                  <option>INSTALASI RADIOTERAPI</option>
-                  <option>INSTALASI RAWAT INAP</option>
-                  <option>INSTALASI RAWAT JALAN</option>
-                  <option>IPFRS</option>
-                  <option>IPPP</option>
-                  <option>IRM</option>
-                  <option>ISB</option>
-                  <option>ISL</option>
-                  <option>ISOLASI</option>
-                  <option>K3</option>
-                  <option>LABORATORIUM MIKRO</option>
-                  <option>LABORATORIUM PA</option>
-                  <option>LABORATORIUM PK</option>
-                  <option>LAIN-LAIN</option>
-                  <option>LOGISTIK</option>
-                  <option>ODC (KEMOTERAPI)</option>
-                  <option>OK IBS</option>
-                  <option>OK IGD</option>
-                  <option>PPI</option>
-                  <option>PPT</option>
-                  <option>PUSDIKLAT</option>
-                  <option>RUAI</option>
-                  <option>RUANGAN ANAK</option>
-                  <option>RUANGAN CAMAR</option>
-                  <option>RUANGAN CATHLAB</option>
-                  <option>RUANGAN CENDANA</option>
-                  <option>RUANGAN ENGGANG GADING</option>
-                  <option>RUANGAN HCU</option>
-                  <option>RUANGAN HEMODIALISA</option>
-                  <option>RUANGAN ICU</option>
-                  <option>RUANGAN ICVCU</option>
-                  <option>RUANGAN KERAPU</option>
-                  <option>RUANGAN MAHONI</option>
-                  <option>RUANGAN MERANTI</option>
-                  <option>RUANGAN NICU</option>
-                  <option>RUANGAN PERINATOLOGI</option>
-                  <option>RUANGAN PICU</option>
-                  <option>RUANGAN RAMIN</option>
-                  <option>RUANGAN RAWAT INAP PJT</option>
-                  <option>RUANGAN SINGKUT BULUH</option>
-                  <option>THALASEMIA</option>
-                  <option>UNIT PELAYANAN STROKE</option>
-                  <option>UTDRS</option>
+                  <option>Rawat Inap</option>
+                  <option>ICU</option>
+                  <option>Poli Umum</option>
+                  <option>Farmasi</option>
+                  <option>Laboratorium</option>
+                  <option>Radiologi</option>
+                  <option>Semua Unit</option>
                 </select>
                 <select class="flt" id="user-status-filter" onchange="renderUserTable()">
                   <option value="">Semua Status</option>
@@ -3863,10 +3700,7 @@
         <div style="padding:14px 16px">
           <div style="background:#e8e8e8;border-radius:10px;overflow:hidden">
             <div class="form-kop">
-              <div
-                style="font-size:32px;color:var(--primary);flex-shrink:0;background:rgba(59,130,246,0.1);padding:10px;border-radius:12px;display:flex;align-items:center;justify-content:center">
-                <i class="ph ph-hospital"></i>
-              </div>
+              <div style="font-size:32px;color:var(--primary);flex-shrink:0;background:rgba(59,130,246,0.1);padding:10px;border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="ph ph-hospital"></i></div>
               <div>
                 <div class="kop-title">Formulir Investigasi Sederhana</div>
                 <div class="kop-sub">Di Rumah Sakit Umum Daerah Dokter Soedarso</div>
@@ -3920,25 +3754,6 @@
       </div>
     </div>
   </div>
-  <div id="md-add-modal" class="modal-overlay">
-    <div class="modal-box" style="max-width:520px">
-      <div class="modal-head">
-        <div>
-          <h3 id="mda-title"></h3>
-          <div id="mda-meta" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
-        </div>
-        <button class="modal-close" onclick="closeMdAddModal()">✕</button>
-      </div>
-      <div id="mda-form"
-        style="display:flex;flex-direction:column;gap:12px;overflow-y:auto;max-height:calc(92vh - 140px);padding:18px 20px">
-      </div>
-      <div class="modal-foot" style="justify-content:flex-end">
-        <button class="btn btn-ghost" onclick="closeMdAddModal()">Batal</button>
-        <button class="btn-approve" onclick="saveMdAddModal()" style="background:var(--primary);color:#fff">Simpan
-          Data</button>
-      </div>
-    </div>
-  </div>
 
   <div id="user-modal" class="modal-overlay">
     <div class="modal-box" style="max-width:520px">
@@ -3971,60 +3786,13 @@
           <div class="uf-group"><label class="uf-label">Unit *</label>
             <select class="uf-input" id="uf-unit">
               <option value="">— Pilih Unit —</option>
-              <option>CASE MANAGER</option>
-              <option>FISIOTERAPI</option>
-              <option>HHPO</option>
               <option>IGD</option>
-              <option>IKFM</option>
-              <option>INSTALASI BEDAH SENTRAL</option>
-              <option>INSTALASI FARMASI</option>
-              <option>INSTALASI GIZI</option>
-              <option>INSTALASI PKRS</option>
-              <option>INSTALASI RADIOLOGI</option>
-              <option>INSTALASI RADIONUKLIR</option>
-              <option>INSTALASI RADIOTERAPI</option>
-              <option>INSTALASI RAWAT INAP</option>
-              <option>INSTALASI RAWAT JALAN</option>
-              <option>IPFRS</option>
-              <option>IPPP</option>
-              <option>IRM</option>
-              <option>ISB</option>
-              <option>ISL</option>
-              <option>ISOLASI</option>
-              <option>K3</option>
-              <option>LABORATORIUM MIKRO</option>
-              <option>LABORATORIUM PA</option>
-              <option>LABORATORIUM PK</option>
-              <option>LAIN-LAIN</option>
-              <option>LOGISTIK</option>
-              <option>ODC (KEMOTERAPI)</option>
-              <option>OK IBS</option>
-              <option>OK IGD</option>
-              <option>PPI</option>
-              <option>PPT</option>
-              <option>PUSDIKLAT</option>
-              <option>RUAI</option>
-              <option>RUANGAN ANAK</option>
-              <option>RUANGAN CAMAR</option>
-              <option>RUANGAN CATHLAB</option>
-              <option>RUANGAN CENDANA</option>
-              <option>RUANGAN ENGGANG GADING</option>
-              <option>RUANGAN HCU</option>
-              <option>RUANGAN HEMODIALISA</option>
-              <option>RUANGAN ICU</option>
-              <option>RUANGAN ICVCU</option>
-              <option>RUANGAN KERAPU</option>
-              <option>RUANGAN MAHONI</option>
-              <option>RUANGAN MERANTI</option>
-              <option>RUANGAN NICU</option>
-              <option>RUANGAN PERINATOLOGI</option>
-              <option>RUANGAN PICU</option>
-              <option>RUANGAN RAMIN</option>
-              <option>RUANGAN RAWAT INAP PJT</option>
-              <option>RUANGAN SINGKUT BULUH</option>
-              <option>THALASEMIA</option>
-              <option>UNIT PELAYANAN STROKE</option>
-              <option>UTDRS</option>
+              <option>Rawat Inap</option>
+              <option>ICU</option>
+              <option>Poli Umum</option>
+              <option>Farmasi</option>
+              <option>Laboratorium</option>
+              <option>Radiologi</option>
               <option>Semua Unit</option>
             </select>
           </div>
@@ -4032,9 +3800,7 @@
         <div id="uf-unit-note" style="display:none;margin-top:-8px;margin-bottom:12px">
           <div
             style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:7px 11px;font-size:12px;color:var(--primary);display:flex;align-items:center;gap:6px">
-            <i class="ph ph-info" style="font-size:16px"></i> Super Admin dan Admin otomatis mendapat akses <b>Semua
-              Unit</b>.
-          </div>
+            <i class="ph ph-info" style="font-size:16px"></i> Super Admin dan Admin otomatis mendapat akses <b>Semua Unit</b>.</div>
         </div>
         <hr class="uf-divider">
         <div class="uf-row">
@@ -4051,8 +3817,7 @@
         </div>
       </div>
       <div class="modal-foot-user"><button class="btn-cancel-modal" onclick="closeUserModal()">Batal</button><button
-          class="btn-save" onclick="saveUser()"><i class="ph ph-floppy-disk" style="margin-right:4px"></i>
-          Simpan</button></div>
+          class="btn-save" onclick="saveUser()"><i class="ph ph-floppy-disk" style="margin-right:4px"></i> Simpan</button></div>
     </div>
   </div>
 
@@ -4100,8 +3865,7 @@
         <button onclick="showPage('landing')" title="Keluar"
           style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
           onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
-          onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i
-            class="ph ph-sign-out"></i></button>
+          onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
       </div>
     </div>
   </div>
@@ -4297,7 +4061,7 @@
     function mkPelapor(id) { return [ffRow(1, 'Tanggal Lapor *', `<input type="datetime-local" class="ff-in" id="${id}-tgl">`), ffRow(2, 'Pembuat Laporan *', ffTA(3, 'Nama lengkap dan jabatan...'), 'top'), ffRow(3, 'Paraf / Tanda Tangan *', ffTTD(id), 'top')].join(''); }
 
     function renderSidebars() {
-      ['sb-dashboard', 'sb-tabelPelaporan', 'sb-tabelInvestigasi', 'sb-pengguna', 'sb-masterDataDynamic'].forEach(id => {
+      ['sb-dashboard', 'sb-tabelPelaporan', 'sb-tabelInvestigasi', 'sb-pengguna'].forEach(id => {
         const active = id.replace('sb-', '');
         document.getElementById(id).innerHTML = mkSidebar(active);
       });
@@ -4431,8 +4195,8 @@
     function toggleUserStatus(id) { const u = USERS.find(x => x.id === id); if (!u) return; u.status = u.status === 'Aktif' ? 'Nonaktif' : 'Aktif'; showToast(`${u.status === 'Aktif' ? '✅' : '⛔'} ${u.nama} → ${u.status}`); renderUserTable(); renderUserStats(); updateUserCounts(); }
     function deleteUser(id) { const u = USERS.find(x => x.id === id); if (!u || u.isMe) return; if (!confirm(`Hapus akun "${u.nama}"?`)) return; USERS = USERS.filter(x => x.id !== id); showToast(`🗑️ Akun ${u.nama} dihapus.`); renderUserStats(); updateUserCounts(); renderUserTable(); }
 
-    const ADMIN_PAGES = ['dashboardAdmin', 'tabelPelaporan', 'tabelInvestigasi', 'pengguna', 'masterDataDynamic'];
-    const PAGE_TITLE = { dashboardAdmin: 'Dashboard', tabelPelaporan: 'Tabel Pelaporan', tabelInvestigasi: 'Tabel Investigasi', pengguna: 'Pengguna', masterDataDynamic: 'Master Data' };
+    const ADMIN_PAGES = ['dashboardAdmin', 'tabelPelaporan', 'tabelInvestigasi', 'pengguna'];
+    const PAGE_TITLE = { dashboardAdmin: 'Dashboard', tabelPelaporan: 'Tabel Pelaporan', tabelInvestigasi: 'Tabel Investigasi', pengguna: 'Pengguna' };
 
     function showPage(id) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -4442,25 +4206,6 @@
       const tb = document.getElementById('g-topbar');
       if (ADMIN_PAGES.includes(id)) { tb.classList.add('visible'); document.getElementById('g-page-title').textContent = PAGE_TITLE[id] || ''; }
       else { tb.classList.remove('visible'); }
-
-      // Update sidebar nav items highlight
-      const sidebarNavItems = document.querySelectorAll('.sidebar .nav-item');
-      sidebarNavItems.forEach(el => el.classList.remove('active'));
-
-      const mapping = {
-        'dashboardAdmin': 'Dashboard',
-        'pengguna': 'Pengguna',
-        'tabelPelaporan': 'Tabel Pelaporan',
-        'tabelInvestigasi': 'Tabel Investigasi Sederhana'
-      };
-
-      if (mapping[id]) {
-        sidebarNavItems.forEach(el => {
-          if (el.textContent.trim() === mapping[id] || (id === 'tabelPelaporan' && el.textContent.includes('Tabel Pelaporan'))) {
-            el.classList.add('active');
-          }
-        });
-      }
 
       if (id === 'formPublic' || id === 'formNoPatient') {
         const now = new Date(), p = n => String(n).padStart(2, '0');
@@ -4540,118 +4285,71 @@
       'Jenis Insiden': { icon: '📂', color: 'rgba(29,78,216,.1)', accent: '#1d4ed8', desc: 'Kelola jenis-jenis insiden yang dapat dilaporkan.', cols: ['Kode', 'Nama Jenis Insiden', 'Deskripsi', 'Status'], rows: [['JI-001', 'Kejadian Jatuh', 'Pasien atau staf terjatuh di area RS', '✅ Aktif'], ['JI-002', 'Kesalahan Obat', 'Pemberian obat tidak sesuai resep', '✅ Aktif'], ['JI-003', 'Salah Identitas', 'Pasien tertukar atau salah identifikasi', '✅ Aktif'], ['JI-004', 'Infeksi Nosokomial', 'Infeksi yang didapat selama perawatan', '✅ Aktif'], ['JI-005', 'Kecelakaan Alat Medis', 'Malfungsi atau kesalahan penggunaan alat', '⛔ Nonaktif'], ['JI-006', 'Dekubitus / Luka Tekan', 'Luka akibat tekanan berkepanjangan', '✅ Aktif']] },
       'Kelompok Umur': { icon: '👶', color: 'rgba(22,163,74,.1)', accent: '#15803d', desc: 'Kelola pengelompokan usia pasien.', cols: ['Kode', 'Kelompok Umur', 'Rentang Usia', 'Keterangan'], rows: [['KU-001', 'Bayi', '0 – 1 tahun', 'Neonatus hingga bayi 12 bulan'], ['KU-002', 'Anak', '2 – 12 tahun', 'Masa kanak-kanak'], ['KU-003', 'Remaja', '13 – 17 tahun', 'Masa pubertas'], ['KU-004', 'Dewasa', '18 – 59 tahun', 'Usia produktif'], ['KU-005', 'Lansia', '≥ 60 tahun', 'Berisiko tinggi insiden jatuh']] },
       'Penanggung Pasien': { icon: '💳', color: 'rgba(124,58,237,.1)', accent: '#7c3aed', desc: 'Kelola jenis penanggung biaya pasien.', cols: ['Kode', 'Nama Penanggung', 'Keterangan', 'Status'], rows: [['PP-001', 'BPJS Kesehatan', 'Jaminan kesehatan nasional', '✅ Aktif'], ['PP-002', 'Asuransi Swasta', 'Perusahaan asuransi swasta', '✅ Aktif'], ['PP-003', 'Umum / Mandiri', 'Biaya sendiri tanpa asuransi', '✅ Aktif'], ['PP-004', 'Jamkesda', 'Jaminan kesehatan daerah', '✅ Aktif'], ['PP-005', 'Lainnya', 'Penanggung lain yang tidak tercantum', '✅ Aktif']] },
-      'Ruangan': { icon: '🏥', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola daftar unit dan ruangan RSUD dr. Soedarso.', cols: ['Kode', 'Nama Ruangan', 'Status'], rows: [['RU-001', 'CASE MANAGER', '✅ Aktif'], ['RU-002', 'FISIOTERAPI', '✅ Aktif'], ['RU-003', 'HHPO', '✅ Aktif'], ['RU-004', 'IGD', '✅ Aktif'], ['RU-005', 'IKFM', '✅ Aktif'], ['RU-006', 'INSTALASI BEDAH SENTRAL', '✅ Aktif'], ['RU-007', 'INSTALASI FARMASI', '✅ Aktif'], ['RU-008', 'INSTALASI GIZI', '✅ Aktif'], ['RU-009', 'INSTALASI PKRS', '✅ Aktif'], ['RU-010', 'INSTALASI RADIOLOGI', '✅ Aktif'], ['RU-011', 'INSTALASI RADIONUKLIR', '✅ Aktif'], ['RU-012', 'INSTALASI RADIOTERAPI', '✅ Aktif'], ['RU-013', 'INSTALASI RAWAT INAP', '✅ Aktif'], ['RU-014', 'INSTALASI RAWAT JALAN', '✅ Aktif'], ['RU-015', 'IPFRS', '✅ Aktif'], ['RU-016', 'IPPP', '✅ Aktif'], ['RU-017', 'IRM', '✅ Aktif'], ['RU-018', 'ISB', '✅ Aktif'], ['RU-019', 'ISL', '✅ Aktif'], ['RU-020', 'ISOLASI', '✅ Aktif'], ['RU-021', 'K3', '✅ Aktif'], ['RU-022', 'LABORATORIUM MIKRO', '✅ Aktif'], ['RU-023', 'LABORATORIUM PA', '✅ Aktif'], ['RU-024', 'LABORATORIUM PK', '✅ Aktif'], ['RU-025', 'LAIN-LAIN', '✅ Aktif'], ['RU-026', 'LOGISTIK', '✅ Aktif'], ['RU-027', 'ODC (KEMOTERAPI)', '✅ Aktif'], ['RU-028', 'OK IBS', '✅ Aktif'], ['RU-029', 'OK IGD', '✅ Aktif'], ['RU-030', 'PPI', '✅ Aktif'], ['RU-031', 'PPT', '✅ Aktif'], ['RU-032', 'PUSDIKLAT', '✅ Aktif'], ['RU-033', 'RUAI', '✅ Aktif'], ['RU-034', 'RUANGAN ANAK', '✅ Aktif'], ['RU-035', 'RUANGAN CAMAR', '✅ Aktif'], ['RU-036', 'RUANGAN CATHLAB', '✅ Aktif'], ['RU-037', 'RUANGAN CENDANA', '✅ Aktif'], ['RU-038', 'RUANGAN ENGGANG GADING', '✅ Aktif'], ['RU-039', 'RUANGAN HCU', '✅ Aktif'], ['RU-040', 'RUANGAN HEMODIALISA', '✅ Aktif'], ['RU-041', 'RUANGAN ICU', '✅ Aktif'], ['RU-042', 'RUANGAN ICVCU', '✅ Aktif'], ['RU-043', 'RUANGAN KERAPU', '✅ Aktif'], ['RU-044', 'RUANGAN MAHONI', '✅ Aktif'], ['RU-045', 'RUANGAN MERANTI', '✅ Aktif'], ['RU-046', 'RUANGAN NICU', '✅ Aktif'], ['RU-047', 'RUANGAN PERINATOLOGI', '✅ Aktif'], ['RU-048', 'RUANGAN PICU', '✅ Aktif'], ['RU-049', 'RUANGAN RAMIN', '✅ Aktif'], ['RU-050', 'RUANGAN RAWAT INAP PJT', '✅ Aktif'], ['RU-051', 'RUANGAN SINGKUT BULUH', '✅ Aktif'], ['RU-052', 'THALASEMIA', '✅ Aktif'], ['RU-053', 'UNIT PELAYANAN STROKE', '✅ Aktif'], ['RU-054', 'UTDRS', '✅ Aktif']] },
-      'Tingkat Risiko': { icon: '⚠️', color: 'rgba(245,158,11,.1)', accent: '#d97706', desc: 'Kelola tingkatan risiko untuk penilaian insiden.', cols: ['Kode', 'Tingkat Risiko', 'Warna'], rows: [['TR-001', 'Rendah', '🔵 Biru'], ['TR-002', 'Moderat', '🟢 Hijau'], ['TR-003', 'Tinggi', '🟡 Kuning'], ['TR-004', 'Ekstrim', '🔴 Merah']] },
-      'Dampak Klinis': { icon: '📉', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola kategori dampak klinis dari suatu insiden.', cols: ['Level', 'Dampak Klinis', 'Deskripsi'], rows: [['1', 'Tidak Signifikan', 'Dampak paling ringan'], ['2', 'Minor', 'Dampak kecil'], ['3', 'Moderat', 'Dampak menengah'], ['4', 'Mayor', 'Dampak besar'], ['5', 'Katostropik', 'Dampak fatal / kematian']] },
+      'Ruangan': { icon: '🏥', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola daftar unit dan ruangan.', cols: ['Kode', 'Nama Ruangan', 'Lantai / Gedung', 'Status'], rows: [['RU-001', 'IGD', 'Lantai 1 — Gedung A', '✅ Aktif'], ['RU-002', 'Rawat Inap Mawar', 'Lantai 2 — Gedung B', '✅ Aktif'], ['RU-003', 'Rawat Inap Flamboyan', 'Lantai 3 — Gedung B', '✅ Aktif'], ['RU-004', 'ICU', 'Lantai 4 — Gedung C', '✅ Aktif'], ['RU-005', 'Poli Umum', 'Lantai 1 — Gedung D', '✅ Aktif'], ['RU-006', 'Farmasi', 'Lantai 1 — Gedung A', '✅ Aktif'], ['RU-007', 'Laboratorium', 'Basement — Gedung A', '✅ Aktif'], ['RU-008', 'Radiologi', 'Lantai 1 — Gedung C', '⛔ Nonaktif']] },
+      'Tingkat Risiko': { icon: '⚠️', color: 'rgba(245,158,11,.1)', accent: '#d97706', desc: 'Kelola tingkatan risiko untuk penilaian insiden.', cols: ['Kode', 'Tingkat Risiko', 'Skor', 'Warna', 'Deskripsi'], rows: [['TR-001', 'Rendah', '1 – 3', '🟢 Hijau', 'Dapat diatasi dengan prosedur rutin'], ['TR-002', 'Sedang', '4 – 6', '🟡 Kuning', 'Perlu pemantauan berkala'], ['TR-003', 'Tinggi', '7 – 9', '🟠 Oranye', 'Memerlukan tindakan segera'], ['TR-004', 'Ekstrem', '10 – 12', '🔴 Merah', 'Eskalasi ke direktur, tindakan segera']] },
+      'Dampak Klinis': { icon: '📉', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola kategori dampak klinis dari suatu insiden.', cols: ['Level', 'Dampak Klinis', 'Deskripsi'], rows: [['1', 'Tidak Ada Cedera', 'Tidak berdampak klinis, tidak perlu penanganan'], ['2', 'Cedera Ringan', 'Luka minor, dapat ditangani P3K'], ['3', 'Cedera Sedang', 'Perlu penanganan medis, rawat inap'], ['4', 'Cedera Berat', 'Cedera permanen atau kehilangan fungsi'], ['5', 'Kematian', 'Pasien meninggal akibat insiden']] },
       'Dampak Terhadap Pasien': { icon: '🩺', color: 'rgba(14,165,233,.1)', accent: '#0ea5e9', desc: 'Kelola kategori dampak langsung terhadap kondisi pasien.', cols: ['Kode', 'Dampak', 'Penjelasan', 'Status'], rows: [['DTP-001', 'Tidak Berdampak', 'Tidak ada perubahan kondisi pasien', '✅ Aktif'], ['DTP-002', 'Perlu Observasi', 'Pasien perlu diobservasi lebih lanjut', '✅ Aktif'], ['DTP-003', 'Perlu Tindakan Medis', 'Diperlukan penanganan tambahan', '✅ Aktif'], ['DTP-004', 'Perpanjang Rawat', 'Masa rawat inap bertambah', '✅ Aktif'], ['DTP-005', 'Cacat Sementara', 'Gangguan fungsi bersifat sementara', '✅ Aktif'], ['DTP-006', 'Cacat Permanen', 'Gangguan fungsi bersifat menetap', '✅ Aktif'], ['DTP-007', 'Kematian', 'Pasien meninggal', '✅ Aktif']] },
-      'Probabilitas': { icon: '🎲', color: 'rgba(124,58,237,.1)', accent: '#7c3aed', desc: 'Kelola tingkat kemungkinan terulangnya insiden.', cols: ['Level', 'Probabilitas', 'Frekuensi'], rows: [['5', 'Sangat sering terjadi', 'Tiap minggu/bulan'], ['4', 'Sering Terjadi', 'Beberapa kali/tahun'], ['3', 'Mungkin terjadi', '1 - <2 tahun/kali'], ['2', 'Jarang terjadi', '>2 - <5 tahun/kali'], ['1', 'Sangat jarang terjadi', '>5 tahun/kali']] },
-      'Matriks Grading': { icon: '📐', color: 'rgba(2,132,199,.1)', accent: '#0284c7', isMatrix: true, desc: 'Matriks risiko berdasarkan kombinasi dampak dan probabilitas.', cols: ['Probabilitas \\ Dampak', 'Tidak Signifikan (1)', 'Minor (2)', 'Moderat (3)', 'Mayor (4)', 'Katostropik (5)'], rows: [['Sangat sering terjadi (5)', 'Moderat', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Sering Terjadi (4)', 'Moderat', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Mungkin terjadi (3)', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Jarang terjadi (2)', 'Rendah', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim'], ['Sangat jarang terjadi (1)', 'Rendah', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim']] },
+      'Probabilitas': { icon: '🎲', color: 'rgba(124,58,237,.1)', accent: '#7c3aed', desc: 'Kelola tingkat kemungkinan terulangnya insiden.', cols: ['Level', 'Probabilitas', 'Frekuensi', 'Deskripsi'], rows: [['1', 'Sangat Jarang', '< 1x / tahun', 'Hampir tidak pernah terjadi'], ['2', 'Jarang', '1 – 2x / tahun', 'Kadang-kadang terjadi'], ['3', 'Mungkin', '3 – 5x / tahun', 'Bisa terjadi sewaktu-waktu'], ['4', 'Sering', '6 – 11x / tahun', 'Beberapa kali dalam setahun'], ['5', 'Sangat Sering', '≥ 12x / tahun', 'Hampir setiap bulan terjadi']] },
+      'Matriks Grading': { icon: '📐', color: 'rgba(2,132,199,.1)', accent: '#0284c7', isMatrix: true, desc: 'Matriks risiko berdasarkan kombinasi dampak dan probabilitas.', cols: ['Probabilitas \\ Dampak', 'Tidak Ada (1)', 'Ringan (2)', 'Sedang (3)', 'Berat (4)', 'Kematian (5)'], rows: [['Sangat Jarang (1)', 'Rendah', 'Rendah', 'Sedang', 'Tinggi', 'Ekstrem'], ['Jarang (2)', 'Rendah', 'Sedang', 'Sedang', 'Tinggi', 'Ekstrem'], ['Mungkin (3)', 'Sedang', 'Sedang', 'Tinggi', 'Ekstrem', 'Ekstrem'], ['Sering (4)', 'Sedang', 'Tinggi', 'Tinggi', 'Ekstrem', 'Ekstrem'], ['Sangat Sering (5)', 'Tinggi', 'Tinggi', 'Ekstrem', 'Ekstrem', 'Ekstrem']] },
     };
-    const MX_CLR = { Rendah: 'background:rgba(59,130,246,.15);color:#3b82f6', Moderat: 'background:rgba(34,197,94,.15);color:#22c55e', Tinggi: 'background:rgba(234,179,8,.15);color:#eab308', Ekstrim: 'background:rgba(239,68,68,.15);color:#ef4444' };
-
-    let activeMdForm = '';
-    function openMdAddModal(name) {
-      if (name === 'Matriks Grading') return showToast('⛔ Matriks Grading bersifat statis (5x5) dan tidak bisa ditambah baris!');
-      const cfg = MD[name]; if (!cfg) return;
-      activeMdForm = name;
-      document.getElementById('mda-title').innerHTML = `${cfg.icon} Tambah ${name}`;
-      document.getElementById('mda-meta').innerText = 'Silakan isi parameter di bawah ini untuk menambah konfigurasi master data.';
-
-      let html = '';
-      cfg.cols.forEach((col, i) => {
-        if (col === 'Status') html += `<div class="uf-group"><label class="uf-label">${col}</label><select class="uf-input" id="mda-input-${i}"><option>✅ Aktif</option><option>⛔ Nonaktif</option></select></div>`;
-        else if (col === 'Warna') html += `<div class="uf-group"><label class="uf-label">${col}</label><select class="uf-input" id="mda-input-${i}"><option>🔵 Biru</option><option>🟢 Hijau</option><option>🟡 Kuning</option><option>🔴 Merah</option></select></div>`;
-        else html += `<div class="uf-group"><label class="uf-label">${col}</label><input type="text" class="uf-input" id="mda-input-${i}" placeholder="Masukkan ${col}..."></div>`;
-      });
-      document.getElementById('mda-form').innerHTML = html;
-      document.getElementById('md-add-modal').style.display = 'flex';
-    }
-    function closeMdAddModal() { document.getElementById('md-add-modal').style.display = 'none'; }
-    function saveMdAddModal() {
-      const cfg = MD[activeMdForm];
-      const newRow = [];
-      cfg.cols.forEach((col, i) => { newRow.push(document.getElementById(`mda-input-${i}`).value || '-'); });
-      cfg.rows.push(newRow); // Store to memory
-      closeMdAddModal();
-      showToast(`✅ Data ${activeMdForm} berhasil ditambahkan!`);
-      showMasterData(activeMdForm); // Re-render table
-    }
+    const MX_CLR = { Rendah: 'background:rgba(34,197,94,.15);color:#4ade80', Sedang: 'background:rgba(245,158,11,.15);color:#fcd34d', Tinggi: 'background:rgba(249,115,22,.15);color:#fdba74', Ekstrem: 'background:rgba(239,68,68,.15);color:#f87171' };
     function showMasterData(name) {
       const cfg = MD[name]; if (!cfg) return;
       toggleMobileDrawer(true);
-
-      const thead = cfg.cols.map(c => `<th>${c}</th>`).join('');
+      const old = document.getElementById('cs-modal'); if (old) old.remove();
+      const thead = cfg.cols.map(c => `<th style="background:var(--table-head);color:var(--muted);font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap">${c}</th>`).join('');
       const tbody = cfg.rows.map(row => {
         const cells = row.map((cell, i) => {
           let content = cell;
-          if (cfg.isMatrix && i > 0 && MX_CLR[cell]) content = `<span class="matrix-badge" style="${MX_CLR[cell]}">${cell}</span>`;
+          if (cfg.isMatrix && i > 0 && MX_CLR[cell]) content = `<span style="display:inline-block;padding:2px 9px;border-radius:6px;${MX_CLR[cell]};font-size:11px;font-weight:700">${cell}</span>`;
           else if (cell === '✅ Aktif') content = `<span style="font-size:12px;font-weight:600;color:var(--success);display:flex;align-items:center;gap:4px"><i class="ph ph-check-circle"></i> Aktif</span>`;
           else if (cell === '⛔ Nonaktif') content = `<span style="font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:4px"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
           else if (i === 0 && !cfg.isMatrix) content = `<span style="font-weight:700;color:var(--muted);font-size:12px">${cell}</span>`;
-          return `<td>${content}</td>`;
+          return `<td style="padding:10px 13px;font-size:13px;border-bottom:1px solid var(--table-border);vertical-align:middle;color:var(--text);white-space:nowrap">${content}</td>`;
         }).join('');
-        return `<tr>${cells}</tr>`;
+        return `<tr style="transition:background .15s" onmouseover="this.style.background='var(--table-hover)'" onmouseout="this.style.background=''">${cells}</tr>`;
       }).join('');
-
-      document.getElementById('mdd-title').innerHTML = `<span>/ ${name}</span>`;
-      document.getElementById('mdd-content').innerHTML = `
-        <div class="pg-header-bar" style="border-left: 4px solid ${cfg.accent}; background: ${cfg.color}">
-          <div>
-            <div style="font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px">
-              <span style="font-size:22px">${cfg.icon}</span> ${name}
-            </div>
-            <div style="font-size:13px;color:var(--muted);margin-top:2px">${cfg.desc}</div>
-          </div>
-          <button class="btn-primary" style="background:${cfg.accent};color:#fff;border:none" onclick="openMdAddModal('${name}')"><span style="font-size:16px">＋</span> Tambah Data</button>
-        </div>
-        
-        <div class="table-card">
-          <div class="table-head">
-            <h3>Daftar ${name}</h3>
-            <div class="tbl-controls">
-              <div class="search-wrap">
-                <span class="search-ico">🔍</span>
-                <input type="text" placeholder="Cari data..." style="width:240px">
-              </div>
-            </div>
-          </div>
-          <table class="desktop-table">
-            <thead><tr>${thead}</tr></thead>
-            <tbody>${tbody}</tbody>
-          </table>
-          <div class="pgn">
-            <div class="pgn-info">Menampilkan ${cfg.rows.length} dari ${cfg.rows.length} data</div>
-            <div class="pgn-btns">
-              <button class="pg-btn">‹</button>
-              <button class="pg-btn cur">1</button>
-              <button class="pg-btn">›</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Update sidebar active status to the generic Master Data container
-      document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
-      const menus = Array.from(document.querySelectorAll('.sidebar .nav-item'));
-      menus.forEach(el => {
-        if (el.textContent.includes(name)) {
-          el.classList.add('active');
-        }
-      });
-
-      // Switch Page Full View
-      showPage('masterDataDynamic');
+      const overlay = document.createElement('div');
+      overlay.id = 'cs-modal';
+      overlay.style.cssText = 'position:fixed;inset:0;background:var(--modal-overlay);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease both';
+      overlay.innerHTML = `<div style="background:var(--modal-bg);border:1px solid var(--border);border-radius:18px;width:100%;max-width:820px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:fadeUp .22s ease both;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:${cfg.color}">
+      <div style="display:flex;align-items:center;gap:11px">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:18px">${cfg.icon}</div>
+        <div><div style="font-size:14px;font-weight:800;color:var(--text)">${name}</div><div style="font-size:12px;color:var(--muted);margin-top:1px">${cfg.desc}</div></div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button style="background:${cfg.accent};color:#fff;border:none;padding:6px 12px;border-radius:8px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">＋ Tambah</button>
+        <button onclick="document.getElementById('cs-modal').remove()" style="width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:14px;color:var(--muted)">✕</button>
+      </div>
+    </div>
+    <div style="padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+      <div style="position:relative;flex:1;max-width:240px"><span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted)">🔍</span><input type="text" placeholder="Cari data..." style="width:100%;padding:7px 10px 7px 28px;border:1.5px solid var(--input-border);border-radius:8px;font-family:inherit;font-size:13px;outline:none;background:var(--input-bg);color:var(--text)"></div>
+      <div style="margin-left:auto;font-size:12px;color:var(--muted)">${cfg.rows.length} data</div>
+    </div>
+    <div style="overflow-y:auto;flex:1"><table style="width:100%;border-collapse:collapse"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table></div>
+    <div style="padding:10px 18px;border-top:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:12px;color:var(--muted)">Menampilkan ${cfg.rows.length} data</div>
+      <div style="display:flex;gap:4px">
+        <button style="width:27px;height:27px;border-radius:6px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:12px;color:var(--text)">‹</button>
+        <button style="width:27px;height:27px;border-radius:6px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700">1</button>
+        <button style="width:27px;height:27px;border-radius:6px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:12px;color:var(--text)">›</button>
+      </div>
+    </div>
+  </div>`;
+      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+      document.body.appendChild(overlay);
     }
 
     let c1Chart = null, dKncChart = null, dKtdChart = null, dKtcChart = null, dKpcsChart = null, cUnitChart = null;
     let cb1 = null, dKncB = null, dKtdB = null, dKtcB = null, dKpcsB = null, cUnitB = null; // for landing
-    function getChartColors() {
+    function getChartColors() { 
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      return {
-        grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+      return { 
+        grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', 
         text: isDark ? '#94a3b8' : '#64748b',
         ringBg: isDark ? '#334155' : '#e2e8f0'
-      };
+      }; 
     }
     function initCharts() {
       const { grid, text, ringBg } = getChartColors();
@@ -4677,52 +4375,35 @@
           }
         }
       };
-
+      
       const ctx1 = document.getElementById('c1'); if (ctx1) c1Chart = new Chart(ctx1, lineOpts);
       const ctx1Land = document.getElementById('c1-land'); if (ctx1Land) cb1 = new Chart(ctx1Land, lineOpts);
 
       // 2. Mini Doughnuts: Verifikasi per Kategori
-      const dOptions = {
-        maintainAspectRatio: false,
-        cutout: '82%',
-        plugins: {
-          tooltip: { enabled: true, yAlign: 'bottom', displayColors: false },
-          legend: { display: false }
-        }
-      };
+      const dOptions = { maintainAspectRatio: false, cutout: '82%', plugins: { tooltip: { enabled: true }, legend: { display: false } } };
       const mkDChart = (id, verified, pending, color) => {
         const el = document.getElementById(id);
-        if (!el) return null;
+        if(!el) return null;
         return new Chart(el, { type: 'doughnut', data: { labels: ['Selesai', 'Belum'], datasets: [{ data: [verified, pending], backgroundColor: [color, ringBg], borderWidth: 0, hoverOffset: 4, borderRadius: 20 }] }, options: dOptions });
       };
-
+      
       // Injecting the numbers into the center of the ring
       const injectNumber = (id, val, color) => {
         const p = document.getElementById(id);
-        if (p && p.parentElement) {
-          let span = p.parentElement.querySelector('.donut-center-val');
-          if (!span) {
-            span = document.createElement('div');
-            span.className = 'donut-center-val';
-            span.style.cssText = `position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;pointer-events:none;color:${color}`;
-            p.parentElement.appendChild(span);
-          }
-          span.textContent = val;
-
-          // Cleanup sub-label if it exists
-          const lblBox = p.parentElement.parentElement;
-          if (lblBox) {
-            const lbl = lblBox.querySelector('.donut-lbl');
-            if (lbl) {
-              let sub = lbl.querySelector('.donut-pending-val');
-              if (sub) sub.remove();
-            }
-          }
+        if(p && p.parentElement) {
+           let span = p.parentElement.querySelector('.donut-center-val');
+           if(!span) {
+             span = document.createElement('div');
+             span.className = 'donut-center-val';
+             span.style.cssText = `position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;pointer-events:none;color:${color}`;
+             p.parentElement.appendChild(span);
+           }
+           span.textContent = val;
         }
       };
 
       const cBlue = '#0ea5e9', cGreen = '#10b981', cAmber = '#f59e0b', cRed = '#ef4444';
-
+      
       dKncChart = mkDChart('d-knc', 13, 5, cBlue); injectNumber('d-knc', '13', cBlue);
       dKtdChart = mkDChart('d-ktd', 18, 12, cGreen); injectNumber('d-ktd', '18', cGreen);
       dKtcChart = mkDChart('d-ktc', 10, 2, cAmber); injectNumber('d-ktc', '10', cAmber);
@@ -4733,68 +4414,32 @@
       dKtcB = mkDChart('d-ktc-land', 10, 2, cAmber); injectNumber('d-ktc-land', '10', cAmber);
       dKpcsB = mkDChart('d-kpcs-land', 62, 14, cRed); injectNumber('d-kpcs-land', '62', cRed);
 
-      // 3. Horizontal Bar: Insiden per Unit (Semua Ruangan via Scroll)
-      const rawUnitNames = [
-        'CASE MANAGER', 'FISIOTERAPI', 'HHPO', 'IGD', 'IKFM', 'INSTALASI BEDAH SENTRAL', 'INSTALASI FARMASI', 'INSTALASI GIZI',
-        'INSTALASI PKRS', 'INSTALASI RADIOLOGI', 'INSTALASI RADIONUKLIR', 'INSTALASI RADIOTERAPI', 'INSTALASI RAWAT INAP',
-        'INSTALASI RAWAT JALAN', 'IPFRS', 'IPPP', 'IRM', 'ISB', 'ISL', 'ISOLASI', 'K3', 'LABORATORIUM MIKRO', 'LABORATORIUM PA',
-        'LABORATORIUM PK', 'LAIN-LAIN', 'LOGISTIK', 'ODC (KEMOTERAPI)', 'OK IBS', 'OK IGD', 'PPI', 'PPT', 'PUSDIKLAT', 'RUAI',
-        'RUANGAN ANAK', 'RUANGAN CAMAR', 'RUANGAN CATHLAB', 'RUANGAN CENDANA', 'RUANGAN ENGGANG GADING', 'RUANGAN HCU',
-        'RUANGAN HEMODIALISA', 'RUANGAN ICU', 'RUANGAN ICVCU', 'RUANGAN KERAPU', 'RUANGAN MAHONI', 'RUANGAN MERANTI',
-        'RUANGAN NICU', 'RUANGAN PERINATOLOGI', 'RUANGAN PICU', 'RUANGAN RAMIN', 'RUANGAN RAWAT INAP PJT', 'RUANGAN SINGKUT BULUH',
-        'THALASEMIA', 'UNIT PELAYANAN STROKE', 'UTDRS'
-      ];
-
-      // Simulasi jumlah pelaporan berdasarkan gambar grafik lama
-      const rawUnitData = [
-        0, 1, 0, 2, 0, 1, 2, 2, 0, 2, 0, 0, 0, 3, 1, 0, 2, 0, 0, 2, 0, 0, 0, 5, 1, 0, 0, 1, 7, 1, 2, 0, 1, 1, 2, 3, 3, 0, 2, 2, 2, 1, 2, 3, 7, 1, 1, 3, 5, 2, 7, 2, 4, 0
-      ];
-
-      const sortedUnits = rawUnitNames.map((name, i) => ({ name, val: rawUnitData[i] })).sort((a, b) => b.val - a.val);
-      const unitNames = sortedUnits.map(u => u.name);
-      const unitData = sortedUnits.map(u => u.val);
+      // 3. Horizontal Bar: Insiden per Unit (Top 5)
+      const unitNamesAll = ['IGD', 'Rawat Inap Mawar', 'Rawat Inap Flamboyan', 'ICU', 'Poli Bedah', 'Poli Dalam', 'Laboratorium', 'VK Bersalin', 'NICU / PICU', 'Poli Anak', 'Instalasi Farmasi', 'Kamar Operasi', 'Poli Umum', 'Radiologi', 'Gizi', 'Rehabilitasi Medik', 'Poli THT', 'Poli Gigi', 'Poli Mata', 'Rekam Medis'];
+      const unitDataAll = [45, 32, 28, 25, 19, 18, 15, 14, 12, 11, 9, 8, 7, 5, 4, 3, 2, 2, 1, 1];
+      
+      // Top 5 slicing
+      const topCount = 5;
+      const unitNames = unitNamesAll.slice(0, topCount);
+      const unitData = unitDataAll.slice(0, topCount);
 
       const barOpts = {
         type: 'bar',
         data: { labels: unitNames, datasets: [{ label: 'Jumlah Laporan', data: unitData, backgroundColor: '#3b82f6', borderRadius: 4, maxBarThickness: 16 }] },
         options: {
           indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } },
-          onHover: (event, chartElement) => {
-            event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-          },
-          onClick: (e, activeEls) => {
-            if (activeEls.length > 0) {
-              const idx = activeEls[0].index;
-              const unitStr = unitNames[idx];
-
-              // KHUSUS hanya menargetkan input search milik tabel pelaporan
-              const tpSearch = document.getElementById('tc-search');
-              if (tpSearch) {
-                tpSearch.value = unitStr;
-                // Panggil fungsi render ulang daftar insiden agar langsung terfilter
-                renderFilteredLaporan && renderFilteredLaporan();
-              }
-
-              // Buka halaman tabel (di sistem Admin)
-              showPage('tabelPelaporan');
-            }
-          },
           scales: {
             x: { grid: { color: grid, borderDash: [5, 5] }, ticks: { font: { size: 11 }, color: text }, beginAtZero: true },
-            y: { grid: { display: false }, ticks: { font: { size: 10 }, color: text } }
+            y: { grid: { display: false }, ticks: { font: { size: 11 }, color: text } }
           }
         }
       };
 
-      const barHeight = Math.max(220, unitNames.length * 32);
-
-      const barInner = document.getElementById('bar-inner');
       const cUnitCtx = document.getElementById('c-unit');
-      if (barInner && cUnitCtx) { barInner.style.height = barHeight + 'px'; cUnitChart = new Chart(cUnitCtx, barOpts); }
+      if (cUnitCtx) { cUnitChart = new Chart(cUnitCtx, barOpts); }
 
-      const barInnerLand = document.getElementById('bar-inner-land');
       const cUnitCtxLand = document.getElementById('c-unit-land');
-      if (barInnerLand && cUnitCtxLand) { barInnerLand.style.height = barHeight + 'px'; cUnitB = new Chart(cUnitCtxLand, barOpts); }
+      if (cUnitCtxLand) { cUnitB = new Chart(cUnitCtxLand, barOpts); }
     }
     function updateChartColors() { setTimeout(initCharts, 50); }
 
