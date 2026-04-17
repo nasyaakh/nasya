@@ -6,30 +6,30 @@
 /* ════════════════════════════
        THEME
        ════════════════════════════ */
-    function toggleTheme() {
-      const h = document.documentElement;
-      const isDark = h.getAttribute('data-theme') === 'dark';
-      h.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      document.querySelectorAll('#theme-ico-landing,#theme-ico-admin').forEach(el => { if (el) el.innerHTML = isDark ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>'; });
-      localStorage.setItem('sidekap-theme', isDark ? 'light' : 'dark');
-      if (typeof c1Chart !== 'undefined' && c1Chart) updateChartColors();
-    }
-    (function () {
-      const saved = localStorage.getItem('sidekap-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', saved);
-      document.querySelectorAll('#theme-ico-landing,#theme-ico-admin').forEach(el => { if (el) el.innerHTML = saved === 'dark' ? '<i class="ph ph-moon"></i>' : '<i class="ph ph-sun"></i>'; });
-    })();
+function toggleTheme() {
+  const h = document.documentElement;
+  const isDark = h.getAttribute('data-theme') === 'dark';
+  h.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelectorAll('#theme-ico-landing,#theme-ico-admin').forEach(el => { if (el) el.innerHTML = isDark ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>'; });
+  localStorage.setItem('sidekap-theme', isDark ? 'light' : 'dark');
+  if (typeof c1Chart !== 'undefined' && c1Chart) updateChartColors();
+}
+(function () {
+  const saved = localStorage.getItem('sidekap-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.querySelectorAll('#theme-ico-landing,#theme-ico-admin').forEach(el => { if (el) el.innerHTML = saved === 'dark' ? '<i class="ph ph-moon"></i>' : '<i class="ph ph-sun"></i>'; });
+})();
 
-    /* ════════════════════════════
-       HAMBURGER / MOBILE DRAWER
-       ════════════════════════════ */
-    function buildDrawerNav(activePage) {
-      const active = { dashboardAdmin: 'dashboard', tabelPelaporan: 'tabelPelaporan', tabelInvestigasi: 'tabelInvestigasi', pengguna: 'pengguna' }[activePage] || '';
-      return `
+/* ════════════════════════════
+   HAMBURGER / MOBILE DRAWER
+   ════════════════════════════ */
+function buildDrawerNav(activePage) {
+  const active = { dashboardAdmin: 'dashboard', tabelPelaporan: 'tabelPelaporan', tabelInvestigasi: 'tabelInvestigasi', pengguna: 'pengguna' }[activePage] || '';
+  return `
     <div class="sb-sec">Beranda</div>
     <div class="nav-item ${active === 'dashboard' ? 'active' : ''}" onclick="showPage('dashboardAdmin')"><span class="ni-ico">📊</span> Dashboard</div>
     <div class="sb-sec">Master Data</div>
-    <div class="nav-item ${active === 'pengguna' ? 'active' : ''}" onclick="showPage('pengguna')"><span class="ni-ico">👤</span> Pengguna</div>
+    ${isAdmin() ? `<div class="nav-item ${active === 'pengguna' ? 'active' : ''}" onclick="showPage('pengguna')"><span class="ni-ico">👤</span> Pengguna</div>` : ''}
     <div class="nav-item" onclick="showMasterData('Jenis Insiden')"><span class="ni-ico">📂</span> Jenis Insiden</div>
     <div class="nav-item" onclick="showMasterData('Kelompok Umur')"><span class="ni-ico">👶</span> Kelompok Umur</div>
     <div class="nav-item" onclick="showMasterData('Penanggung Pasien')"><span class="ni-ico">💳</span> Penanggung Pasien</div>
@@ -43,111 +43,150 @@
     <div class="nav-item ${active === 'tabelPelaporan' ? 'active' : ''}" onclick="showPage('tabelPelaporan')"><span class="ni-ico">📋</span> Tabel Pelaporan</div>
     <div class="nav-item ${active === 'tabelInvestigasi' ? 'active' : ''}" onclick="showPage('tabelInvestigasi')"><span class="ni-ico">🔬</span> Tabel Investigasi Sederhana</div>
   `;
+}
+
+function toggleMobileDrawer(forceClose) {
+  const btn = document.getElementById('g-hamburger');
+  const drawer = document.getElementById('mobile-drawer');
+  const overlay = document.getElementById('mobile-overlay');
+  const isOpen = drawer.classList.contains('open');
+  if (forceClose || isOpen) {
+    btn.classList.remove('open');
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  } else {
+    const activePage = document.querySelector('.page.active')?.id || '';
+    document.getElementById('mdr-nav-content').innerHTML = buildDrawerNav(activePage);
+    btn.classList.add('open');
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+/* ════════════════════════════
+   DATA
+   ════════════════════════════ */
+let INSIDEN = [
+  {
+    no: '001', tgl: '05/03/2026', unit: ' OK IGD', pelapor: 'dr. Siti R.', kat: 'KPCS', status: 'Terverifikasi', risiko: 'Tinggi',
+    formData: {
+      tipe: 'withPatient', pasien: { mr: 'RM-2026-001', nama: 'Budi Santoso', kelamin: 'Laki-laki', umur: '45', kelompokUmur: '18–59 tahun (Dewasa)', penanggung: 'BPJS Kesehatan', tglMasuk: '2026-03-01' },
+      kejadian: { tglWaktu: '2026-03-05T08:30', insiden: 'Pasien jatuh dari tempat tidur', kronologis: 'Pasien post-op hari ke-2 mencoba turun sendiri dari tempat tidur saat perawat keluar ruangan. Rail tempat tidur tidak terpasang.', jenisInsiden: 'KPCS', pelaporPertama: 'Perawat', menyangkut: 'Pasien Rawat Inap', tempat: 'Ruang Flamboyan Lantai 2', spesialisasi: 'Bedah', unitTerkait: 'IGD', akibat: 'Cedera ringan', tindakan: 'Pasien dibantu kembali, luka dibersihkan, dokter dihubungi, rail dipasang kembali.', tindakanOleh: 'Tim / Dokter + Perawat', pernahTerjadi: 'Tidak' },
+      pelapor: { tglLapor: '2026-03-05T09:00', pembuat: 'Ns. Dewi Rahayu, S.Kep — Kepala Ruangan Flamboyan' }
     }
-
-    function toggleMobileDrawer(forceClose) {
-      const btn = document.getElementById('g-hamburger');
-      const drawer = document.getElementById('mobile-drawer');
-      const overlay = document.getElementById('mobile-overlay');
-      const isOpen = drawer.classList.contains('open');
-      if (forceClose || isOpen) {
-        btn.classList.remove('open');
-        drawer.classList.remove('open');
-        overlay.classList.remove('open');
-        document.body.style.overflow = '';
-      } else {
-        const activePage = document.querySelector('.page.active')?.id || '';
-        document.getElementById('mdr-nav-content').innerHTML = buildDrawerNav(activePage);
-        btn.classList.add('open');
-        drawer.classList.add('open');
-        overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      }
+  },
+  {
+    no: '002', tgl: '04/03/2026', unit: 'Rawat Inap', pelapor: 'Ns. Budi S.', kat: 'KTD', status: 'Menunggu', risiko: 'Sedang',
+    formData: {
+      tipe: 'withPatient', pasien: { mr: 'RM-2026-002', nama: 'Sari Wulandari', kelamin: 'Perempuan', umur: '32', kelompokUmur: '18–59 tahun (Dewasa)', penanggung: 'Asuransi Swasta', tglMasuk: '2026-03-02' },
+      kejadian: { tglWaktu: '2026-03-04T14:15', insiden: 'Pemberian obat tidak sesuai dosis', kronologis: 'Pasien menerima Amoxicillin 500mg 2 tablet, padahal resep dokter tertulis 1 tablet.', jenisInsiden: 'KTD', pelaporPertama: 'Perawat', menyangkut: 'Pasien Rawat Inap', tempat: 'Ruang Mawar Lantai 3', spesialisasi: 'Penyakit Dalam', unitTerkait: 'Rawat Inap', akibat: 'Tidak ada cedera', tindakan: 'Pasien diobservasi, dokter diberitahu.', tindakanOleh: 'Perawat', pernahTerjadi: 'Ya' },
+      pelapor: { tglLapor: '2026-03-04T16:00', pembuat: 'Ns. Budi Setiawan, AMK — Perawat Pelaksana' }
     }
+  },
+  {
+    no: '003', tgl: '03/03/2026', unit: 'Poli Umum', pelapor: 'dr. Rina P.', kat: 'KNC', status: 'Terverifikasi', risiko: 'Rendah',
+    formData: {
+      tipe: 'noPatient', kejadian: { tglWaktu: '2026-03-03T10:00', insiden: 'Hampir terjadi salah identitas pasien', kronologis: 'Dua pasien dengan nama mirip hampir tertukar rekam medisnya.', jenisInsiden: 'KNC', pelaporPertama: 'Dokter', menyangkut: 'Pasien Rawat Jalan', tempat: 'Poli Umum', spesialisasi: 'Penyakit Dalam', unitTerkait: 'Poli Umum', akibat: 'Tidak ada cedera', tindakan: 'Identitas diverifikasi ulang.', tindakanOleh: 'Dokter', pernahTerjadi: 'Tidak' },
+      pelapor: { tglLapor: '2026-03-03T11:30', pembuat: 'dr. Rina Puspita — Dokter Umum Poli' }
+    }
+  },
+  {
+    no: '004', tgl: '01/03/2026', unit: 'Ruangan ICU', pelapor: 'Ns. Ayu M.', kat: 'KPCS', status: 'Ditolak', risiko: 'Tinggi',
+    formData: {
+      tipe: 'withPatient', pasien: { mr: 'RM-2026-004', nama: 'Hendra Kusuma', kelamin: 'Laki-laki', umur: '67', kelompokUmur: '≥60 tahun (Lansia)', penanggung: 'BPJS Kesehatan', tglMasuk: '2026-02-27' },
+      kejadian: { tglWaktu: '2026-03-01T03:20', insiden: 'Kematian pasien tidak terduga pasca operasi', kronologis: 'Pasien laparotomi hari ke-2 mengalami cardiac arrest tiba-tiba.', jenisInsiden: 'KPCS', pelaporPertama: 'Dokter', menyangkut: 'Pasien Rawat Inap', tempat: 'ICU', spesialisasi: 'Bedah', unitTerkait: 'ICU', akibat: 'Kematian', tindakan: 'RJP dilakukan, keluarga diberitahu.', tindakanOleh: 'Tim / Dokter + Perawat', pernahTerjadi: 'Tidak' },
+      pelapor: { tglLapor: '2026-03-01T06:00', pembuat: 'Ns. Ayu Maharani, S.Kep — Perawat ICU' }
+    }
+  },
+  {
+    no: '005', tgl: '28/02/2026', unit: 'Farmasi', pelapor: 'Apt. Hendra K.', kat: 'KNC', status: 'Menunggu', risiko: 'Sedang',
+    formData: {
+      tipe: 'noPatient', kejadian: { tglWaktu: '2026-02-28T13:45', insiden: 'Hampir terjadi kesalahan dispensing obat LASA', kronologis: 'Losartan hampir diberikan sebagai pengganti Loratadine karena kemiripan nama.', jenisInsiden: 'KNC', pelaporPertama: 'Apoteker', menyangkut: 'Pasien Rawat Jalan', tempat: 'Instalasi Farmasi', spesialisasi: 'Penyakit Dalam', unitTerkait: 'Farmasi', akibat: 'Tidak ada cedera', tindakan: 'Obat dikembalikan, label LASA ditambahkan.', tindakanOleh: 'Apoteker', pernahTerjadi: 'Ya' },
+      pelapor: { tglLapor: '2026-02-28T14:30', pembuat: 'Apt. Hendra Kurniawan, S.Farm — Apoteker Pelaksana' }
+    }
+  },
+];
 
-    /* ════════════════════════════
-       DATA
-       ════════════════════════════ */
-    let INSIDEN = [
-      {
-        no: '001', tgl: '05/03/2026', unit: 'IGD', pelapor: 'dr. Siti R.', kat: 'KPCS', status: 'Terverifikasi', risiko: 'Tinggi',
-        formData: {
-          tipe: 'withPatient', pasien: { mr: 'RM-2026-001', nama: 'Budi Santoso', kelamin: 'Laki-laki', umur: '45', kelompokUmur: '18–59 tahun (Dewasa)', penanggung: 'BPJS Kesehatan', tglMasuk: '2026-03-01' },
-          kejadian: { tglWaktu: '2026-03-05T08:30', insiden: 'Pasien jatuh dari tempat tidur', kronologis: 'Pasien post-op hari ke-2 mencoba turun sendiri dari tempat tidur saat perawat keluar ruangan. Rail tempat tidur tidak terpasang.', jenisInsiden: 'KPCS', pelaporPertama: 'Perawat', menyangkut: 'Pasien Rawat Inap', tempat: 'Ruang Flamboyan Lantai 2', spesialisasi: 'Bedah', unitTerkait: 'IGD', akibat: 'Cedera ringan', tindakan: 'Pasien dibantu kembali, luka dibersihkan, dokter dihubungi, rail dipasang kembali.', tindakanOleh: 'Tim / Dokter + Perawat', pernahTerjadi: 'Tidak' },
-          pelapor: { tglLapor: '2026-03-05T09:00', pembuat: 'Ns. Dewi Rahayu, S.Kep — Kepala Ruangan Flamboyan' }
-        }
-      },
-      {
-        no: '002', tgl: '04/03/2026', unit: 'Rawat Inap', pelapor: 'Ns. Budi S.', kat: 'KTD', status: 'Menunggu', risiko: 'Sedang',
-        formData: {
-          tipe: 'withPatient', pasien: { mr: 'RM-2026-002', nama: 'Sari Wulandari', kelamin: 'Perempuan', umur: '32', kelompokUmur: '18–59 tahun (Dewasa)', penanggung: 'Asuransi Swasta', tglMasuk: '2026-03-02' },
-          kejadian: { tglWaktu: '2026-03-04T14:15', insiden: 'Pemberian obat tidak sesuai dosis', kronologis: 'Pasien menerima Amoxicillin 500mg 2 tablet, padahal resep dokter tertulis 1 tablet.', jenisInsiden: 'KTD', pelaporPertama: 'Perawat', menyangkut: 'Pasien Rawat Inap', tempat: 'Ruang Mawar Lantai 3', spesialisasi: 'Penyakit Dalam', unitTerkait: 'Rawat Inap', akibat: 'Tidak ada cedera', tindakan: 'Pasien diobservasi, dokter diberitahu.', tindakanOleh: 'Perawat', pernahTerjadi: 'Ya' },
-          pelapor: { tglLapor: '2026-03-04T16:00', pembuat: 'Ns. Budi Setiawan, AMK — Perawat Pelaksana' }
-        }
-      },
-      {
-        no: '003', tgl: '03/03/2026', unit: 'Poli Umum', pelapor: 'dr. Rina P.', kat: 'KNC', status: 'Terverifikasi', risiko: 'Rendah',
-        formData: {
-          tipe: 'noPatient', kejadian: { tglWaktu: '2026-03-03T10:00', insiden: 'Hampir terjadi salah identitas pasien', kronologis: 'Dua pasien dengan nama mirip hampir tertukar rekam medisnya.', jenisInsiden: 'KNC', pelaporPertama: 'Dokter', menyangkut: 'Pasien Rawat Jalan', tempat: 'Poli Umum', spesialisasi: 'Penyakit Dalam', unitTerkait: 'Poli Umum', akibat: 'Tidak ada cedera', tindakan: 'Identitas diverifikasi ulang.', tindakanOleh: 'Dokter', pernahTerjadi: 'Tidak' },
-          pelapor: { tglLapor: '2026-03-03T11:30', pembuat: 'dr. Rina Puspita — Dokter Umum Poli' }
-        }
-      },
-      {
-        no: '004', tgl: '01/03/2026', unit: 'ICU', pelapor: 'Ns. Ayu M.', kat: 'KPCS', status: 'Ditolak', risiko: 'Tinggi',
-        formData: {
-          tipe: 'withPatient', pasien: { mr: 'RM-2026-004', nama: 'Hendra Kusuma', kelamin: 'Laki-laki', umur: '67', kelompokUmur: '≥60 tahun (Lansia)', penanggung: 'BPJS Kesehatan', tglMasuk: '2026-02-27' },
-          kejadian: { tglWaktu: '2026-03-01T03:20', insiden: 'Kematian pasien tidak terduga pasca operasi', kronologis: 'Pasien laparotomi hari ke-2 mengalami cardiac arrest tiba-tiba.', jenisInsiden: 'KPCS', pelaporPertama: 'Dokter', menyangkut: 'Pasien Rawat Inap', tempat: 'ICU', spesialisasi: 'Bedah', unitTerkait: 'ICU', akibat: 'Kematian', tindakan: 'RJP dilakukan, keluarga diberitahu.', tindakanOleh: 'Tim / Dokter + Perawat', pernahTerjadi: 'Tidak' },
-          pelapor: { tglLapor: '2026-03-01T06:00', pembuat: 'Ns. Ayu Maharani, S.Kep — Perawat ICU' }
-        }
-      },
-      {
-        no: '005', tgl: '28/02/2026', unit: 'Farmasi', pelapor: 'Apt. Hendra K.', kat: 'KNC', status: 'Menunggu', risiko: 'Sedang',
-        formData: {
-          tipe: 'noPatient', kejadian: { tglWaktu: '2026-02-28T13:45', insiden: 'Hampir terjadi kesalahan dispensing obat LASA', kronologis: 'Losartan hampir diberikan sebagai pengganti Loratadine karena kemiripan nama.', jenisInsiden: 'KNC', pelaporPertama: 'Apoteker', menyangkut: 'Pasien Rawat Jalan', tempat: 'Instalasi Farmasi', spesialisasi: 'Penyakit Dalam', unitTerkait: 'Farmasi', akibat: 'Tidak ada cedera', tindakan: 'Obat dikembalikan, label LASA ditambahkan.', tindakanOleh: 'Apoteker', pernahTerjadi: 'Ya' },
-          pelapor: { tglLapor: '2026-02-28T14:30', pembuat: 'Apt. Hendra Kurniawan, S.Farm — Apoteker Pelaksana' }
-        }
-      },
-    ];
+const INVESTIGASI = [
+  { no: 'INV-001', tgl: '06/03/2026', insiden: 'Pasien jatuh dari tempat tidur', unit: 'IGD', investigator: 'dr. Siti R.', grade: 'Tinggi', status: 'Selesai' },
+  { no: 'INV-002', tgl: '05/03/2026', insiden: 'Pemberian obat tidak sesuai dosis', unit: 'Rawat Inap', investigator: 'Ns. Budi S.', grade: 'Sedang', status: 'Proses' },
+  { no: 'INV-003', tgl: '04/03/2026', insiden: 'Hampir terjadi salah identitas', unit: 'Poli Umum', investigator: 'dr. Rina P.', grade: 'Rendah', status: 'Selesai' },
+  { no: 'INV-004', tgl: '02/03/2026', insiden: 'Kematian tidak terduga pasca op.', unit: 'ICU', investigator: 'Ns. Ayu M.', grade: 'Ekstrem', status: 'Proses' },
+  { no: 'INV-005', tgl: '01/03/2026', insiden: 'Kesalahan dispensing obat LASA', unit: 'Farmasi', investigator: 'Apt. Hendra K.', grade: 'Sedang', status: 'Belum' },
+];
 
-    const INVESTIGASI = [
-      { no: 'INV-001', tgl: '06/03/2026', insiden: 'Pasien jatuh dari tempat tidur', unit: 'IGD', investigator: 'dr. Siti R.', grade: 'Tinggi', status: 'Selesai' },
-      { no: 'INV-002', tgl: '05/03/2026', insiden: 'Pemberian obat tidak sesuai dosis', unit: 'Rawat Inap', investigator: 'Ns. Budi S.', grade: 'Sedang', status: 'Proses' },
-      { no: 'INV-003', tgl: '04/03/2026', insiden: 'Hampir terjadi salah identitas', unit: 'Poli Umum', investigator: 'dr. Rina P.', grade: 'Rendah', status: 'Selesai' },
-      { no: 'INV-004', tgl: '02/03/2026', insiden: 'Kematian tidak terduga pasca op.', unit: 'ICU', investigator: 'Ns. Ayu M.', grade: 'Ekstrem', status: 'Proses' },
-      { no: 'INV-005', tgl: '01/03/2026', insiden: 'Kesalahan dispensing obat LASA', unit: 'Farmasi', investigator: 'Apt. Hendra K.', grade: 'Sedang', status: 'Belum' },
-    ];
+let USERS = [
+  { id: 1, nama: 'Administrator Sistem', username: 'admin', email: 'admin@rsud.go.id', role: 'Super Admin', unit: 'Semua Unit', status: 'Aktif', lastLogin: '10/03/2026 08:14', isMe: true, color: '#dc2626' },
+  { id: 2, nama: 'dr. Siti Rahayu', username: 'siti.rahayu', email: 'siti@rsud.go.id', role: 'Admin', unit: 'Semua Unit', status: 'Aktif', lastLogin: '10/03/2026 07:55', isMe: false, color: '#1d4ed8' },
+  { id: 3, nama: 'Ns. Budi Setiawan', username: 'budi.setiawan', email: 'budi@rsud.go.id', role: 'Kepala Ruangan', unit: 'Rawat Inap', status: 'Aktif', lastLogin: '09/03/2026 14:30', isMe: false, color: '#15803d' },
+  { id: 4, nama: 'dr. Rina Puspita', username: 'rina.puspita', email: 'rina@rsud.go.id', role: 'Kepala Ruangan', unit: 'Poli Umum', status: 'Aktif', lastLogin: '09/03/2026 09:00', isMe: false, color: '#15803d' },
+  { id: 5, nama: 'Ns. Ayu Maharani', username: 'ayu.maharani', email: 'ayu@rsud.go.id', role: 'Kepala Ruangan', unit: 'ICU', status: 'Aktif', lastLogin: '08/03/2026 21:10', isMe: false, color: '#15803d' },
+  { id: 6, nama: 'Apt. Hendra Kurniawan', username: 'hendra.apt', email: 'hendra@rsud.go.id', role: 'Pelapor', unit: 'Farmasi', status: 'Aktif', lastLogin: '08/03/2026 15:45', isMe: false, color: '#57534e' },
+  { id: 7, nama: 'dr. Wahyu Nugroho', username: 'wahyu.nugroho', email: 'wahyu@rsud.go.id', role: 'Pelapor', unit: 'IGD', status: 'Aktif', lastLogin: '07/03/2026 11:20', isMe: false, color: '#57534e' },
+  { id: 8, nama: 'Ns. Dewi Rahayu', username: 'dewi.rahayu', email: 'dewi@rsud.go.id', role: 'Kepala Ruangan', unit: 'Rawat Inap', status: 'Nonaktif', lastLogin: '01/03/2026 08:00', isMe: false, color: '#15803d' },
+  { id: 9, nama: 'dr. Fajar Santoso', username: 'fajar.santoso', email: 'fajar@rsud.go.id', role: 'Pelapor', unit: 'Laboratorium', status: 'Aktif', lastLogin: '10/03/2026 09:30', isMe: false, color: '#57534e' },
+  { id: 10, nama: 'Ns. Maya Sari', username: 'maya.sari', email: 'maya@rsud.go.id', role: 'Pelapor', unit: 'ICU', status: 'Nonaktif', lastLogin: '25/02/2026 16:00', isMe: false, color: '#57534e' },
+];
 
-    let USERS = [
-      { id: 1, nama: 'Administrator Sistem', username: 'admin', email: 'admin@rsud.go.id', role: 'Super Admin', unit: 'Semua Unit', status: 'Aktif', lastLogin: '10/03/2026 08:14', isMe: true, color: '#dc2626' },
-      { id: 2, nama: 'dr. Siti Rahayu', username: 'siti.rahayu', email: 'siti@rsud.go.id', role: 'Admin', unit: 'Semua Unit', status: 'Aktif', lastLogin: '10/03/2026 07:55', isMe: false, color: '#1d4ed8' },
-      { id: 3, nama: 'Ns. Budi Setiawan', username: 'budi.setiawan', email: 'budi@rsud.go.id', role: 'Kepala Ruangan', unit: 'Rawat Inap', status: 'Aktif', lastLogin: '09/03/2026 14:30', isMe: false, color: '#15803d' },
-      { id: 4, nama: 'dr. Rina Puspita', username: 'rina.puspita', email: 'rina@rsud.go.id', role: 'Kepala Ruangan', unit: 'Poli Umum', status: 'Aktif', lastLogin: '09/03/2026 09:00', isMe: false, color: '#15803d' },
-      { id: 5, nama: 'Ns. Ayu Maharani', username: 'ayu.maharani', email: 'ayu@rsud.go.id', role: 'Kepala Ruangan', unit: 'ICU', status: 'Aktif', lastLogin: '08/03/2026 21:10', isMe: false, color: '#15803d' },
-      { id: 6, nama: 'Apt. Hendra Kurniawan', username: 'hendra.apt', email: 'hendra@rsud.go.id', role: 'Pelapor', unit: 'Farmasi', status: 'Aktif', lastLogin: '08/03/2026 15:45', isMe: false, color: '#57534e' },
-      { id: 7, nama: 'dr. Wahyu Nugroho', username: 'wahyu.nugroho', email: 'wahyu@rsud.go.id', role: 'Pelapor', unit: 'IGD', status: 'Aktif', lastLogin: '07/03/2026 11:20', isMe: false, color: '#57534e' },
-      { id: 8, nama: 'Ns. Dewi Rahayu', username: 'dewi.rahayu', email: 'dewi@rsud.go.id', role: 'Kepala Ruangan', unit: 'Rawat Inap', status: 'Nonaktif', lastLogin: '01/03/2026 08:00', isMe: false, color: '#15803d' },
-      { id: 9, nama: 'dr. Fajar Santoso', username: 'fajar.santoso', email: 'fajar@rsud.go.id', role: 'Pelapor', unit: 'Laboratorium', status: 'Aktif', lastLogin: '10/03/2026 09:30', isMe: false, color: '#57534e' },
-      { id: 10, nama: 'Ns. Maya Sari', username: 'maya.sari', email: 'maya@rsud.go.id', role: 'Pelapor', unit: 'ICU', status: 'Nonaktif', lastLogin: '25/02/2026 16:00', isMe: false, color: '#57534e' },
-    ];
+let activeRoleFilter = 'semua', editingUserId = null, currentDetailIdx = null;
 
-    let activeRoleFilter = 'semua', editingUserId = null, currentDetailIdx = null;
-    const KAT_CSS = { KNC: 'kat-knc', KTD: 'kat-ktd', KPCS: 'kat-kpcs', KTC: 'kat-ktc' };
-    const STS_CSS = { Terverifikasi: 'badge-s', Menunggu: 'badge-w', Ditolak: 'badge-d' };
-    const STS_ICO = { Terverifikasi: '<i class="ph ph-check"></i>', Menunggu: '<i class="ph ph-hourglass"></i>', Ditolak: '<i class="ph ph-x"></i>' };
-    const RISK_DOT = { Tinggi: 'dot-h', Sedang: 'dot-m', Rendah: 'dot-l' };
-    const ROLE_CSS = { 'Super Admin': 'rb-superadmin', Admin: 'rb-admin', 'Kepala Ruangan': 'rb-karu', Pelapor: 'rb-pelapor' };
-    const ROLE_ICO = { 'Super Admin': '<i class="ph ph-crown"></i>', Admin: '<i class="ph ph-shield"></i>', 'Kepala Ruangan': '<i class="ph ph-hospital"></i>', Pelapor: '<i class="ph ph-file-text"></i>' };
-    const GRADE_CSS = { Rendah: 'grade-rendah', Sedang: 'grade-sedang', Tinggi: 'grade-tinggi', Ekstrem: 'grade-ekstrem' };
-    const AVCOL = ['#1d4ed8', '#15803d', '#b45309', '#7c3aed', '#0284c7', '#b91c1c', '#0f766e', '#c2410c'];
+/* ════════════════════════════
+   AUTH / RBAC
+   Objek sesi pengguna & helper role
+   ════════════════════════════ */
+let currentUser = { id: 0, nama: 'Tamu', username: '', role: '', unit: '', color: '#64748b' };
+function isAdmin() {
+  return currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+}
+function applyRBAC() {
+  const ini = initials(currentUser.nama) || 'G';
+  const col = currentUser.color || '#64748b';
+  renderSidebars();
+  document.querySelectorAll('.topbar-avatar').forEach(el => {
+    el.textContent = ini;
+    el.title = currentUser.nama + ' — ' + currentUser.role;
+    el.style.background = col + '22';
+    el.style.color = col;
+  });
+  document.querySelectorAll('.mt-av').forEach(el => { el.textContent = ini; });
+  document.querySelectorAll('.mdr-subtitle').forEach(el => {
+    el.textContent = currentUser.role || 'Panel';
+  });
+  // Tampilkan nama & role di sidebar mobile (drawer footer)
+  document.querySelectorAll('.mdr-foot .sb-uname').forEach(el => { el.textContent = currentUser.nama; });
+  document.querySelectorAll('.mdr-foot .sb-urole').forEach(el => { el.textContent = currentUser.role; });
+  document.querySelectorAll('.mdr-foot .sb-avatar').forEach(el => {
+    el.textContent = ini;
+    el.style.background = col + '22';
+    el.style.color = col;
+  });
+  // Sembunyikan alert harian untuk Pelapor (biasanya hanya untuk Admin/Karu)
+  document.querySelectorAll('.daily-alert').forEach(el => {
+    el.style.display = currentUser.role === 'Pelapor' ? 'none' : 'flex';
+  });
+  // Sembunyikan tombol Tambah Pengguna jika bukan Admin
+  const addUserBtn = document.querySelector('.btn-add-user');
+  if (addUserBtn) addUserBtn.style.display = isAdmin() ? '' : 'none';
+}
+const KAT_CSS = { KNC: 'kat-knc', KTD: 'kat-ktd', KPCS: 'kat-kpcs', KTC: 'kat-ktc' };
+const STS_CSS = { Terverifikasi: 'badge-s', Menunggu: 'badge-w', Ditolak: 'badge-d' };
+const STS_ICO = { Terverifikasi: '<i class="ph ph-check"></i>', Menunggu: '<i class="ph ph-hourglass"></i>', Ditolak: '<i class="ph ph-x"></i>' };
+const RISK_DOT = { Tinggi: 'dot-h', Sedang: 'dot-m', Rendah: 'dot-l' };
+const ROLE_CSS = { 'Super Admin': 'rb-superadmin', Admin: 'rb-admin', 'Kepala Ruangan': 'rb-karu', Pelapor: 'rb-pelapor' };
+const ROLE_ICO = { 'Super Admin': '<i class="ph ph-crown"></i>', Admin: '<i class="ph ph-shield"></i>', 'Kepala Ruangan': '<i class="ph ph-hospital"></i>', Pelapor: '<i class="ph ph-file-text"></i>' };
+const GRADE_CSS = { Rendah: 'grade-rendah', Sedang: 'grade-sedang', Tinggi: 'grade-tinggi', Ekstrem: 'grade-ekstrem' };
+const AVCOL = ['#1d4ed8', '#15803d', '#b45309', '#7c3aed', '#0284c7', '#b91c1c', '#0f766e', '#c2410c'];
 
-    function katBadge(k) { return `<span class="kat ${KAT_CSS[k] || ''}">${k}</span>`; }
-    function stsBadge(s) { return `<span class="badge ${STS_CSS[s] || ''}">${STS_ICO[s]} ${s}</span>`; }
-    function riskHtml(r) { return `<span style="display:inline-flex;align-items:center;font-size:12px"><span class="dot ${RISK_DOT[r] || ''}"></span>${r}</span>`; }
-    function roleBadge(r) { return `<span class="role-badge ${ROLE_CSS[r] || ''}">${ROLE_ICO[r] || ''} ${r}</span>`; }
-    function gradeBadge(g) { return `<span class="grade-badge ${GRADE_CSS[g] || ''}">${g}</span>`; }
-    function initials(n) { return n.split(' ').map(w => w[0] || '').join('').substring(0, 2).toUpperCase(); }
+function katBadge(k) { return `<span class="kat ${KAT_CSS[k] || ''}">${k}</span>`; }
+function stsBadge(s) { return `<span class="badge ${STS_CSS[s] || ''}">${STS_ICO[s]} ${s}</span>`; }
+function riskHtml(r) { return `<span style="display:inline-flex;align-items:center;font-size:12px"><span class="dot ${RISK_DOT[r] || ''}"></span>${r}</span>`; }
+function roleBadge(r) { return `<span class="role-badge ${ROLE_CSS[r] || ''}">${ROLE_ICO[r] || ''} ${r}</span>`; }
+function gradeBadge(g) { return `<span class="grade-badge ${GRADE_CSS[g] || ''}">${g}</span>`; }
+function initials(n) { return n.split(' ').map(w => w[0] || '').join('').substring(0, 2).toUpperCase(); }
 
-    const mkSidebar = (active) => `
+const mkSidebar = (active) => `
   <div class="sb-head">
     <div class="sb-icon">🏥</div>
     <div><div style="font-weight:800;font-size:17px;color:var(--text);letter-spacing:-0.5px">SIDEKAP</div><div style="font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-top:-2px">Admin Panel</div></div>
@@ -156,7 +195,7 @@
     <div class="sb-sec">Beranda</div>
     <div class="nav-item ${active === 'dashboard' ? 'active' : ''}" onclick="showPage('dashboardAdmin')"><span class="ni-ico"><i class="ph ph-chart-bar"></i></span> Dashboard</div>
     <div class="sb-sec">Master Data</div>
-    <div class="nav-item ${active === 'pengguna' ? 'active' : ''}" onclick="showPage('pengguna')"><span class="ni-ico"><i class="ph ph-user"></i></span> Pengguna</div>
+    ${isAdmin() ? `<div class="nav-item ${active === 'pengguna' ? 'active' : ''}" onclick="showPage('pengguna')"><span class="ni-ico"><i class="ph ph-user"></i></span> Pengguna</div>` : ''}
     <div class="nav-item" onclick="showMasterData('Jenis Insiden')"><span class="ni-ico"><i class="ph ph-folder"></i></span> Jenis Insiden</div>
     <div class="nav-item" onclick="showMasterData('Kelompok Umur')"><span class="ni-ico"><i class="ph ph-baby"></i></span> Kelompok Umur</div>
     <div class="nav-item" onclick="showMasterData('Penanggung Pasien')"><span class="ni-ico"><i class="ph ph-credit-card"></i></span> Penanggung Pasien</div>
@@ -172,604 +211,991 @@
   </nav>
   <div class="sb-foot">
     <div class="sb-user">
-      <div class="sb-avatar">A</div>
-      <div style="flex:1;min-width:0"><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div>
-      <button onclick="showPage('landing')" title="Keluar" style="width:32px;height:32px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:16px;flex-shrink:0;transition:all .2s;color:var(--text);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
+      <div class="sb-avatar" style="background:${currentUser.color || '#1d4ed8'}22;color:${currentUser.color || '#1d4ed8'}">${initials(currentUser.nama) || 'G'}</div>
+      <div style="flex:1;min-width:0"><div class="sb-uname">${currentUser.nama}</div><div class="sb-urole">${currentUser.role}</div></div>
+      <button onclick="doLogout()" title="Keluar" style="width:32px;height:32px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:16px;flex-shrink:0;transition:all .2s;color:var(--text);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
     </div>
   </div>`;
 
-    function ffRow(n, l, f, top = false) { return `<div class="ff-row${top ? ' ff-row-top' : ''}"><div class="ff-num">${n}.</div><div class="ff-lbl">${l}</div><div class="ff-field">${f}</div></div>`; }
-    function ffIn(t = 'text') { return `<input type="${t}" class="ff-in">`; }
-    function ffSel(opts) { return `<select class="ff-in">${opts.map(o => `<option>${o}</option>`).join('')}</select>`; }
-    function ffTA(r = 3, p = '') { return `<textarea class="ff-in ff-ta" rows="${r}" placeholder="${p}"></textarea>`; }
-    function ffTTD(id) { return `<div class="ttd-box" id="${id}">Area Tanda Tangan</div><button type="button" class="ttd-reset" onclick="document.getElementById('${id}').textContent='Area Tanda Tangan'">↺ Reset</button>`; }
+function ffRow(n, l, f, top = false) { return `<div class="ff-row${top ? ' ff-row-top' : ''}"><div class="ff-num">${n}.</div><div class="ff-lbl">${l}</div><div class="ff-field">${f}</div></div>`; }
+function ffIn(t = 'text') { return `<input type="${t}" class="ff-in">`; }
+function ffSel(opts) { return `<select class="ff-in">${opts.map(o => `<option>${o}</option>`).join('')}</select>`; }
+function ffTA(r = 3, p = '') { return `<textarea class="ff-in ff-ta" rows="${r}" placeholder="${p}"></textarea>`; }
+function ffTTD(id) { return `<div class="ttd-box" id="${id}">Area Tanda Tangan</div><button type="button" class="ttd-reset" onclick="document.getElementById('${id}').textContent='Area Tanda Tangan'">↺ Reset</button>`; }
 
-    const FP_FIELDS = [[1, 'Nomor Rekam Medis *', ffIn()], [2, 'Nama Pasien', ffIn()], [3, 'Jenis Kelamin', ffSel(['', 'Laki-laki', 'Perempuan'])], [4, 'Umur', ffIn()], [5, 'Kelompok Umur', ffSel(['', '0 bulan - 1 bulan', '1 bulan - 1 tahun', '1 tahun - 5 tahun', '5 tahun - 15 tahun', '15 tahun - 30 tahun', '30 tahun - 65 tahun', '> 65 tahun'])], [6, 'Penanggung Pasien', ffSel(['', 'BPJS Kesehatan', 'Asuransi Swasta', 'Umum / Mandiri', 'Jamkesda', 'Lainnya'])], [7, 'Tanggal Masuk RS', ffIn('date')]];
-    const FK_FIELDS = [[1, 'Tanggal & Waktu Kejadian', ffIn('datetime-local')], [2, 'Insiden yang Terjadi', ffTA(2, 'Uraikan insiden secara singkat...'), 'top'], [3, 'Kronologis Kejadian', ffTA(4, 'Uraikan secara kronologis...'), 'top'], [4, 'Jenis Insiden *', ffSel(['', 'KNC — Kejadian Nyaris Cedera', 'KTD — Kejadian Tidak Diharapkan', 'KPCS — Kejadian Potensial Cedera Signifikan', 'KTC — Kejadian Tidak Cedera', 'KS — Kejadian Sentinel'])], [5, 'Pelapor Pertama', ffSel(['', 'Dokter', 'Perawat', 'Bidan', 'Apoteker', 'Analis', 'Radiografer', 'Pasien', 'Keluarga Pasien', 'Lainnya'])], [6, 'Menyangkut', ffSel(['', 'Pasien Rawat Inap', 'Pasien Rawat Jalan', 'Pasien UGD', 'Staf', 'Lainnya'])], [7, 'Tempat Kejadian', ffIn()], [8, 'Spesialisasi / Disiplin', ffSel(['', 'Penyakit Dalam', 'Anak', 'Bedah', 'Obstetri Ginekologi', 'THT', 'Mata', 'Saraf', 'Ortopedi', 'Lainnya'])], [9, 'Unit / Instalasi Terkait', ffSel(['', 'IGD', 'Rawat Inap', 'ICU', 'Poli Umum', 'Farmasi', 'Laboratorium', 'Radiologi', 'Kamar Operasi', 'Lainnya'])], [10, 'Akibat Insiden *', ffSel(['', 'Tidak ada cedera', 'Cedera ringan', 'Cedera sedang', 'Cedera berat', 'Kematian'])], [11, 'Tindakan Segera yang Dilakukan', ffTA(3, 'Uraikan tindakan yang dilakukan...'), 'top'], [12, 'Tindakan Dilakukan Oleh *', ffSel(['', 'Dokter', 'Perawat', 'Bidan', 'Tim / Dokter + Perawat', 'Lainnya'])], [13, 'Apakah Pernah Terjadi di Unit Lain?', ffSel(['Tidak', 'Ya'])]];
-    function mkPelapor(id) { return [ffRow(1, 'Tanggal Lapor *', `<input type="datetime-local" class="ff-in" id="${id}-tgl">`), ffRow(2, 'Pembuat Laporan *', ffTA(3, 'Nama lengkap dan jabatan...'), 'top'), ffRow(3, 'Paraf / Tanda Tangan *', ffTTD(id), 'top')].join(''); }
+const FP_FIELDS = [[1, 'Nomor Rekam Medis *', ffIn()], [2, 'Nama Pasien', ffIn()], [3, 'Jenis Kelamin', ffSel(['', 'Laki-laki', 'Perempuan'])], [4, 'Umur', ffIn()], [5, 'Kelompok Umur', ffSel(['', '0 bulan - 1 bulan', '1 bulan - 1 tahun', '1 tahun - 5 tahun', '5 tahun - 15 tahun', '15 tahun - 30 tahun', '30 tahun - 65 tahun', '> 65 tahun'])], [6, 'Penanggung Pasien', ffSel(['', 'BPJS Kesehatan', 'Asuransi Swasta', 'Umum / Mandiri', 'Jamkesda', 'Lainnya'])], [7, 'Tanggal Masuk RS', ffIn('date')]];
+const FK_FIELDS = [[1, 'Tanggal & Waktu Kejadian', ffIn('datetime-local')], [2, 'Insiden yang Terjadi', ffTA(2, 'Uraikan insiden secara singkat...'), 'top'], [3, 'Kronologis Kejadian', ffTA(4, 'Uraikan secara kronologis...'), 'top'], [4, 'Jenis Insiden *', ffSel(['', 'KNC — Kejadian Nyaris Cedera', 'KTD — Kejadian Tidak Diharapkan', 'KPCS — Kejadian Potensial Cedera Signifikan', 'KTC — Kejadian Tidak Cedera', 'KS — Kejadian Sentinel'])], [5, 'Pelapor Pertama', ffSel(['', 'Dokter', 'Perawat', 'Bidan', 'Apoteker', 'Analis', 'Radiografer', 'Pasien', 'Keluarga Pasien', 'Lainnya'])], [6, 'Menyangkut', ffSel(['', 'Pasien Rawat Inap', 'Pasien Rawat Jalan', 'Pasien UGD', 'Staf', 'Lainnya'])], [7, 'Tempat Kejadian', ffIn()], [8, 'Spesialisasi / Disiplin', ffSel(['', 'Penyakit Dalam', 'Anak', 'Bedah', 'Obstetri Ginekologi', 'THT', 'Mata', 'Saraf', 'Ortopedi', 'Lainnya'])], [9, 'Unit / Instalasi Terkait', ffSel(['', 'IGD', 'Rawat Inap', 'ICU', 'Poli Umum', 'Farmasi', 'Laboratorium', 'Radiologi', 'Kamar Operasi', 'Lainnya'])], [10, 'Akibat Insiden *', ffSel(['', 'Tidak ada cedera', 'Cedera ringan', 'Cedera sedang', 'Cedera berat', 'Kematian'])], [11, 'Tindakan Segera yang Dilakukan', ffTA(3, 'Uraikan tindakan yang dilakukan...'), 'top'], [12, 'Tindakan Dilakukan Oleh *', ffSel(['', 'Dokter', 'Perawat', 'Bidan', 'Tim / Dokter + Perawat', 'Lainnya'])], [13, 'Apakah Pernah Terjadi di Unit Lain?', ffSel(['Tidak', 'Ya'])]];
+function mkPelapor(id) { return [ffRow(1, 'Tanggal Lapor *', `<input type="datetime-local" class="ff-in" id="${id}-tgl">`), ffRow(2, 'Pembuat Laporan *', ffTA(3, 'Nama lengkap dan jabatan...'), 'top'), ffRow(3, 'Paraf / Tanda Tangan *', ffTTD(id), 'top')].join(''); }
 
-    function renderSidebars() {
-      ['sb-dashboard', 'sb-tabelPelaporan', 'sb-tabelInvestigasi', 'sb-pengguna', 'sb-masterDataDynamic'].forEach(id => {
-        const active = id.replace('sb-', '');
-        document.getElementById(id).innerHTML = mkSidebar(active);
-      });
-    }
-    function renderStats() {
-      const cards = [{ i: '<i class="ph ph-file-text"></i>', c: 'si-blue', v: 30, l: 'Total Insiden' }, { i: '<i class="ph ph-check-circle"></i>', c: 'si-green', v: 20, l: 'Terverifikasi' }, { i: '<i class="ph ph-hourglass"></i>', c: 'si-yellow', v: 7, l: 'Menunggu Review' }, { i: '<i class="ph ph-warning-circle"></i>', c: 'si-red', v: 3, l: 'Risiko Tinggi' }, { i: '<i class="ph ph-microscope"></i>', c: 'si-purple', v: 20, l: 'Sudah Investigasi' }];
-      document.getElementById('stat-grid').innerHTML = cards.map(x => `<div class="stat-card"><div class="stat-icon ${x.c}">${x.i}</div><div><div class="stat-val">${x.v}</div><div class="stat-lbl">${x.l}</div></div></div>`).join('');
-      document.getElementById('stat-grid').style.gridTemplateColumns = 'repeat(5,1fr)';
-    }
-    function renderDashRows() {
-      document.getElementById('dash-rows').innerHTML = INSIDEN.slice(0, 4).map(d => `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td><b>${d.unit}</b></td><td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td></tr>`).join('');
-    }
-    function renderLaporan() {
-      const tbody = document.getElementById('laporan-rows');
-      tbody.innerHTML = INSIDEN.map((d, i) => {
-        const col = AVCOL[i % AVCOL.length];
-        const rep = `<div class="rep-cell"><div class="rep-av" style="background:${col}22;color:${col}">${initials(d.pelapor)}</div>${d.pelapor}</div>`;
-        return `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td>
-    <td style="white-space:nowrap"><button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 11px;margin-right:4px">Detail</button><button class="btn btn-ghost" onclick="openPrint()" style="font-size:14px;padding:4px 8px"><i class="ph ph-printer"></i></button></td></tr>`;
-      }).join('');
-      tbody.querySelectorAll('.detail-btn').forEach(b => b.addEventListener('click', () => openDetail(INSIDEN[+b.dataset.idx], +b.dataset.idx)));
-      const cards = document.getElementById('laporan-cards');
-      cards.innerHTML = INSIDEN.map((d, i) => `<div class="inc-card" data-idx="${i}"><div class="ic-top"><div class="ic-num">#${d.no}</div>${katBadge(d.kat)}${stsBadge(d.status)}</div><div style="margin-bottom:5px"><div class="ic-unit"><i class="ph ph-hospital"></i> ${d.unit}</div><div class="ic-meta">${d.pelapor} · ${d.tgl}</div></div><div style="display:flex;align-items:center">${riskHtml(d.risiko)}<span style="flex:1"></span><span style="font-size:16px;color:var(--muted)"><i class="ph ph-caret-right"></i></span></div></div>`).join('');
-      cards.querySelectorAll('.inc-card').forEach(c => c.addEventListener('click', () => openDetail(INSIDEN[+c.dataset.idx], +c.dataset.idx)));
-    }
-    function renderInvestigasi() {
-      document.getElementById('inv-rows').innerHTML = INVESTIGASI.map((d, i) => `<tr>
+function renderSidebars() {
+  ['sb-dashboard', 'sb-tabelPelaporan', 'sb-tabelInvestigasi', 'sb-pengguna', 'sb-masterDataDynamic'].forEach(id => {
+    const active = id.replace('sb-', '');
+    document.getElementById(id).innerHTML = mkSidebar(active);
+  });
+}
+function renderStats() {
+  const cards = [{ i: '<i class="ph ph-file-text"></i>', c: 'si-blue', v: 30, l: 'Total Insiden' }, { i: '<i class="ph ph-check-circle"></i>', c: 'si-green', v: 20, l: 'Terverifikasi' }, { i: '<i class="ph ph-hourglass"></i>', c: 'si-yellow', v: 7, l: 'Menunggu Review' }, { i: '<i class="ph ph-warning-circle"></i>', c: 'si-red', v: 3, l: 'Risiko Tinggi' }, { i: '<i class="ph ph-microscope"></i>', c: 'si-purple', v: 20, l: 'Sudah Investigasi' }];
+  document.getElementById('stat-grid').innerHTML = cards.map(x => `<div class="stat-card"><div class="stat-icon ${x.c}">${x.i}</div><div><div class="stat-val">${x.v}</div><div class="stat-lbl">${x.l}</div></div></div>`).join('');
+  document.getElementById('stat-grid').style.gridTemplateColumns = 'repeat(5,1fr)';
+}
+function renderDashRows() {
+  document.getElementById('dash-rows').innerHTML = INSIDEN.slice(0, 4).map(d => `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td><b>${d.unit}</b></td><td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td></tr>`).join('');
+}
+function renderLaporan() {
+  const tbody = document.getElementById('laporan-rows');
+  tbody.innerHTML = INSIDEN.map((d, i) => {
+    const col = AVCOL[i % AVCOL.length];
+    const rep = `<div class="rep-cell"><div class="rep-av" style="background:${col}22;color:${col}">${initials(d.pelapor)}</div>${d.pelapor}</div>`;
+    const isSent = d.terkirim === true;
+    const kirimBtn = isAdmin() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim' : 'Kirim Laporan'}" style="font-size:12px;padding:5px 9px">
+      <i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i>
+    </button>` : '';
+    const hapusBtn = isAdmin() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px">
+      <i class="ph ph-trash"></i>
+    </button>` : '';
+    return `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td>
+    <td style="white-space:nowrap">
+      <div style="display:flex;align-items:center;gap:4px">
+        <button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button>
+        <button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>
+        ${kirimBtn}
+        ${hapusBtn}
+      </div>
+    </td></tr>`;
+  }).join('');
+  tbody.querySelectorAll('.detail-btn').forEach(b => b.addEventListener('click', () => openDetail(INSIDEN[+b.dataset.idx], +b.dataset.idx)));
+  tbody.querySelectorAll('.lap-btn-kirim').forEach(b => b.addEventListener('click', () => kirimLaporan(+b.dataset.idx)));
+  tbody.querySelectorAll('.lap-btn-hapus').forEach(b => b.addEventListener('click', () => hapusLaporan(+b.dataset.idx)));
+  const cards = document.getElementById('laporan-cards');
+  cards.innerHTML = INSIDEN.map((d, i) => `<div class="inc-card" data-idx="${i}"><div class="ic-top"><div class="ic-num">#${d.no}</div>${katBadge(d.kat)}${stsBadge(d.status)}</div><div style="margin-bottom:5px"><div class="ic-unit"><i class="ph ph-hospital"></i> ${d.unit}</div><div class="ic-meta">${d.pelapor} · ${d.tgl}</div></div><div style="display:flex;align-items:center">${riskHtml(d.risiko)}<span style="flex:1"></span><span style="font-size:16px;color:var(--muted)"><i class="ph ph-caret-right"></i></span></div></div>`).join('');
+  cards.querySelectorAll('.inc-card').forEach(c => c.addEventListener('click', () => openDetail(INSIDEN[+c.dataset.idx], +c.dataset.idx)));
+}
+
+/**
+ * Render tabel laporan dengan filter aktif.
+ * Dipanggil saat search/filter berubah atau dari klik chart.
+ */
+function renderFilteredLaporan() {
+  const q = (document.getElementById('lap-search')?.value || '').toLowerCase();
+  const kat = document.getElementById('lap-flt-kat')?.value || '';
+  const sts = document.getElementById('lap-flt-sts')?.value || '';
+  const risk = document.getElementById('lap-flt-risk')?.value || '';
+
+  const filtered = INSIDEN.filter(d => {
+    const matchQ = !q || d.no.toString().includes(q) || d.unit.toLowerCase().includes(q)
+      || d.pelapor.toLowerCase().includes(q) || d.kat.toLowerCase().includes(q);
+    const matchKat = !kat || d.kat.toLowerCase().includes(kat.toLowerCase());
+    const matchSts = !sts || d.status.toLowerCase().includes(sts.toLowerCase());
+    const matchRisk = !risk || d.risiko.toLowerCase().includes(risk.toLowerCase());
+    return matchQ && matchKat && matchSts && matchRisk;
+  });
+
+  // Tampilkan/sembunyikan tombol Reset Filter
+  const hasFilter = q || kat || sts || risk;
+  const resetBtn = document.getElementById('lap-reset-btn');
+  if (resetBtn) resetBtn.style.display = hasFilter ? 'inline-flex' : 'none';
+
+  // Render ke tbody
+  const tbody = document.getElementById('laporan-rows');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
+      <div class="es-icon" style="font-size:32px"><i class="ph ph-magnifying-glass"></i></div>
+      <p>Tidak ada laporan yang cocok dengan filter.</p></div></td></tr>`;
+  } else {
+    tbody.innerHTML = filtered.map((d) => {
+      const i = INSIDEN.indexOf(d); // index asli agar tombol aksi tetap benar
+      const col = AVCOL[i % AVCOL.length];
+      const rep = `<div class="rep-cell"><div class="rep-av" style="background:${col}22;color:${col}">${initials(d.pelapor)}</div>${d.pelapor}</div>`;
+      const isSent = d.terkirim === true;
+      const kirimBtn = isAdmin() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim' : 'Kirim Laporan'}" style="font-size:12px;padding:5px 9px">
+        <i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i>
+      </button>` : '';
+      const hapusBtn = isAdmin() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px">
+        <i class="ph ph-trash"></i>
+      </button>` : '';
+      return `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td>
+        <td style="font-size:12px;color:var(--muted)">${d.tgl}</td>
+        <td><b>${d.unit}</b></td><td>${rep}</td>
+        <td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td>
+        <td style="white-space:nowrap">
+          <div style="display:flex;align-items:center;gap:4px">
+            <button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button>
+            <button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>
+            ${kirimBtn}${hapusBtn}
+          </div>
+        </td></tr>`;
+    }).join('');
+    tbody.querySelectorAll('.detail-btn').forEach(b => b.addEventListener('click', () => openDetail(INSIDEN[+b.dataset.idx], +b.dataset.idx)));
+    tbody.querySelectorAll('.lap-btn-kirim').forEach(b => b.addEventListener('click', () => kirimLaporan(+b.dataset.idx)));
+    tbody.querySelectorAll('.lap-btn-hapus').forEach(b => b.addEventListener('click', () => hapusLaporan(+b.dataset.idx)));
+  }
+
+  // Update info jumlah
+  const pgn = document.getElementById('lap-pgn-info');
+  if (pgn) pgn.textContent = hasFilter
+    ? `Menampilkan ${filtered.length} dari ${INSIDEN.length} laporan`
+    : `${INSIDEN.length} laporan`;
+}
+
+/** Reset semua filter Tabel Pelaporan */
+function resetLaporanFilter() {
+  const s = document.getElementById('lap-search');
+  if (s) s.value = '';
+  ['lap-flt-kat', 'lap-flt-sts', 'lap-flt-risk'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  renderFilteredLaporan();
+}
+
+function kirimLaporan(idx) {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  const d = INSIDEN[idx];
+  if (!d) return;
+  if (d.terkirim) { showToast('ℹ️ Laporan #' + d.no + ' sudah pernah dikirim.'); return; }
+  if (!confirm('Kirim laporan #' + d.no + ' ke unit terkait?')) return;
+  INSIDEN[idx].terkirim = true;
+  showToast('✉️ Laporan #' + d.no + ' berhasil dikirim!');
+  renderLaporan();
+}
+
+function hapusLaporan(idx) {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  const d = INSIDEN[idx];
+  if (!d) return;
+  if (!confirm('Hapus laporan #' + d.no + '? Tindakan ini tidak dapat dibatalkan.')) return;
+  INSIDEN.splice(idx, 1);
+  showToast('🗑️ Laporan #' + d.no + ' berhasil dihapus.');
+  renderLaporan();
+  renderDashRows();
+}
+function renderInvestigasi() {
+  const btnTxt = isAdmin() ? 'Investigasi' : 'Lihat Detail';
+  const btnIcon = isAdmin() ? 'ph-microscope' : 'ph-eye';
+  document.getElementById('inv-rows').innerHTML = INVESTIGASI.map((d, i) => `<tr>
     <td style="color:var(--muted);font-size:12px;font-weight:700">${d.no}</td>
     <td style="font-size:12px;color:var(--muted)">${d.tgl}</td>
     <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.insiden}</td>
     <td><b>${d.unit}</b></td><td>${d.investigator}</td>
     <td>${gradeBadge(d.grade)}</td>
     <td>${d.status === 'Selesai' ? '<span class="badge badge-s">✓ Selesai</span>' : d.status === 'Proses' ? '<span class="badge badge-w">⏳ Proses</span>' : '<span class="badge badge-d">— Belum</span>'}</td>
-    <td><button class="btn btn-navy" style="font-size:11px;padding:5px 10px;display:inline-flex;align-items:center;gap:4px" onclick="openInvModal(${i})"><i class="ph ph-microscope"></i> Investigasi</button></td>
+    <td><button class="btn btn-navy" style="font-size:11px;padding:5px 10px;display:inline-flex;align-items:center;gap:4px" onclick="openInvModal(${i})"><i class="ph ${btnIcon}"></i> ${btnTxt}</button></td>
   </tr>`).join('');
-    }
+}
 
-    /* ════════════════════════════
-       INVESTIGASI MODAL
-       ════════════════════════════ */
-    function buildInvForm(inv) {
-      const row = (n, l, f, top = false) => `<div class="ff-row${top ? ' ff-row-top' : ''}"><div class="ff-num">${n}.</div><div class="ff-lbl">${l}</div><div class="ff-field">${f}</div></div>`;
-      const inp = (v = '', t = 'text') => `<input type="${t}" class="ff-in" value="${v}">`;
-      const sel = (opts, cur = '') => `<select class="ff-in">${opts.map(o => `<option${o === cur ? ' selected' : ''}>${o}</option>`).join('')}</select>`;
-      const ta = (r = 3, p = '', v = '') => `<textarea class="ff-in ff-ta" rows="${r}" placeholder="${p}">${v}</textarea>`;
-      document.getElementById('inv-f-identitas').innerHTML = [row(1, 'No. Laporan Insiden', inp(inv.no)), row(2, 'Tanggal Insiden', inp(inv.tgl, 'text')), row(3, 'Unit / Instalasi', sel(['', 'IGD', 'Rawat Inap', 'ICU', 'Poli Umum', 'Farmasi', 'Laboratorium', 'Radiologi', 'Kamar Operasi'], inv.unit)), row(4, 'Jenis Insiden', sel(['', 'KNC', 'KTD', 'KPCS', 'KTC', 'KS'], inv.grade === 'Ekstrem' ? 'KPCS' : '')), row(5, 'Uraian Insiden', ta(3, 'Uraikan insiden...', inv.insiden), 'top')].join('');
-      document.getElementById('inv-f-penyebab').innerHTML = [row(1, 'Penyebab Langsung Insiden', ta(3, 'Identifikasi penyebab langsung...'), 'top'), row(2, 'Penyebab yang Melatarbelakangi', ta(3, 'Identifikasi root cause...'), 'top')].join('');
-      document.getElementById('inv-f-faktor').innerHTML = [row(1, 'Faktor Pasien', ta(2), 'top'), row(2, 'Faktor Petugas', ta(2), 'top'), row(3, 'Faktor Lingkungan', ta(2), 'top'), row(4, 'Faktor Organisasi', ta(2), 'top')].join('');
-      document.getElementById('inv-f-rekomendasi').innerHTML = [row(1, 'Rekomendasi Tindak Lanjut', ta(3, 'Tuliskan rekomendasi...'), 'top'), row(2, 'Penanggung Jawab', inp()), row(3, 'Target Waktu', inp('', 'date'))].join('');
-      document.getElementById('inv-f-grading').innerHTML = [row(1, 'Dampak Klinis', sel(['', '1 — Tidak Ada Cedera', '2 — Cedera Ringan', '3 — Cedera Sedang', '4 — Cedera Berat', '5 — Kematian'])), row(2, 'Probabilitas', sel(['', '1 — Sangat Jarang', '2 — Jarang', '3 — Mungkin', '4 — Sering', '5 — Sangat Sering'])), row(3, 'Grade Risiko', sel(['', 'Rendah', 'Sedang', 'Tinggi', 'Ekstrem'], inv.grade)), row(4, 'Tindakan Berdasarkan Grade', ta(2), 'top')].join('');
-      const now = new Date(), p = n => String(n).padStart(2, '0');
-      const dt = `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
-      document.getElementById('inv-f-investigator').innerHTML = [row(1, 'Tanggal Investigasi', `<input type="datetime-local" class="ff-in" value="${dt}">`), row(2, 'Nama Investigator', inp(inv.investigator)), row(3, 'Jabatan / Profesi', inp()), row(4, 'Tanda Tangan', `<div class="ttd-box">Area Tanda Tangan</div><button type="button" class="ttd-reset" onclick="this.previousElementSibling.textContent='Area Tanda Tangan'">↺ Reset</button>`, 'top'), row(5, 'Mengetahui (Ka. Bidang)', inp())].join('');
-    }
-    let currentInvIdx = null;
-    function openInvModal(idx) {
-      const inv = INVESTIGASI[idx]; currentInvIdx = idx;
-      document.getElementById('inv-modal-title').innerHTML = '<i class="ph ph-microscope" style="margin-right:6px"></i> Investigasi Sederhana — ' + inv.no;
-      document.getElementById('inv-modal-meta').textContent = inv.tgl + ' · ' + inv.unit + ' · Investigator: ' + inv.investigator;
-      document.getElementById('inv-modal-status').innerHTML = `${gradeBadge(inv.grade)}<span style="margin-left:4px">${inv.status === 'Selesai' ? '<span class="badge badge-s">✓ Selesai</span>' : inv.status === 'Proses' ? '<span class="badge badge-w">⏳ Proses</span>' : '<span class="badge badge-d">— Belum Dimulai</span>'}</span><span style="margin-left:auto;font-size:12px;color:var(--muted)">Insiden: <b>${inv.insiden}</b></span>`;
-      buildInvForm(inv);
-      document.getElementById('inv-modal').classList.add('open');
-    }
-    function closeInvModal() { document.getElementById('inv-modal').classList.remove('open'); currentInvIdx = null; }
-    function resetInvForm() { if (currentInvIdx === null) return; buildInvForm(INVESTIGASI[currentInvIdx]); }
-    function simpanInvestigasi() { if (currentInvIdx === null) return; INVESTIGASI[currentInvIdx].status = 'Selesai'; renderInvestigasi(); closeInvModal(); showToast('Investigasi berhasil disimpan!'); }
+/* ════════════════════════════
+   INVESTIGASI MODAL
+   ════════════════════════════ */
+function buildInvForm(inv) {
+  const row = (n, l, f, top = false) => `<div class="ff-row${top ? ' ff-row-top' : ''}"><div class="ff-num">${n}.</div><div class="ff-lbl">${l}</div><div class="ff-field">${f}</div></div>`;
+  const inp = (v = '', t = 'text') => `<input type="${t}" class="ff-in" value="${v}">`;
+  const sel = (opts, cur = '') => `<select class="ff-in">${opts.map(o => `<option${o === cur ? ' selected' : ''}>${o}</option>`).join('')}</select>`;
+  const ta = (r = 3, p = '', v = '') => `<textarea class="ff-in ff-ta" rows="${r}" placeholder="${p}">${v}</textarea>`;
+  document.getElementById('inv-f-identitas').innerHTML = [row(1, 'No. Laporan Insiden', inp(inv.no)), row(2, 'Tanggal Insiden', inp(inv.tgl, 'text')), row(3, 'Unit / Instalasi', sel(['', 'IGD', 'Rawat Inap', 'ICU', 'Poli Umum', 'Farmasi', 'Laboratorium', 'Radiologi', 'Kamar Operasi'], inv.unit)), row(4, 'Jenis Insiden', sel(['', 'KNC', 'KTD', 'KPCS', 'KTC', 'KS'], inv.grade === 'Ekstrem' ? 'KPCS' : '')), row(5, 'Uraian Insiden', ta(3, 'Uraikan insiden...', inv.insiden), 'top')].join('');
+  document.getElementById('inv-f-penyebab').innerHTML = [row(1, 'Penyebab Langsung Insiden', ta(3, 'Identifikasi penyebab langsung...'), 'top'), row(2, 'Penyebab yang Melatarbelakangi', ta(3, 'Identifikasi root cause...'), 'top')].join('');
+  document.getElementById('inv-f-faktor').innerHTML = [row(1, 'Faktor Pasien', ta(2), 'top'), row(2, 'Faktor Petugas', ta(2), 'top'), row(3, 'Faktor Lingkungan', ta(2), 'top'), row(4, 'Faktor Organisasi', ta(2), 'top')].join('');
+  document.getElementById('inv-f-rekomendasi').innerHTML = [row(1, 'Rekomendasi Tindak Lanjut', ta(3, 'Tuliskan rekomendasi...'), 'top'), row(2, 'Penanggung Jawab', inp()), row(3, 'Target Waktu', inp('', 'date'))].join('');
+  document.getElementById('inv-f-grading').innerHTML = [row(1, 'Dampak Klinis', sel(['', '1 — Tidak Ada Cedera', '2 — Cedera Ringan', '3 — Cedera Sedang', '4 — Cedera Berat', '5 — Kematian'])), row(2, 'Probabilitas', sel(['', '1 — Sangat Jarang', '2 — Jarang', '3 — Mungkin', '4 — Sering', '5 — Sangat Sering'])), row(3, 'Grade Risiko', sel(['', 'Rendah', 'Sedang', 'Tinggi', 'Ekstrem'], inv.grade)), row(4, 'Tindakan Berdasarkan Grade', ta(2), 'top')].join('');
+  const now = new Date(), p = n => String(n).padStart(2, '0');
+  const dt = `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
+  document.getElementById('inv-f-investigator').innerHTML = [row(1, 'Tanggal Investigasi', `<input type="datetime-local" class="ff-in" value="${dt}">`), row(2, 'Nama Investigator', inp(inv.investigator)), row(3, 'Jabatan / Profesi', inp()), row(4, 'Tanda Tangan', `<div class="ttd-box">Area Tanda Tangan</div><button type="button" class="ttd-reset" onclick="this.previousElementSibling.textContent='Area Tanda Tangan'">↺ Reset</button>`, 'top'), row(5, 'Mengetahui (Ka. Bidang)', inp())].join('');
+}
+let currentInvIdx = null;
+function openInvModal(idx) {
+  const inv = INVESTIGASI[idx]; currentInvIdx = idx;
+  document.getElementById('inv-modal-title').innerHTML = (isAdmin() ? '<i class="ph ph-microscope"></i> Investigasi Sederhana' : '<i class="ph ph-eye"></i> Detail Investigasi') + ' — ' + inv.no;
+  document.getElementById('inv-modal-meta').textContent = inv.tgl + ' · ' + inv.unit + ' · Investigator: ' + inv.investigator;
+  document.getElementById('inv-modal-status').innerHTML = `${gradeBadge(inv.grade)}<span style="margin-left:4px">${inv.status === 'Selesai' ? '<span class="badge badge-s">✓ Selesai</span>' : inv.status === 'Proses' ? '<span class="badge badge-w">⏳ Proses</span>' : '<span class="badge badge-d">— Belum Dimulai</span>'}</span><span style="margin-left:auto;font-size:12px;color:var(--muted)">Insiden: <b>${inv.insiden}</b></span>`;
+  buildInvForm(inv);
 
-    function renderForms() {
-      document.getElementById('ff-pasien').innerHTML = FP_FIELDS.map(f => ffRow(f[0], f[1], f[2], f[3] === 'top')).join('');
-      document.getElementById('ff-kejadian-a').innerHTML = FK_FIELDS.map(f => ffRow(f[0], f[1], f[2], f[3] === 'top')).join('');
-      document.getElementById('ff-kejadian-b').innerHTML = FK_FIELDS.map(f => ffRow(f[0], f[1], f[2], f[3] === 'top')).join('');
-      document.getElementById('ff-pelapor-a').innerHTML = mkPelapor('ttd-a');
-      document.getElementById('ff-pelapor-b').innerHTML = mkPelapor('ttd-b');
-    }
+  // RBAC: Sembunyikan tombol simpan untuk non-admin
+  const foot = document.querySelector('#inv-modal .modal-foot');
+  if (foot) {
+    const saveGroup = foot.querySelector('div[style*="display:flex"]');
+    if (saveGroup) saveGroup.style.display = isAdmin() ? 'flex' : 'none';
+  }
 
-    function updateUserCounts() {
-      const c = { semua: USERS.length, 'Super Admin': 0, Admin: 0, 'Kepala Ruangan': 0, Pelapor: 0 };
-      USERS.forEach(u => { if (c[u.role] !== undefined) c[u.role]++; });
-      document.getElementById('cnt-semua').textContent = c.semua;
-      document.getElementById('cnt-superadmin').textContent = c['Super Admin'];
-      document.getElementById('cnt-admin').textContent = c.Admin;
-      document.getElementById('cnt-karu').textContent = c['Kepala Ruangan'];
-      document.getElementById('cnt-pelapor').textContent = c.Pelapor;
-    }
-    function renderUserStats() {
-      const t = USERS.length, a = USERS.filter(u => u.status === 'Aktif').length;
-      const ad = USERS.filter(u => u.role === 'Admin' || u.role === 'Super Admin').length;
-      const k = USERS.filter(u => u.role === 'Kepala Ruangan').length;
-      document.getElementById('user-stats-row').innerHTML = [{ i: '<i class="ph ph-users"></i>', bg: 'rgba(59,130,246,.15)', v: t, l: 'Total Pengguna' }, { i: '<i class="ph ph-check-circle"></i>', bg: 'rgba(16,185,129,.15)', v: a, l: 'Akun Aktif' }, { i: '<i class="ph ph-shield"></i>', bg: 'rgba(239,68,68,.15)', v: ad, l: 'Admin / Super Admin' }, { i: '<i class="ph ph-hospital"></i>', bg: 'rgba(245,158,11,.15)', v: k, l: 'Kepala Ruangan' }].map(s => `<div class="us-card"><div class="us-icon" style="background:${s.bg}">${s.i}</div><div><div class="us-val">${s.v}</div><div class="us-lbl">${s.l}</div></div></div>`).join('');
-    }
-    function filterRole(role) {
-      activeRoleFilter = role;
-      document.querySelectorAll('.role-tab').forEach(t => t.classList.toggle('active', t.dataset.role === role));
-      const lbl = { semua: 'Semua Pengguna', 'Super Admin': 'Super Admin', Admin: 'Administrator', 'Kepala Ruangan': 'Kepala Ruangan', Pelapor: 'Pelapor / Staf' };
-      document.getElementById('user-table-title').textContent = lbl[role] || role;
-      renderUserTable();
-    }
-    function getFilteredUsers() {
-      const q = (document.getElementById('user-search')?.value || '').toLowerCase();
-      const unit = document.getElementById('user-unit-filter')?.value || '';
-      const sts = document.getElementById('user-status-filter')?.value || '';
-      return USERS.filter(u => {
-        const rm = activeRoleFilter === 'semua' || u.role === activeRoleFilter;
-        const qm = !q || u.nama.toLowerCase().includes(q) || u.username.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
-        return rm && qm && (!unit || u.unit === unit) && (!sts || u.status === sts);
-      });
-    }
-    function renderUserTable() {
-      const filtered = getFilteredUsers();
-      const tbody = document.getElementById('user-tbody');
-      if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="es-icon" style="font-size:32px"><i class="ph ph-user"></i></div><p>Tidak ada pengguna yang sesuai filter.</p></div></td></tr>`; }
-      else { tbody.innerHTML = filtered.map(u => `<tr><td><div class="user-avatar-cell"><div class="ua-circle" style="background:${u.color}22;color:${u.color}">${initials(u.nama)}</div><div><div class="ua-name">${u.nama}${u.isMe ? '<span class="ua-you">Anda</span>' : ''}</div><div class="ua-email">@${u.username} · ${u.email}</div></div></div></td><td>${roleBadge(u.role)}</td><td><span class="unit-badge">${u.unit}</span></td><td><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></td><td style="font-size:11px;color:var(--muted)">${u.lastLogin.replace(' ', '<br>')}</td><td><div class="act-btns"><button class="act-btn" title="Edit" onclick="openEditUserModal(${u.id})"><i class="ph ph-pencil-simple"></i></button><button class="act-btn" title="Toggle Status" onclick="toggleUserStatus(${u.id})">${u.status === 'Aktif' ? '<i class="ph ph-lock-key"></i>' : '<i class="ph ph-lock-key-open"></i>'}</button>${!u.isMe ? `<button class="act-btn danger" title="Hapus" onclick="deleteUser(${u.id})"><i class="ph ph-trash"></i></button>` : '<div style="width:28px"></div>'}</div></td></tr>`).join(''); }
-      document.getElementById('user-pgn-info').textContent = `Menampilkan ${filtered.length} dari ${USERS.length} pengguna`;
-    }
-    function openUserModal() { editingUserId = null; document.getElementById('um-title').textContent = '👤 Tambah Pengguna Baru'; document.getElementById('um-meta').textContent = 'Isi data lengkap pengguna';['uf-nama', 'uf-username', 'uf-email', 'uf-password'].forEach(id => document.getElementById(id).value = ''); document.getElementById('uf-role').value = ''; document.getElementById('uf-unit').value = ''; document.getElementById('uf-status').value = 'Aktif'; document.getElementById('uf-unit-note').style.display = 'none'; document.getElementById('user-modal').classList.add('open'); }
-    function openEditUserModal(id) { const u = USERS.find(x => x.id === id); if (!u) return; editingUserId = id; document.getElementById('um-title').textContent = '✏️ Edit Pengguna'; document.getElementById('um-meta').textContent = `Mengubah data @${u.username}`; document.getElementById('uf-nama').value = u.nama; document.getElementById('uf-username').value = u.username; document.getElementById('uf-email').value = u.email; document.getElementById('uf-role').value = u.role; document.getElementById('uf-unit').value = u.unit; document.getElementById('uf-password').value = ''; document.getElementById('uf-status').value = u.status; handleRoleChange(); document.getElementById('user-modal').classList.add('open'); }
-    function handleRoleChange() { const r = document.getElementById('uf-role').value; const n = document.getElementById('uf-unit-note'); if (r === 'Super Admin' || r === 'Admin') { document.getElementById('uf-unit').value = 'Semua Unit'; n.style.display = 'block'; } else n.style.display = 'none'; }
-    function closeUserModal() { document.getElementById('user-modal').classList.remove('open'); editingUserId = null; }
-    function saveUser() {
-      const nama = document.getElementById('uf-nama').value.trim(), username = document.getElementById('uf-username').value.trim();
-      const email = document.getElementById('uf-email').value.trim(), role = document.getElementById('uf-role').value;
-      const unit = document.getElementById('uf-unit').value, status = document.getElementById('uf-status').value;
-      if (!nama || !username || !role || !unit) { showToast('⚠️ Nama, username, role, dan unit wajib diisi!'); return; }
-      const clr = { 'Super Admin': '#dc2626', Admin: '#1d4ed8', 'Kepala Ruangan': '#15803d', Pelapor: '#57534e' };
-      const now = new Date(), p = n => String(n).padStart(2, '0');
-      const ll = `${p(now.getDate())}/${p(now.getMonth() + 1)}/${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}`;
-      if (editingUserId) { const i = USERS.findIndex(u => u.id === editingUserId); if (i > -1) USERS[i] = { ...USERS[i], nama, username, email, role, unit, status, color: clr[role] || '#64748b' }; showToast(`✅ Data ${nama} berhasil diperbarui.`); }
-      else { USERS.push({ id: Math.max(...USERS.map(u => u.id)) + 1, nama, username, email, role, unit, status, lastLogin: ll, isMe: false, color: clr[role] || '#64748b' }); showToast(`✅ Pengguna ${nama} berhasil ditambahkan.`); }
-      closeUserModal(); renderUserStats(); updateUserCounts(); renderUserTable();
-    }
-    function toggleUserStatus(id) { const u = USERS.find(x => x.id === id); if (!u) return; u.status = u.status === 'Aktif' ? 'Nonaktif' : 'Aktif'; showToast(`${u.status === 'Aktif' ? '✅' : '⛔'} ${u.nama} → ${u.status}`); renderUserTable(); renderUserStats(); updateUserCounts(); }
-    function deleteUser(id) { const u = USERS.find(x => x.id === id); if (!u || u.isMe) return; if (!confirm(`Hapus akun "${u.nama}"?`)) return; USERS = USERS.filter(x => x.id !== id); showToast(`🗑️ Akun ${u.nama} dihapus.`); renderUserStats(); updateUserCounts(); renderUserTable(); }
+  document.getElementById('inv-modal').classList.add('open');
+}
+function closeInvModal() { document.getElementById('inv-modal').classList.remove('open'); currentInvIdx = null; }
+function resetInvForm() { if (currentInvIdx === null) return; buildInvForm(INVESTIGASI[currentInvIdx]); }
+function simpanInvestigasi() {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  if (currentInvIdx === null) return; INVESTIGASI[currentInvIdx].status = 'Selesai'; renderInvestigasi(); closeInvModal(); showToast('Investigasi berhasil disimpan!'); }
 
-    const ADMIN_PAGES = ['dashboardAdmin', 'tabelPelaporan', 'tabelInvestigasi', 'pengguna', 'masterDataDynamic'];
-    const PAGE_TITLE = { dashboardAdmin: 'Dashboard', tabelPelaporan: 'Tabel Pelaporan', tabelInvestigasi: 'Tabel Investigasi', pengguna: 'Pengguna', masterDataDynamic: 'Master Data' };
+function renderForms() {
+  document.getElementById('ff-pasien').innerHTML = FP_FIELDS.map(f => ffRow(f[0], f[1], f[2], f[3] === 'top')).join('');
+  document.getElementById('ff-kejadian-a').innerHTML = FK_FIELDS.map(f => ffRow(f[0], f[1], f[2], f[3] === 'top')).join('');
+  document.getElementById('ff-kejadian-b').innerHTML = FK_FIELDS.map(f => ffRow(f[0], f[1], f[2], f[3] === 'top')).join('');
+  document.getElementById('ff-pelapor-a').innerHTML = mkPelapor('ttd-a');
+  document.getElementById('ff-pelapor-b').innerHTML = mkPelapor('ttd-b');
+}
 
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      /* tutup drawer jika terbuka */
-      toggleMobileDrawer(true);
-      const tb = document.getElementById('g-topbar');
-      if (ADMIN_PAGES.includes(id)) { tb.classList.add('visible'); document.getElementById('g-page-title').textContent = PAGE_TITLE[id] || ''; }
-      else { tb.classList.remove('visible'); }
-
-      // Update sidebar nav items highlight
-      const sidebarNavItems = document.querySelectorAll('.sidebar .nav-item');
-      sidebarNavItems.forEach(el => el.classList.remove('active'));
-
-      const mapping = {
-        'dashboardAdmin': 'Dashboard',
-        'pengguna': 'Pengguna',
-        'tabelPelaporan': 'Tabel Pelaporan',
-        'tabelInvestigasi': 'Tabel Investigasi Sederhana'
-      };
-
-      if (mapping[id]) {
-        sidebarNavItems.forEach(el => {
-          if (el.textContent.trim() === mapping[id] || (id === 'tabelPelaporan' && el.textContent.includes('Tabel Pelaporan'))) {
-            el.classList.add('active');
-          }
-        });
-      }
-
-      if (id === 'formPublic' || id === 'formNoPatient') {
-        const now = new Date(), p = n => String(n).padStart(2, '0');
-        const v = `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
-        ['ttd-a-tgl', 'ttd-b-tgl'].forEach(i => { const el = document.getElementById(i); if (el) el.value = v; });
-      }
-      window.scrollTo(0, 0);
-    }
-
-    function doLogin() {
-      const u = document.getElementById('login-user').value.trim();
-      if (!u) { showToast('⚠️ Masukkan username!'); return; }
-      showPage('dashboardAdmin'); showToast('✅ Login berhasil! Selamat datang, ' + u + '.');
-    }
-
-    function renderDetailBody(d) {
-      const row = (l, v) => `<div class="d-row"><div class="d-lbl">${l}</div><div class="d-val">${v || '<span style="color:var(--border2)">—</span>'}</div></div>`;
-      const sec = (t) => `<div style="background:var(--bg2);padding:6px 18px;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">${t}</div>`;
-      const f = d.formData || {}, p = f.pasien || {}, k = f.kejadian || {}, pel = f.pelapor || {};
-      let out = `<div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--bg2)">${katBadge(d.kat)} ${stsBadge(d.status)}<span style="margin-left:auto;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px">${riskHtml(d.risiko)}</span></div>`;
-      if (f.tipe === 'withPatient') { out += sec('A. DATA PASIEN'); out += row('No. Rekam Medis', p.mr) + row('Nama Pasien', p.nama ? `<b>${p.nama}</b>` : '') + row('Jenis Kelamin', p.kelamin) + row('Umur', p.umur ? p.umur + ' tahun' : '') + row('Kelompok Umur', p.kelompokUmur) + row('Penanggung', p.penanggung) + row('Tgl Masuk RS', p.tglMasuk); out += sec('B. RINCIAN KEJADIAN'); } else { out += sec('A. RINCIAN KEJADIAN'); }
-      out += row('Tgl & Waktu', (k.tglWaktu || '').replace('T', ' ')) + row('Insiden', k.insiden ? `<b>${k.insiden}</b>` : '') + row('Kronologis', k.kronologis ? `<span style="color:var(--muted);font-size:12px;line-height:1.7;display:block">${k.kronologis}</span>` : '') + row('Jenis Insiden', k.jenisInsiden || d.kat) + row('Pelapor Pertama', k.pelaporPertama) + row('Menyangkut', k.menyangkut) + row('Tempat', k.tempat) + row('Spesialisasi', k.spesialisasi) + row('Unit Terkait', `<b>${k.unitTerkait || d.unit}</b>`) + row('Akibat', k.akibat) + row('Tindakan', k.tindakan ? `<span style="color:var(--muted);font-size:12px;line-height:1.7;display:block">${k.tindakan}</span>` : '') + row('Tindakan Oleh', k.tindakanOleh) + row('Pernah di Unit Lain?', k.pernahTerjadi);
-      out += sec(f.tipe === 'withPatient' ? 'C. DATA PELAPOR' : 'B. DATA PELAPOR');
-      out += row('Tgl Lapor', (pel.tglLapor || d.tgl || '').replace('T', ' ')) + row('Pembuat Laporan', pel.pembuat ? `<span style="white-space:pre-line">${pel.pembuat}</span>` : d.pelapor);
-      out += `<div class="d-row" style="align-items:flex-start"><div class="d-lbl" style="padding-top:8px">Paraf / TTD</div><div class="d-val"><div style="border:1.5px dashed var(--border2);border-radius:8px;min-height:56px;background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;font-style:italic;margin:4px 0">Tanda tangan tidak tersedia dalam tampilan digital</div></div></div>`;
-      return out;
-    }
-    function openDetail(d, idx) {
-      currentDetailIdx = idx;
-      document.getElementById('modal-title').textContent = '📋 Detail Insiden #' + d.no;
-      document.getElementById('modal-meta').textContent = d.tgl + ' · ' + d.unit + ' · ' + d.pelapor;
-      document.getElementById('modal-body').innerHTML = renderDetailBody(d);
-      document.getElementById('modal-foot').style.display = (d.status === 'Terverifikasi' || d.status === 'Ditolak') ? 'none' : 'flex';
-      document.getElementById('modal').classList.add('open');
-    }
-    function verifikasiInsiden() { if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Terverifikasi'; closeModal(); renderLaporan(); renderDashRows(); showToast('✅ Insiden berhasil diverifikasi.'); }
-    function tolakInsiden() { if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Ditolak'; closeModal(); renderLaporan(); renderDashRows(); showToast('❌ Insiden ditolak.'); }
-    function closeModal() { document.getElementById('modal').classList.remove('open'); }
-    function openPrint() { closeModal(); showPage('print-pelaporan'); }
-    window.addEventListener('click', e => {
-      if (e.target === document.getElementById('modal')) closeModal();
-      if (e.target === document.getElementById('user-modal')) closeUserModal();
-      if (e.target === document.getElementById('inv-modal')) closeInvModal();
+function updateUserCounts() {
+  const c = { semua: USERS.length, 'Super Admin': 0, Admin: 0, 'Kepala Ruangan': 0, Pelapor: 0 };
+  USERS.forEach(u => { if (c[u.role] !== undefined) c[u.role]++; });
+  document.getElementById('cnt-semua').textContent = c.semua;
+  document.getElementById('cnt-superadmin').textContent = c['Super Admin'];
+  document.getElementById('cnt-admin').textContent = c.Admin;
+  document.getElementById('cnt-karu').textContent = c['Kepala Ruangan'];
+  document.getElementById('cnt-pelapor').textContent = c.Pelapor;
+}
+function renderUserStats() {
+  const t = USERS.length, a = USERS.filter(u => u.status === 'Aktif').length;
+  const ad = USERS.filter(u => u.role === 'Admin' || u.role === 'Super Admin').length;
+  const k = USERS.filter(u => u.role === 'Kepala Ruangan').length;
+  document.getElementById('user-stats-row').innerHTML = [{ i: '<i class="ph ph-users"></i>', bg: 'rgba(59,130,246,.15)', v: t, l: 'Total Pengguna' }, { i: '<i class="ph ph-check-circle"></i>', bg: 'rgba(16,185,129,.15)', v: a, l: 'Akun Aktif' }, { i: '<i class="ph ph-shield"></i>', bg: 'rgba(239,68,68,.15)', v: ad, l: 'Admin / Super Admin' }, { i: '<i class="ph ph-hospital"></i>', bg: 'rgba(245,158,11,.15)', v: k, l: 'Kepala Ruangan' }].map(s => `<div class="us-card"><div class="us-icon" style="background:${s.bg}">${s.i}</div><div><div class="us-val">${s.v}</div><div class="us-lbl">${s.l}</div></div></div>`).join('');
+}
+function filterRole(role) {
+  activeRoleFilter = role;
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.toggle('active', t.dataset.role === role));
+  const lbl = { semua: 'Semua Pengguna', 'Super Admin': 'Super Admin', Admin: 'Administrator', 'Kepala Ruangan': 'Kepala Ruangan', Pelapor: 'Pelapor / Staf' };
+  document.getElementById('user-table-title').textContent = lbl[role] || role;
+  renderUserTable();
+}
+function getFilteredUsers() {
+  const q = (document.getElementById('user-search')?.value || '').toLowerCase();
+  const unit = document.getElementById('user-unit-filter')?.value || '';
+  const sts = document.getElementById('user-status-filter')?.value || '';
+  return USERS.filter(u => {
+    const rm = activeRoleFilter === 'semua' || u.role === activeRoleFilter;
+    const qm = !q || u.nama.toLowerCase().includes(q) || u.username.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+    return rm && qm && (!unit || u.unit === unit) && (!sts || u.status === sts);
+  });
+}
+function renderUserTable() {
+  const filtered = getFilteredUsers();
+  const tbody = document.getElementById('user-tbody');
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="es-icon" style="font-size:32px"><i class="ph ph-user"></i></div><p>Tidak ada pengguna yang sesuai filter.</p></div></td></tr>`; }
+  else { tbody.innerHTML = filtered.map(u => `<tr><td><div class="user-avatar-cell"><div class="ua-circle" style="background:${u.color}22;color:${u.color}">${initials(u.nama)}</div><div><div class="ua-name">${u.nama}${u.isMe ? '<span class="ua-you">Anda</span>' : ''}</div><div class="ua-email">@${u.username} · ${u.email}</div></div></div></td><td>${roleBadge(u.role)}</td><td><span class="unit-badge">${u.unit}</span></td><td><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></td><td style="font-size:11px;color:var(--muted)">${u.lastLogin.replace(' ', '<br>')}</td><td><div class="act-btns"><button class="act-btn" title="Edit" onclick="openEditUserModal(${u.id})"><i class="ph ph-pencil-simple"></i></button><button class="act-btn" title="Toggle Status" onclick="toggleUserStatus(${u.id})">${u.status === 'Aktif' ? '<i class="ph ph-lock-key"></i>' : '<i class="ph ph-lock-key-open"></i>'}</button>${!u.isMe ? `<button class="act-btn danger" title="Hapus" onclick="deleteUser(${u.id})"><i class="ph ph-trash"></i></button>` : '<div style="width:28px"></div>'}</div></td></tr>`).join(''); }
+  // RBAC: sembunyikan tombol aksi untuk non-Admin
+  if (!isAdmin()) {
+    tbody.querySelectorAll('.act-btns').forEach(el => {
+      el.parentElement.innerHTML = '<span style="font-size:11px;color:var(--muted);padding:0 8px;display:inline-flex;align-items:center;gap:4px"><i class="ph ph-eye"></i> Lihat Saja</span>';
     });
+  }
+  document.getElementById('user-pgn-info').textContent = `Menampilkan ${filtered.length} dari ${USERS.length} pengguna`;
+}
+function openUserModal() { editingUserId = null; document.getElementById('um-title').textContent = '👤 Tambah Pengguna Baru'; document.getElementById('um-meta').textContent = 'Isi data lengkap pengguna';['uf-nama', 'uf-username', 'uf-email', 'uf-password'].forEach(id => document.getElementById(id).value = ''); document.getElementById('uf-role').value = ''; document.getElementById('uf-unit').value = ''; document.getElementById('uf-status').value = 'Aktif'; document.getElementById('uf-unit-note').style.display = 'none'; document.getElementById('user-modal').classList.add('open'); }
+function openEditUserModal(id) { const u = USERS.find(x => x.id === id); if (!u) return; editingUserId = id; document.getElementById('um-title').textContent = '✏️ Edit Pengguna'; document.getElementById('um-meta').textContent = `Mengubah data @${u.username}`; document.getElementById('uf-nama').value = u.nama; document.getElementById('uf-username').value = u.username; document.getElementById('uf-email').value = u.email; document.getElementById('uf-role').value = u.role; document.getElementById('uf-unit').value = u.unit; document.getElementById('uf-password').value = ''; document.getElementById('uf-status').value = u.status; handleRoleChange(); document.getElementById('user-modal').classList.add('open'); }
+function handleRoleChange() { const r = document.getElementById('uf-role').value; const n = document.getElementById('uf-unit-note'); if (r === 'Super Admin' || r === 'Admin') { document.getElementById('uf-unit').value = 'Semua Unit'; n.style.display = 'block'; } else n.style.display = 'none'; }
+function closeUserModal() { document.getElementById('user-modal').classList.remove('open'); editingUserId = null; }
+function saveUser() {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  const nama = document.getElementById('uf-nama').value.trim(), username = document.getElementById('uf-username').value.trim();
+  const email = document.getElementById('uf-email').value.trim(), role = document.getElementById('uf-role').value;
+  const unit = document.getElementById('uf-unit').value, status = document.getElementById('uf-status').value;
+  if (!nama || !username || !role || !unit) { showToast('⚠️ Nama, username, role, dan unit wajib diisi!'); return; }
+  const clr = { 'Super Admin': '#dc2626', Admin: '#1d4ed8', 'Kepala Ruangan': '#15803d', Pelapor: '#57534e' };
+  const now = new Date(), p = n => String(n).padStart(2, '0');
+  const ll = `${p(now.getDate())}/${p(now.getMonth() + 1)}/${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}`;
+  if (editingUserId) { const i = USERS.findIndex(u => u.id === editingUserId); if (i > -1) USERS[i] = { ...USERS[i], nama, username, email, role, unit, status, color: clr[role] || '#64748b' }; showToast(`✅ Data ${nama} berhasil diperbarui.`); }
+  else { USERS.push({ id: Math.max(...USERS.map(u => u.id)) + 1, nama, username, email, role, unit, status, lastLogin: ll, isMe: false, color: clr[role] || '#64748b' }); showToast(`✅ Pengguna ${nama} berhasil ditambahkan.`); }
+  closeUserModal(); renderUserStats(); updateUserCounts(); renderUserTable();
+}
+function toggleUserStatus(id) { const u = USERS.find(x => x.id === id); if (!u) return; u.status = u.status === 'Aktif' ? 'Nonaktif' : 'Aktif'; showToast(`${u.status === 'Aktif' ? '✅' : '⛔'} ${u.nama} → ${u.status}`); renderUserTable(); renderUserStats(); updateUserCounts(); }
+function deleteUser(id) {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  const u = USERS.find(x => x.id === id); if (!u || u.isMe) return; if (!confirm(`Hapus akun "${u.nama}"?`)) return; USERS = USERS.filter(x => x.id !== id); showToast(`🗑️ Akun ${u.nama} dihapus.`); renderUserStats(); updateUserCounts(); renderUserTable(); }
 
-    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+const ADMIN_PAGES = ['dashboardAdmin', 'tabelPelaporan', 'tabelInvestigasi', 'pengguna', 'masterDataDynamic'];
+const PAGE_TITLE = { dashboardAdmin: 'Dashboard', tabelPelaporan: 'Tabel Pelaporan', tabelInvestigasi: 'Tabel Investigasi', pengguna: 'Pengguna', masterDataDynamic: 'Master Data' };
 
-    function gv(el) { return el ? el.value.trim() : ''; }
-    function tambahInsiden(fd) {
-      const now = new Date(), p = n => String(n).padStart(2, '0');
-      const tgl = `${p(now.getDate())}/${p(now.getMonth() + 1)}/${now.getFullYear()}`;
-      const ji = fd.kejadian.jenisInsiden || '';
-      let kat = 'KNC'; if (ji.startsWith('KTD')) kat = 'KTD'; else if (ji.startsWith('KPCS') || ji.startsWith('KS')) kat = 'KPCS';
-      const no = String(INSIDEN.length + 1).padStart(3, '0');
-      const pelapor = fd.pelapor.pembuat || 'Anonim';
-      INSIDEN.unshift({ no, tgl, unit: fd.kejadian.unitTerkait || 'Umum', pelapor: pelapor.length > 28 ? pelapor.substring(0, 28) + '…' : pelapor, kat, status: 'Menunggu', risiko: 'Sedang', formData: fd });
-    }
-    function submitFormPublic() {
-      const pi = [...document.getElementById('ff-pasien').querySelectorAll('.ff-in')];
-      const ki = [...document.getElementById('ff-kejadian-a').querySelectorAll('.ff-in')];
-      const li = [...document.getElementById('ff-pelapor-a').querySelectorAll('.ff-in')];
-      const fd = { tipe: 'withPatient', pasien: { mr: gv(pi[0]), nama: gv(pi[1]), kelamin: gv(pi[2]), umur: gv(pi[3]), kelompokUmur: gv(pi[4]), penanggung: gv(pi[5]), tglMasuk: gv(pi[6]) }, kejadian: { tglWaktu: gv(ki[0]), insiden: gv(ki[1]), kronologis: gv(ki[2]), jenisInsiden: gv(ki[3]), pelaporPertama: gv(ki[4]), menyangkut: gv(ki[5]), tempat: gv(ki[6]), spesialisasi: gv(ki[7]), unitTerkait: gv(ki[8]), akibat: gv(ki[9]), tindakan: gv(ki[10]), tindakanOleh: gv(ki[11]), pernahTerjadi: gv(ki[12]) }, pelapor: { tglLapor: gv(li[0]), pembuat: gv(li[1]) } };
-      if (!fd.pasien.mr && !fd.kejadian.insiden) { showToast('⚠️ Harap isi minimal Nomor MR dan keterangan insiden.'); return; }
-      tambahInsiden(fd); renderLaporan(); renderDashRows(); showPage('landing'); showToast('✅ Formulir berhasil dikirim!');
-    }
-    function submitFormNoPatient() {
-      const ki = [...document.getElementById('ff-kejadian-b').querySelectorAll('.ff-in')];
-      const li = [...document.getElementById('ff-pelapor-b').querySelectorAll('.ff-in')];
-      const fd = { tipe: 'noPatient', kejadian: { tglWaktu: gv(ki[0]), insiden: gv(ki[1]), kronologis: gv(ki[2]), jenisInsiden: gv(ki[3]), pelaporPertama: gv(ki[4]), menyangkut: gv(ki[5]), tempat: gv(ki[6]), spesialisasi: gv(ki[7]), unitTerkait: gv(ki[8]), akibat: gv(ki[9]), tindakan: gv(ki[10]), tindakanOleh: gv(ki[11]), pernahTerjadi: gv(ki[12]) }, pelapor: { tglLapor: gv(li[0]), pembuat: gv(li[1]) } };
-      if (!fd.kejadian.insiden) { showToast('⚠️ Harap isi keterangan insiden.'); return; }
-      tambahInsiden(fd); renderLaporan(); renderDashRows(); showPage('landing'); showToast('✅ Formulir berhasil dikirim!');
-    }
-    function resetFormPublic() { ['ff-pasien', 'ff-kejadian-a', 'ff-pelapor-a'].forEach(id => { document.getElementById(id).querySelectorAll('.ff-in').forEach(el => { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; }); }); }
-    function resetFormNoPatient() { ['ff-kejadian-b', 'ff-pelapor-b'].forEach(id => { document.getElementById(id).querySelectorAll('.ff-in').forEach(el => { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; }); }); }
+function showPage(id) {
+  // RBAC guard: halaman Pengguna eksklusif untuk Admin
+  if (id === 'pengguna' && !isAdmin()) {
+    showToast('⛔ Akses ditolak! Hanya Admin yang dapat membuka halaman Pengguna.');
+    return;
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  /* tutup drawer jika terbuka */
+  toggleMobileDrawer(true);
+  const tb = document.getElementById('g-topbar');
+  if (ADMIN_PAGES.includes(id)) { tb.classList.add('visible'); document.getElementById('g-page-title').textContent = PAGE_TITLE[id] || ''; }
+  else { tb.classList.remove('visible'); }
 
-    const MD = {
-      'Jenis Insiden': { icon: '📂', color: 'rgba(29,78,216,.1)', accent: '#1d4ed8', desc: 'Kelola jenis-jenis insiden yang dapat dilaporkan.', cols: ['Kode', 'Nama Jenis Insiden', 'Deskripsi', 'Status'], rows: [['JI-001', 'Kejadian Jatuh', 'Pasien atau staf terjatuh di area RS', '✅ Aktif'], ['JI-002', 'Kesalahan Obat', 'Pemberian obat tidak sesuai resep', '✅ Aktif'], ['JI-003', 'Salah Identitas', 'Pasien tertukar atau salah identifikasi', '✅ Aktif'], ['JI-004', 'Infeksi Nosokomial', 'Infeksi yang didapat selama perawatan', '✅ Aktif'], ['JI-005', 'Kecelakaan Alat Medis', 'Malfungsi atau kesalahan penggunaan alat', '⛔ Nonaktif'], ['JI-006', 'Dekubitus / Luka Tekan', 'Luka akibat tekanan berkepanjangan', '✅ Aktif']] },
-      'Kelompok Umur': { icon: '👶', color: 'rgba(22,163,74,.1)', accent: '#15803d', desc: 'Kelola pengelompokan usia pasien.', cols: ['Kode', 'Kelompok Umur', 'Rentang Usia', 'Keterangan'], rows: [['KU-001', 'Neonatal', '0 – 1 bulan', 'Bayi baru lahir'], ['KU-002', 'Bayi', '1 bulan – 1 tahun', 'Masa bayi'], ['KU-003', 'Balita', '1 – 5 tahun', 'Masa balita'], ['KU-004', 'Anak', '5 – 15 tahun', 'Masa anak-anak'], ['KU-005', 'Remaja', '15 – 30 tahun', 'Masa remaja & pemuda'], ['KU-006', 'Dewasa', '30 – 65 tahun', 'Masa dewasa'], ['KU-007', 'Lansia', '> 65 tahun', 'Lanjut usia']] },
-      'Penanggung Pasien': { icon: '💳', color: 'rgba(124,58,237,.1)', accent: '#7c3aed', desc: 'Kelola jenis penanggung biaya pasien.', cols: ['Kode', 'Nama Penanggung', 'Keterangan', 'Status'], rows: [['PP-001', 'BPJS Kesehatan', 'Jaminan kesehatan nasional', '✅ Aktif'], ['PP-002', 'Asuransi Swasta', 'Perusahaan asuransi swasta', '✅ Aktif'], ['PP-003', 'Umum / Mandiri', 'Biaya sendiri tanpa asuransi', '✅ Aktif'], ['PP-004', 'Jamkesda', 'Jaminan kesehatan daerah', '✅ Aktif'], ['PP-005', 'Lainnya', 'Penanggung lain yang tidak tercantum', '✅ Aktif']] },
-      'Ruangan': { icon: '🏥', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola daftar unit dan ruangan RSUD dr. Soedarso.', cols: ['Kode', 'Nama Ruangan', 'Status'], rows: [['RU-001', 'CASE MANAGER', '✅ Aktif'], ['RU-002', 'FISIOTERAPI', '✅ Aktif'], ['RU-003', 'HHPO', '✅ Aktif'], ['RU-004', 'IGD', '✅ Aktif'], ['RU-005', 'IKFM', '✅ Aktif'], ['RU-006', 'INSTALASI BEDAH SENTRAL', '✅ Aktif'], ['RU-007', 'INSTALASI FARMASI', '✅ Aktif'], ['RU-008', 'INSTALASI GIZI', '✅ Aktif'], ['RU-009', 'INSTALASI PKRS', '✅ Aktif'], ['RU-010', 'INSTALASI RADIOLOGI', '✅ Aktif'], ['RU-011', 'INSTALASI RADIONUKLIR', '✅ Aktif'], ['RU-012', 'INSTALASI RADIOTERAPI', '✅ Aktif'], ['RU-013', 'INSTALASI RAWAT INAP', '✅ Aktif'], ['RU-014', 'INSTALASI RAWAT JALAN', '✅ Aktif'], ['RU-015', 'IPFRS', '✅ Aktif'], ['RU-016', 'IPPP', '✅ Aktif'], ['RU-017', 'IRM', '✅ Aktif'], ['RU-018', 'ISB', '✅ Aktif'], ['RU-019', 'ISL', '✅ Aktif'], ['RU-020', 'ISOLASI', '✅ Aktif'], ['RU-021', 'K3', '✅ Aktif'], ['RU-022', 'LABORATORIUM MIKRO', '✅ Aktif'], ['RU-023', 'LABORATORIUM PA', '✅ Aktif'], ['RU-024', 'LABORATORIUM PK', '✅ Aktif'], ['RU-025', 'LAIN-LAIN', '✅ Aktif'], ['RU-026', 'LOGISTIK', '✅ Aktif'], ['RU-027', 'ODC (KEMOTERAPI)', '✅ Aktif'], ['RU-028', 'OK IBS', '✅ Aktif'], ['RU-029', 'OK IGD', '✅ Aktif'], ['RU-030', 'PPI', '✅ Aktif'], ['RU-031', 'PPT', '✅ Aktif'], ['RU-032', 'PUSDIKLAT', '✅ Aktif'], ['RU-033', 'RUAI', '✅ Aktif'], ['RU-034', 'RUANGAN ANAK', '✅ Aktif'], ['RU-035', 'RUANGAN CAMAR', '✅ Aktif'], ['RU-036', 'RUANGAN CATHLAB', '✅ Aktif'], ['RU-037', 'RUANGAN CENDANA', '✅ Aktif'], ['RU-038', 'RUANGAN ENGGANG GADING', '✅ Aktif'], ['RU-039', 'RUANGAN HCU', '✅ Aktif'], ['RU-040', 'RUANGAN HEMODIALISA', '✅ Aktif'], ['RU-041', 'RUANGAN ICU', '✅ Aktif'], ['RU-042', 'RUANGAN ICVCU', '✅ Aktif'], ['RU-043', 'RUANGAN KERAPU', '✅ Aktif'], ['RU-044', 'RUANGAN MAHONI', '✅ Aktif'], ['RU-045', 'RUANGAN MERANTI', '✅ Aktif'], ['RU-046', 'RUANGAN NICU', '✅ Aktif'], ['RU-047', 'RUANGAN PERINATOLOGI', '✅ Aktif'], ['RU-048', 'RUANGAN PICU', '✅ Aktif'], ['RU-049', 'RUANGAN RAMIN', '✅ Aktif'], ['RU-050', 'RUANGAN RAWAT INAP PJT', '✅ Aktif'], ['RU-051', 'RUANGAN SINGKUT BULUH', '✅ Aktif'], ['RU-052', 'THALASEMIA', '✅ Aktif'], ['RU-053', 'UNIT PELAYANAN STROKE', '✅ Aktif'], ['RU-054', 'UTDRS', '✅ Aktif']] },
-      'Tingkat Risiko': { icon: '⚠️', color: 'rgba(245,158,11,.1)', accent: '#d97706', desc: 'Kelola tingkatan risiko untuk penilaian insiden.', cols: ['Kode', 'Tingkat Risiko', 'Warna'], rows: [['TR-001', 'Rendah', '🔵 Biru'], ['TR-002', 'Moderat', '🟢 Hijau'], ['TR-003', 'Tinggi', '🟡 Kuning'], ['TR-004', 'Ekstrim', '🔴 Merah']] },
-      'Dampak Klinis': { icon: '📉', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola kategori dampak klinis dari suatu insiden.', cols: ['Level', 'Dampak Klinis', 'Deskripsi'], rows: [['1', 'Tidak Signifikan', 'Dampak paling ringan'], ['2', 'Minor', 'Dampak kecil'], ['3', 'Moderat', 'Dampak menengah'], ['4', 'Mayor', 'Dampak besar'], ['5', 'Katostropik', 'Dampak fatal / kematian']] },
-      'Dampak Terhadap Pasien': { icon: '🩺', color: 'rgba(14,165,233,.1)', accent: '#0ea5e9', desc: 'Kelola kategori dampak langsung terhadap kondisi pasien.', cols: ['Kode', 'Dampak', 'Penjelasan', 'Status'], rows: [['DTP-001', 'Tidak Berdampak', 'Tidak ada perubahan kondisi pasien', '✅ Aktif'], ['DTP-002', 'Perlu Observasi', 'Pasien perlu diobservasi lebih lanjut', '✅ Aktif'], ['DTP-003', 'Perlu Tindakan Medis', 'Diperlukan penanganan tambahan', '✅ Aktif'], ['DTP-004', 'Perpanjang Rawat', 'Masa rawat inap bertambah', '✅ Aktif'], ['DTP-005', 'Cacat Sementara', 'Gangguan fungsi bersifat sementara', '✅ Aktif'], ['DTP-006', 'Cacat Permanen', 'Gangguan fungsi bersifat menetap', '✅ Aktif'], ['DTP-007', 'Kematian', 'Pasien meninggal', '✅ Aktif']] },
-      'Probabilitas': { icon: '🎲', color: 'rgba(124,58,237,.1)', accent: '#7c3aed', desc: 'Kelola tingkat kemungkinan terulangnya insiden.', cols: ['Level', 'Probabilitas', 'Frekuensi'], rows: [['5', 'Sangat sering terjadi', 'Tiap minggu/bulan'], ['4', 'Sering Terjadi', 'Beberapa kali/tahun'], ['3', 'Mungkin terjadi', '1 - <2 tahun/kali'], ['2', 'Jarang terjadi', '>2 - <5 tahun/kali'], ['1', 'Sangat jarang terjadi', '>5 tahun/kali']] },
-      'Matriks Grading': { icon: '📐', color: 'rgba(2,132,199,.1)', accent: '#0284c7', isMatrix: true, desc: 'Matriks risiko berdasarkan kombinasi dampak dan probabilitas.', cols: ['Probabilitas \\ Dampak', 'Tidak Signifikan (1)', 'Minor (2)', 'Moderat (3)', 'Mayor (4)', 'Katostropik (5)'], rows: [['Sangat sering terjadi (5)', 'Moderat', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Sering Terjadi (4)', 'Moderat', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Mungkin terjadi (3)', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Jarang terjadi (2)', 'Rendah', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim'], ['Sangat jarang terjadi (1)', 'Rendah', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim']] },
-    };
-    const MX_CLR = { Rendah: 'background:rgba(59,130,246,.15);color:#3b82f6', Moderat: 'background:rgba(34,197,94,.15);color:#22c55e', Tinggi: 'background:rgba(234,179,8,.15);color:#eab308', Ekstrim: 'background:rgba(239,68,68,.15);color:#ef4444' };
+  // Update sidebar nav items highlight
+  const sidebarNavItems = document.querySelectorAll('.sidebar .nav-item');
+  sidebarNavItems.forEach(el => el.classList.remove('active'));
 
-    let activeMdForm = '';
-    function openMdAddModal(name) {
-      if (name === 'Matriks Grading') return showToast('⛔ Matriks Grading bersifat statis (5x5) dan tidak bisa ditambah baris!');
-      const cfg = MD[name]; if (!cfg) return;
-      activeMdForm = name;
-      document.getElementById('mda-title').innerHTML = `${cfg.icon} Tambah ${name}`;
-      document.getElementById('mda-meta').innerText = 'Silakan isi parameter di bawah ini untuk menambah konfigurasi master data.';
+  const mapping = {
+    'dashboardAdmin': 'Dashboard',
+    'pengguna': 'Pengguna',
+    'tabelPelaporan': 'Tabel Pelaporan',
+    'tabelInvestigasi': 'Tabel Investigasi Sederhana'
+  };
 
-      let html = '';
-      cfg.cols.forEach((col, i) => {
-        if (col === 'Status') html += `<div class="uf-group"><label class="uf-label">${col}</label><select class="uf-input" id="mda-input-${i}"><option>✅ Aktif</option><option>⛔ Nonaktif</option></select></div>`;
-        else if (col === 'Warna') html += `<div class="uf-group"><label class="uf-label">${col}</label><select class="uf-input" id="mda-input-${i}"><option>🔵 Biru</option><option>🟢 Hijau</option><option>🟡 Kuning</option><option>🔴 Merah</option></select></div>`;
-        else html += `<div class="uf-group"><label class="uf-label">${col}</label><input type="text" class="uf-input" id="mda-input-${i}" placeholder="Masukkan ${col}..."></div>`;
-      });
-      document.getElementById('mda-form').innerHTML = html;
-      document.getElementById('md-add-modal').style.display = 'flex';
-    }
-    function closeMdAddModal() { document.getElementById('md-add-modal').style.display = 'none'; }
-    function saveMdAddModal() {
-      const cfg = MD[activeMdForm];
-      const newRow = [];
-      cfg.cols.forEach((col, i) => { newRow.push(document.getElementById(`mda-input-${i}`).value || '-'); });
-      cfg.rows.push(newRow); // Store to memory
-      closeMdAddModal();
-      showToast(`✅ Data ${activeMdForm} berhasil ditambahkan!`);
-      showMasterData(activeMdForm); // Re-render table
-    }
-    function showMasterData(name) {
-      const cfg = MD[name]; if (!cfg) return;
-      toggleMobileDrawer(true);
+  if (mapping[id]) {
+    sidebarNavItems.forEach(el => {
+      if (el.textContent.trim() === mapping[id] || (id === 'tabelPelaporan' && el.textContent.includes('Tabel Pelaporan'))) {
+        el.classList.add('active');
+      }
+    });
+  }
 
-      const thead = cfg.cols.map(c => `<th>${c}</th>`).join('');
-      const tbody = cfg.rows.map(row => {
-        const cells = row.map((cell, i) => {
-          let content = cell;
-          if (cfg.isMatrix && i > 0 && MX_CLR[cell]) content = `<span class="matrix-badge" style="${MX_CLR[cell]}">${cell}</span>`;
-          else if (cell === '✅ Aktif') content = `<span style="font-size:12px;font-weight:600;color:var(--success);display:flex;align-items:center;gap:4px"><i class="ph ph-check-circle"></i> Aktif</span>`;
-          else if (cell === '⛔ Nonaktif') content = `<span style="font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:4px"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
-          else if (i === 0 && !cfg.isMatrix) content = `<span style="font-weight:700;color:var(--muted);font-size:12px">${cell}</span>`;
-          return `<td>${content}</td>`;
-        }).join('');
-        return `<tr>${cells}</tr>`;
-      }).join('');
+  if (id === 'formPublic' || id === 'formNoPatient') {
+    const now = new Date(), p = n => String(n).padStart(2, '0');
+    const v = `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
+    ['ttd-a-tgl', 'ttd-b-tgl'].forEach(i => { const el = document.getElementById(i); if (el) el.value = v; });
+  }
+  window.scrollTo(0, 0);
+}
 
-      document.getElementById('mdd-title').innerHTML = `<span>/ ${name}</span>`;
-      document.getElementById('mdd-content').innerHTML = `
-        <div class="pg-header-bar" style="border-left: 4px solid ${cfg.accent}; background: ${cfg.color}">
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  if (!u) { showToast('⚠️ Masukkan username!'); return; }
+  const found = USERS.find(x => x.username.toLowerCase() === u.toLowerCase());
+  if (!found) {
+    showToast('❌ Username tidak ditemukan! Contoh: admin · siti.rahayu · budi.setiawan');
+    return;
+  }
+  if (found.status !== 'Aktif') {
+    showToast('⛔ Akun tidak aktif. Hubungi administrator.');
+    return;
+  }
+  currentUser = { ...found };
+  applyRBAC();
+  showPage('dashboardAdmin');
+  const roleLabel = { 'Super Admin': '👑 Super Admin', Admin: '🛡️ Admin', 'Kepala Ruangan': '🏥 Kepala Ruangan', Pelapor: '📋 Pelapor' };
+  showToast('✅ Selamat datang, ' + found.nama + '! (' + (roleLabel[found.role] || found.role) + ')');
+}
+function doLogout() {
+  currentUser = { id: 0, nama: 'Tamu', username: '', role: '', unit: '', color: '#64748b' };
+  applyRBAC();
+  showPage('landing');
+}
+
+function renderDetailBody(d) {
+  const row = (l, v) => `<div class="d-row"><div class="d-lbl">${l}</div><div class="d-val">${v || '<span style="color:var(--border2)">—</span>'}</div></div>`;
+  const sec = (t) => `<div style="background:var(--bg2);padding:6px 18px;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">${t}</div>`;
+  const f = d.formData || {}, p = f.pasien || {}, k = f.kejadian || {}, pel = f.pelapor || {};
+  let out = `<div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--bg2)">${katBadge(d.kat)} ${stsBadge(d.status)}<span style="margin-left:auto;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px">${riskHtml(d.risiko)}</span></div>`;
+  if (f.tipe === 'withPatient') { out += sec('A. DATA PASIEN'); out += row('No. Rekam Medis', p.mr) + row('Nama Pasien', p.nama ? `<b>${p.nama}</b>` : '') + row('Jenis Kelamin', p.kelamin) + row('Umur', p.umur ? p.umur + ' tahun' : '') + row('Kelompok Umur', p.kelompokUmur) + row('Penanggung', p.penanggung) + row('Tgl Masuk RS', p.tglMasuk); out += sec('B. RINCIAN KEJADIAN'); } else { out += sec('A. RINCIAN KEJADIAN'); }
+  out += row('Tgl & Waktu', (k.tglWaktu || '').replace('T', ' ')) + row('Insiden', k.insiden ? `<b>${k.insiden}</b>` : '') + row('Kronologis', k.kronologis ? `<span style="color:var(--muted);font-size:12px;line-height:1.7;display:block">${k.kronologis}</span>` : '') + row('Jenis Insiden', k.jenisInsiden || d.kat) + row('Pelapor Pertama', k.pelaporPertama) + row('Menyangkut', k.menyangkut) + row('Tempat', k.tempat) + row('Spesialisasi', k.spesialisasi) + row('Unit Terkait', `<b>${k.unitTerkait || d.unit}</b>`) + row('Akibat', k.akibat) + row('Tindakan', k.tindakan ? `<span style="color:var(--muted);font-size:12px;line-height:1.7;display:block">${k.tindakan}</span>` : '') + row('Tindakan Oleh', k.tindakanOleh) + row('Pernah di Unit Lain?', k.pernahTerjadi);
+  out += sec(f.tipe === 'withPatient' ? 'C. DATA PELAPOR' : 'B. DATA PELAPOR');
+  out += row('Tgl Lapor', (pel.tglLapor || d.tgl || '').replace('T', ' ')) + row('Pembuat Laporan', pel.pembuat ? `<span style="white-space:pre-line">${pel.pembuat}</span>` : d.pelapor);
+  out += `<div class="d-row" style="align-items:flex-start"><div class="d-lbl" style="padding-top:8px">Paraf / TTD</div><div class="d-val"><div style="border:1.5px dashed var(--border2);border-radius:8px;min-height:56px;background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;font-style:italic;margin:4px 0">Tanda tangan tidak tersedia dalam tampilan digital</div></div></div>`;
+  return out;
+}
+function openDetail(d, idx) {
+  currentDetailIdx = idx;
+  document.getElementById('modal-title').textContent = '📋 Detail Insiden #' + d.no;
+  document.getElementById('modal-meta').textContent = d.tgl + ' · ' + d.unit + ' · ' + d.pelapor;
+  document.getElementById('modal-body').innerHTML = renderDetailBody(d);
+  // RBAC: hanya Admin yang bisa verifikasi/tolak
+  document.getElementById('modal-foot').style.display = (!isAdmin() || d.status === 'Terverifikasi' || d.status === 'Ditolak') ? 'none' : 'flex';
+  document.getElementById('modal').classList.add('open');
+}
+function verifikasiInsiden() {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Terverifikasi'; closeModal(); renderLaporan(); renderDashRows(); showToast('✅ Insiden berhasil diverifikasi.'); }
+function tolakInsiden() {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Ditolak'; closeModal(); renderLaporan(); renderDashRows(); showToast('❌ Insiden ditolak.'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function openPrint() { closeModal(); showPage('print-pelaporan'); }
+window.addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+  if (e.target === document.getElementById('user-modal')) closeUserModal();
+  if (e.target === document.getElementById('inv-modal')) closeInvModal();
+});
+
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+
+function gv(el) { return el ? el.value.trim() : ''; }
+function tambahInsiden(fd) {
+  const now = new Date(), p = n => String(n).padStart(2, '0');
+  const tgl = `${p(now.getDate())}/${p(now.getMonth() + 1)}/${now.getFullYear()}`;
+  const ji = fd.kejadian.jenisInsiden || '';
+  let kat = 'KNC'; if (ji.startsWith('KTD')) kat = 'KTD'; else if (ji.startsWith('KPCS') || ji.startsWith('KS')) kat = 'KPCS';
+  const no = String(INSIDEN.length + 1).padStart(3, '0');
+  const pelapor = fd.pelapor.pembuat || 'Anonim';
+  INSIDEN.unshift({ no, tgl, unit: fd.kejadian.unitTerkait || 'Umum', pelapor: pelapor.length > 28 ? pelapor.substring(0, 28) + '…' : pelapor, kat, status: 'Menunggu', risiko: 'Sedang', formData: fd });
+}
+function submitFormPublic() {
+  const pi = [...document.getElementById('ff-pasien').querySelectorAll('.ff-in')];
+  const ki = [...document.getElementById('ff-kejadian-a').querySelectorAll('.ff-in')];
+  const li = [...document.getElementById('ff-pelapor-a').querySelectorAll('.ff-in')];
+  const fd = { tipe: 'withPatient', pasien: { mr: gv(pi[0]), nama: gv(pi[1]), kelamin: gv(pi[2]), umur: gv(pi[3]), kelompokUmur: gv(pi[4]), penanggung: gv(pi[5]), tglMasuk: gv(pi[6]) }, kejadian: { tglWaktu: gv(ki[0]), insiden: gv(ki[1]), kronologis: gv(ki[2]), jenisInsiden: gv(ki[3]), pelaporPertama: gv(ki[4]), menyangkut: gv(ki[5]), tempat: gv(ki[6]), spesialisasi: gv(ki[7]), unitTerkait: gv(ki[8]), akibat: gv(ki[9]), tindakan: gv(ki[10]), tindakanOleh: gv(ki[11]), pernahTerjadi: gv(ki[12]) }, pelapor: { tglLapor: gv(li[0]), pembuat: gv(li[1]) } };
+  if (!fd.pasien.mr && !fd.kejadian.insiden) { showToast('⚠️ Harap isi minimal Nomor MR dan keterangan insiden.'); return; }
+  tambahInsiden(fd); renderLaporan(); renderDashRows(); showPage('landing'); showToast('✅ Formulir berhasil dikirim!');
+}
+function submitFormNoPatient() {
+  const ki = [...document.getElementById('ff-kejadian-b').querySelectorAll('.ff-in')];
+  const li = [...document.getElementById('ff-pelapor-b').querySelectorAll('.ff-in')];
+  const fd = { tipe: 'noPatient', kejadian: { tglWaktu: gv(ki[0]), insiden: gv(ki[1]), kronologis: gv(ki[2]), jenisInsiden: gv(ki[3]), pelaporPertama: gv(ki[4]), menyangkut: gv(ki[5]), tempat: gv(ki[6]), spesialisasi: gv(ki[7]), unitTerkait: gv(ki[8]), akibat: gv(ki[9]), tindakan: gv(ki[10]), tindakanOleh: gv(ki[11]), pernahTerjadi: gv(ki[12]) }, pelapor: { tglLapor: gv(li[0]), pembuat: gv(li[1]) } };
+  if (!fd.kejadian.insiden) { showToast('⚠️ Harap isi keterangan insiden.'); return; }
+  tambahInsiden(fd); renderLaporan(); renderDashRows(); showPage('landing'); showToast('✅ Formulir berhasil dikirim!');
+}
+function resetFormPublic() { ['ff-pasien', 'ff-kejadian-a', 'ff-pelapor-a'].forEach(id => { document.getElementById(id).querySelectorAll('.ff-in').forEach(el => { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; }); }); }
+function resetFormNoPatient() { ['ff-kejadian-b', 'ff-pelapor-b'].forEach(id => { document.getElementById(id).querySelectorAll('.ff-in').forEach(el => { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; }); }); }
+
+const MD = {
+  'Jenis Insiden': { icon: '📂', color: 'rgba(29,78,216,.1)', accent: '#1d4ed8', desc: 'Kelola jenis-jenis insiden yang dapat dilaporkan.', cols: ['Kode', 'Nama Jenis Insiden', 'Deskripsi', 'Status'], rows: [['JI-001', 'Kejadian Jatuh', 'Pasien atau staf terjatuh di area RS', '✅ Aktif'], ['JI-002', 'Kesalahan Obat', 'Pemberian obat tidak sesuai resep', '✅ Aktif'], ['JI-003', 'Salah Identitas', 'Pasien tertukar atau salah identifikasi', '✅ Aktif'], ['JI-004', 'Infeksi Nosokomial', 'Infeksi yang didapat selama perawatan', '✅ Aktif'], ['JI-005', 'Kecelakaan Alat Medis', 'Malfungsi atau kesalahan penggunaan alat', '⛔ Nonaktif'], ['JI-006', 'Dekubitus / Luka Tekan', 'Luka akibat tekanan berkepanjangan', '✅ Aktif']] },
+  'Kelompok Umur': { icon: '👶', color: 'rgba(22,163,74,.1)', accent: '#15803d', desc: 'Kelola pengelompokan usia pasien.', cols: ['Kode', 'Kelompok Umur', 'Rentang Usia', 'Keterangan'], rows: [['KU-001', 'Neonatal', '0 – 1 bulan', 'Bayi baru lahir'], ['KU-002', 'Bayi', '1 bulan – 1 tahun', 'Masa bayi'], ['KU-003', 'Balita', '1 – 5 tahun', 'Masa balita'], ['KU-004', 'Anak', '5 – 15 tahun', 'Masa anak-anak'], ['KU-005', 'Remaja', '15 – 30 tahun', 'Masa remaja & pemuda'], ['KU-006', 'Dewasa', '30 – 65 tahun', 'Masa dewasa'], ['KU-007', 'Lansia', '> 65 tahun', 'Lanjut usia']] },
+  'Penanggung Pasien': { icon: '💳', color: 'rgba(124,58,237,.1)', accent: '#7c3aed', desc: 'Kelola jenis penanggung biaya pasien.', cols: ['Kode', 'Nama Penanggung', 'Keterangan', 'Status'], rows: [['PP-001', 'BPJS Kesehatan', 'Jaminan kesehatan nasional', '✅ Aktif'], ['PP-002', 'Asuransi Swasta', 'Perusahaan asuransi swasta', '✅ Aktif'], ['PP-003', 'Umum / Mandiri', 'Biaya sendiri tanpa asuransi', '✅ Aktif'], ['PP-004', 'Jamkesda', 'Jaminan kesehatan daerah', '✅ Aktif'], ['PP-005', 'Lainnya', 'Penanggung lain yang tidak tercantum', '✅ Aktif']] },
+  'Ruangan': { icon: '🏥', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola daftar unit dan ruangan RSUD dr. Soedarso.', cols: ['Kode', 'Nama Ruangan', 'Status'], rows: [['RU-001', 'CASE MANAGER', '✅ Aktif'], ['RU-002', 'FISIOTERAPI', '✅ Aktif'], ['RU-003', 'HHPO', '✅ Aktif'], ['RU-004', 'IGD', '✅ Aktif'], ['RU-005', 'IKFM', '✅ Aktif'], ['RU-006', 'INSTALASI BEDAH SENTRAL', '✅ Aktif'], ['RU-007', 'INSTALASI FARMASI', '✅ Aktif'], ['RU-008', 'INSTALASI GIZI', '✅ Aktif'], ['RU-009', 'INSTALASI PKRS', '✅ Aktif'], ['RU-010', 'INSTALASI RADIOLOGI', '✅ Aktif'], ['RU-011', 'INSTALASI RADIONUKLIR', '✅ Aktif'], ['RU-012', 'INSTALASI RADIOTERAPI', '✅ Aktif'], ['RU-013', 'INSTALASI RAWAT INAP', '✅ Aktif'], ['RU-014', 'INSTALASI RAWAT JALAN', '✅ Aktif'], ['RU-015', 'IPFRS', '✅ Aktif'], ['RU-016', 'IPPP', '✅ Aktif'], ['RU-017', 'IRM', '✅ Aktif'], ['RU-018', 'ISB', '✅ Aktif'], ['RU-019', 'ISL', '✅ Aktif'], ['RU-020', 'ISOLASI', '✅ Aktif'], ['RU-021', 'K3', '✅ Aktif'], ['RU-022', 'LABORATORIUM MIKRO', '✅ Aktif'], ['RU-023', 'LABORATORIUM PA', '✅ Aktif'], ['RU-024', 'LABORATORIUM PK', '✅ Aktif'], ['RU-025', 'LAIN-LAIN', '✅ Aktif'], ['RU-026', 'LOGISTIK', '✅ Aktif'], ['RU-027', 'ODC (KEMOTERAPI)', '✅ Aktif'], ['RU-028', 'OK IBS', '✅ Aktif'], ['RU-029', 'OK IGD', '✅ Aktif'], ['RU-030', 'PPI', '✅ Aktif'], ['RU-031', 'PPT', '✅ Aktif'], ['RU-032', 'PUSDIKLAT', '✅ Aktif'], ['RU-033', 'RUAI', '✅ Aktif'], ['RU-034', 'RUANGAN ANAK', '✅ Aktif'], ['RU-035', 'RUANGAN CAMAR', '✅ Aktif'], ['RU-036', 'RUANGAN CATHLAB', '✅ Aktif'], ['RU-037', 'RUANGAN CENDANA', '✅ Aktif'], ['RU-038', 'RUANGAN ENGGANG GADING', '✅ Aktif'], ['RU-039', 'RUANGAN HCU', '✅ Aktif'], ['RU-040', 'RUANGAN HEMODIALISA', '✅ Aktif'], ['RU-041', 'RUANGAN ICU', '✅ Aktif'], ['RU-042', 'RUANGAN ICVCU', '✅ Aktif'], ['RU-043', 'RUANGAN KERAPU', '✅ Aktif'], ['RU-044', 'RUANGAN MAHONI', '✅ Aktif'], ['RU-045', 'RUANGAN MERANTI', '✅ Aktif'], ['RU-046', 'RUANGAN NICU', '✅ Aktif'], ['RU-047', 'RUANGAN PERINATOLOGI', '✅ Aktif'], ['RU-048', 'RUANGAN PICU', '✅ Aktif'], ['RU-049', 'RUANGAN RAMIN', '✅ Aktif'], ['RU-050', 'RUANGAN RAWAT INAP PJT', '✅ Aktif'], ['RU-051', 'RUANGAN SINGKUT BULUH', '✅ Aktif'], ['RU-052', 'THALASEMIA', '✅ Aktif'], ['RU-053', 'UNIT PELAYANAN STROKE', '✅ Aktif'], ['RU-054', 'UTDRS', '✅ Aktif']] },
+  'Tingkat Risiko': { icon: '⚠️', color: 'rgba(245,158,11,.1)', accent: '#d97706', desc: 'Kelola tingkatan risiko untuk penilaian insiden.', cols: ['Kode', 'Tingkat Risiko', 'Warna'], rows: [['TR-001', 'Rendah', '🔵 Biru'], ['TR-002', 'Moderat', '🟢 Hijau'], ['TR-003', 'Tinggi', '🟡 Kuning'], ['TR-004', 'Ekstrim', '🔴 Merah']] },
+  'Dampak Klinis': { icon: '📉', color: 'rgba(220,38,38,.1)', accent: '#dc2626', desc: 'Kelola kategori dampak klinis dari suatu insiden.', cols: ['Level', 'Dampak Klinis', 'Deskripsi'], rows: [['1', 'Tidak Signifikan', 'Dampak paling ringan'], ['2', 'Minor', 'Dampak kecil'], ['3', 'Moderat', 'Dampak menengah'], ['4', 'Mayor', 'Dampak besar'], ['5', 'Katostropik', 'Dampak fatal / kematian']] },
+  'Dampak Terhadap Pasien': { icon: '🩺', color: 'rgba(14,165,233,.1)', accent: '#0ea5e9', desc: 'Kelola kategori dampak langsung terhadap kondisi pasien.', cols: ['Kode', 'Dampak', 'Penjelasan', 'Status'], rows: [['DTP-001', 'Tidak Berdampak', 'Tidak ada perubahan kondisi pasien', '✅ Aktif'], ['DTP-002', 'Perlu Observasi', 'Pasien perlu diobservasi lebih lanjut', '✅ Aktif'], ['DTP-003', 'Perlu Tindakan Medis', 'Diperlukan penanganan tambahan', '✅ Aktif'], ['DTP-004', 'Perpanjang Rawat', 'Masa rawat inap bertambah', '✅ Aktif'], ['DTP-005', 'Cacat Sementara', 'Gangguan fungsi bersifat sementara', '✅ Aktif'], ['DTP-006', 'Cacat Permanen', 'Gangguan fungsi bersifat menetap', '✅ Aktif'], ['DTP-007', 'Kematian', 'Pasien meninggal', '✅ Aktif']] },
+  'Probabilitas': { icon: '🎲', color: 'rgba(124,58,237,.1)', accent: '#7c3aed', desc: 'Kelola tingkat kemungkinan terulangnya insiden.', cols: ['Level', 'Probabilitas', 'Frekuensi'], rows: [['5', 'Sangat sering terjadi', 'Tiap minggu/bulan'], ['4', 'Sering Terjadi', 'Beberapa kali/tahun'], ['3', 'Mungkin terjadi', '1 - <2 tahun/kali'], ['2', 'Jarang terjadi', '>2 - <5 tahun/kali'], ['1', 'Sangat jarang terjadi', '>5 tahun/kali']] },
+  'Matriks Grading': { icon: '📐', color: 'rgba(2,132,199,.1)', accent: '#0284c7', isMatrix: true, desc: 'Matriks risiko berdasarkan kombinasi dampak dan probabilitas.', cols: ['Probabilitas \\ Dampak', 'Tidak Signifikan (1)', 'Minor (2)', 'Moderat (3)', 'Mayor (4)', 'Katostropik (5)'], rows: [['Sangat sering terjadi (5)', 'Moderat', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Sering Terjadi (4)', 'Moderat', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Mungkin terjadi (3)', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim', 'Ekstrim'], ['Jarang terjadi (2)', 'Rendah', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim'], ['Sangat jarang terjadi (1)', 'Rendah', 'Rendah', 'Moderat', 'Tinggi', 'Ekstrim']] },
+};
+const MX_CLR = { Rendah: 'background:rgba(59,130,246,.15);color:#3b82f6', Moderat: 'background:rgba(34,197,94,.15);color:#22c55e', Tinggi: 'background:rgba(234,179,8,.15);color:#eab308', Ekstrim: 'background:rgba(239,68,68,.15);color:#ef4444' };
+
+let activeMdForm = '';
+function openMdAddModal(name) {
+  if (name === 'Matriks Grading') return showToast('⛔ Matriks Grading bersifat statis (5x5) dan tidak bisa ditambah baris!');
+  const cfg = MD[name]; if (!cfg) return;
+  activeMdForm = name;
+  document.getElementById('mda-title').innerHTML = `${cfg.icon} Tambah ${name}`;
+  document.getElementById('mda-meta').innerText = 'Silakan isi parameter di bawah ini untuk menambah konfigurasi master data.';
+
+  let html = '';
+  cfg.cols.forEach((col, i) => {
+    if (col === 'Status') html += `<div class="uf-group"><label class="uf-label">${col}</label><select class="uf-input" id="mda-input-${i}"><option>✅ Aktif</option><option>⛔ Nonaktif</option></select></div>`;
+    else if (col === 'Warna') html += `<div class="uf-group"><label class="uf-label">${col}</label><select class="uf-input" id="mda-input-${i}"><option>🔵 Biru</option><option>🟢 Hijau</option><option>🟡 Kuning</option><option>🔴 Merah</option></select></div>`;
+    else html += `<div class="uf-group"><label class="uf-label">${col}</label><input type="text" class="uf-input" id="mda-input-${i}" placeholder="Masukkan ${col}..."></div>`;
+  });
+  document.getElementById('mda-form').innerHTML = html;
+  document.getElementById('md-add-modal').style.display = 'flex';
+}
+function closeMdAddModal() { document.getElementById('md-add-modal').style.display = 'none'; }
+function saveMdAddModal() {
+  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  const cfg = MD[activeMdForm];
+  const newRow = [];
+  cfg.cols.forEach((col, i) => { newRow.push(document.getElementById(`mda-input-${i}`).value || '-'); });
+  cfg.rows.push(newRow); // Store to memory
+  closeMdAddModal();
+  showToast(`✅ Data ${activeMdForm} berhasil ditambahkan!`);
+  showMasterData(activeMdForm); // Re-render table
+}
+function showMasterData(name) {
+  const cfg = MD[name]; if (!cfg) return;
+  activeMdForm = name;
+  toggleMobileDrawer(true);
+
+  // Update sidebar active status
+  document.querySelectorAll('.sidebar .nav-item, .mdr-nav .nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sidebar .nav-item, .mdr-nav .nav-item').forEach(el => {
+    if (el.textContent.trim().includes(name)) el.classList.add('active');
+  });
+
+  document.getElementById('mdd-title').innerHTML = `<span>/ ${name}</span>`;
+  document.getElementById('mdd-content').innerHTML = `
+        <div class="pg-header-bar" style="border-left: 4px solid ${cfg.accent}; background: ${cfg.color}; padding: 22px 26px; display: flex; align-items: center; justify-content: space-between; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
           <div>
-            <div style="font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px">
-              <span style="font-size:22px">${cfg.icon}</span> ${name}
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom: 4px;">
+              <span style="font-size:28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1))">${cfg.icon}</span>
+              <div style="font-size:18px; font-weight:800; color:var(--text); letter-spacing: -0.4px">${name}</div>
             </div>
-            <div style="font-size:13px;color:var(--muted);margin-top:2px">${cfg.desc}</div>
+            <div style="font-size:13px; color:var(--muted); font-weight: 500; opacity: 0.8">${cfg.desc}</div>
           </div>
-          <button class="btn-primary" style="background:${cfg.accent};color:#fff;border:none" onclick="openMdAddModal('${name}')"><span style="font-size:16px">＋</span> Tambah Data</button>
+          <div>
+            ${isAdmin()
+              ? `<button class="btn-primary" style="background:${cfg.accent}; color:#fff; border:none; padding: 10px 22px; box-shadow: 0 4px 12px ${cfg.accent}44; font-weight:700" onclick="openMdAddModal('${name}')">＋ Tambah Data</button>`
+              : `<span style="display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:10px; background:rgba(255,255,255,0.4); backdrop-filter:blur(4px); color:var(--muted); font-size:12px; font-weight:700; border:1px solid var(--border)"><i class="ph ph-eye"></i> Mode Lihat Saja</span>`}
+          </div>
         </div>
         
-        <div class="table-card">
-          <div class="table-head">
-            <h3>Daftar ${name}</h3>
+        <div class="table-card" style="border-radius: 12px; overflow: hidden; box-shadow: var(--sh);">
+          <div class="table-head" style="padding: 18px 24px; border-bottom: 1px solid var(--border); background: var(--card)">
+            <h3 style="font-size: 15px; font-weight: 700">Daftar ${name}</h3>
             <div class="tbl-controls">
-              <div class="search-wrap">
-                <span class="search-ico">🔍</span>
-                <input type="text" placeholder="Cari data..." style="width:240px">
+              <div class="search-wrap" style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 5px 14px; display: flex; align-items: center; gap: 10px; transition: all 0.2s">
+                <span style="color: var(--muted); font-size: 16px"><i class="ph ph-magnifying-glass"></i></span>
+                <input type="text" id="md-search" placeholder="Cari data..." style="border: none; background: transparent; outline: none; padding: 6px 0; font-size: 13.5px; width: 240px; color: var(--text); font-weight: 500" oninput="renderMdTable('${name}')">
               </div>
             </div>
           </div>
-          <table class="desktop-table">
-            <thead><tr>${thead}</tr></thead>
-            <tbody>${tbody}</tbody>
-          </table>
-          <div class="pgn">
-            <div class="pgn-info">Menampilkan ${cfg.rows.length} dari ${cfg.rows.length} data</div>
-            <div class="pgn-btns">
-              <button class="pg-btn">‹</button>
-              <button class="pg-btn cur">1</button>
-              <button class="pg-btn">›</button>
-            </div>
+          <div id="md-table-body-target" style="background: var(--card)">
+            <!-- Table content will be injected here by renderMdTable -->
           </div>
         </div>
       `;
 
-      // Update sidebar active status to the generic Master Data container
-      document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
-      const menus = Array.from(document.querySelectorAll('.sidebar .nav-item'));
-      menus.forEach(el => {
-        if (el.textContent.includes(name)) {
-          el.classList.add('active');
-        }
-      });
+  renderMdTable(name);
+  showPage('masterDataDynamic');
+}
 
-      // Switch Page Full View
-      showPage('masterDataDynamic');
-    }
+function renderMdTable(name) {
+  const cfg = MD[name];
+  const query = (document.getElementById('md-search')?.value || '').toLowerCase();
+  
+  const filteredRows = cfg.rows.filter(row => {
+    return !query || row.some(cell => cell.toString().toLowerCase().includes(query));
+  });
 
-    /* ═══════════════════════════════════════════
-       TREN INSIDEN — Data Tahunan (12 bulan/tahun)
-       ═══════════════════════════════════════════ */
-    const TREN_DATA = {
-      2022: [3, 5, 4, 7, 6, 8, 5, 9, 6, 4, 7, 5],
-      2023: [4, 6, 8, 5, 9, 7, 11, 8, 6, 10, 7, 9],
-      2024: [6, 8, 10, 9, 12, 8, 14, 11, 9, 13, 10, 12],
-      2025: [7, 10, 9, 13, 11, 15, 10, 14, 12, 16, 11, 14],
-      2026: [5, 8, 12, 6, 9, 4, 0, 0, 0, 0, 0, 0],
-    };
-    const BULAN_LABELS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-    let activeTrenYear = { admin: 2026, land: 2026 };
+  const thead = cfg.cols.map(c => `<th>${c}</th>`).join('');
+  let tbodyHtml = '';
 
-    function buildTrenChart(canvasEl, year, grid, text) {
-      const rawData = TREN_DATA[year] || TREN_DATA[2026];
-      const labels = BULAN_LABELS;
-      const data = rawData;
-      const gradient = canvasEl.getContext('2d').createLinearGradient(0, 0, 0, 220);
-      gradient.addColorStop(0, 'rgba(16,185,129,0.28)');
-      gradient.addColorStop(1, 'rgba(16,185,129,0.0)');
-      return new Chart(canvasEl, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Jumlah Insiden',
-            data,
-            borderColor: '#10b981',
-            backgroundColor: gradient,
-            tension: 0.45,
-            fill: true,
-            pointRadius: 0,
-            pointHoverRadius: 6,
-            pointHoverBackgroundColor: '#10b981',
-            pointHoverBorderColor: '#fff',
-            pointHoverBorderWidth: 2,
-            borderWidth: 2.5,
-          }]
-        },
-        options: {
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              displayColors: false,
-              backgroundColor: 'rgba(15,23,42,0.88)',
-              titleColor: '#94a3b8',
-              bodyColor: '#f8fafc',
-              bodyFont: { size: 13, weight: '700' },
-              padding: 10,
-              callbacks: {
-                title: (items) => items[0].label + '  ' + year,
-                label: (item) => 'Insiden: ' + item.raw,
-              }
-            }
-          },
-          scales: {
-            x: { grid: { display: false }, ticks: { font: { size: 11 }, color: text } },
-            y: { grid: { color: grid, borderDash: [5, 5] }, ticks: { font: { size: 11 }, color: text }, beginAtZero: true }
+  if (filteredRows.length === 0) {
+    tbodyHtml = `<tr><td colspan="${cfg.cols.length}"><div class="empty-state" style="padding: 40px; text-align: center; color: var(--muted)">
+      <div style="font-size: 32px; margin-bottom: 8px"><i class="ph ph-mask-sad"></i></div>
+      <p>Tidak ada data yang cocok dengan pencarian.</p>
+    </div></td></tr>`;
+  } else {
+    tbodyHtml = filteredRows.map(row => {
+      const cells = row.map((cell, i) => {
+        let content = cell;
+        if (cfg.isMatrix && i > 0 && MX_CLR[cell]) content = `<span class="matrix-badge" style="${MX_CLR[cell]}">${cell}</span>`;
+        else if (cell === '✅ Aktif') content = `<span style="font-size:12px;font-weight:600;color:var(--success);display:flex;align-items:center;gap:4px"><i class="ph ph-check-circle"></i> Aktif</span>`;
+        else if (cell === '⛔ Nonaktif') content = `<span style="font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:4px"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
+        else if (i === 0 && !cfg.isMatrix) content = `<span style="font-weight:700;color:var(--muted);font-size:12px">${cell}</span>`;
+        return `<td>${content}</td>`;
+      }).join('');
+      return `<tr>${cells}</tr>`;
+    }).join('');
+  }
+
+  document.getElementById('md-table-body-target').innerHTML = `
+    <table class="desktop-table">
+      <thead><tr>${thead}</tr></thead>
+      <tbody>${tbodyHtml}</tbody>
+    </table>
+    <div class="pgn" style="padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center">
+      <div class="pgn-info" style="font-size: 12px; color: var(--muted)">Menampilkan ${filteredRows.length} dari ${cfg.rows.length} data</div>
+      <div class="pgn-btns" style="display: flex; gap: 4px">
+        <button class="pg-btn">‹</button>
+        <button class="pg-btn cur">1</button>
+        <button class="pg-btn">›</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════
+   TREN INSIDEN — Data Tahunan (12 bulan/tahun)
+   ═══════════════════════════════════════════ */
+const TREN_DATA = {
+  2022: [3, 5, 4, 7, 6, 8, 5, 9, 6, 4, 7, 5],
+  2023: [4, 6, 8, 5, 9, 7, 11, 8, 6, 10, 7, 9],
+  2024: [6, 8, 10, 9, 12, 8, 14, 11, 9, 13, 10, 12],
+  2025: [7, 10, 9, 13, 11, 15, 10, 14, 12, 16, 11, 14],
+  2026: [5, 8, 12, 6, 9, 4, 0, 0, 0, 0, 0, 0],
+};
+const BULAN_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+let activeTrenYear = { admin: 2026, land: 2026 };
+
+/* Palette warna unik per unit (54 warna) */
+const UNIT_COLORS_PALETTE = [
+  '#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#f97316', '#ec4899',
+  '#10b981', '#6366f1', '#14b8a6', '#84cc16', '#a855f7', '#0ea5e9', '#f43f5e', '#d97706',
+  '#7c3aed', '#059688', '#dc2626', '#2563eb', '#16a34a', '#ca8a04', '#9333ea', '#0891b2',
+  '#ea580c', '#db2777', '#0d9488', '#65a30d', '#312e81', '#0284c7', '#e11d48', '#b45309',
+  '#4f46e5', '#047857', '#b91c1c', '#1d4ed8', '#15803d', '#c2410c', '#6d28d9', '#0369a1',
+  '#be123c', '#92400e', '#3730a3', '#065f46', '#991b1b', '#1e40af', '#166534', '#9a3412',
+  '#5b21b6', '#0c4a6e', '#881337', '#78350f', '#1e3a8a', '#064e3b',
+];
+
+/* Daftar nama unit (modul scope, 54 unit) */
+const RAW_UNIT_NAMES = [
+  'CASE MANAGER', 'FISIOTERAPI', 'HHPO', 'IGD', 'IKFM', 'INSTALASI BEDAH SENTRAL',
+  'INSTALASI FARMASI', 'INSTALASI GIZI', 'INSTALASI PKRS', 'INSTALASI RADIOLOGI',
+  'INSTALASI RADIONUKLIR', 'INSTALASI RADIOTERAPI', 'INSTALASI RAWAT INAP',
+  'INSTALASI RAWAT JALAN', 'IPFRS', 'IPPP', 'IRM', 'ISB', 'ISL', 'ISOLASI', 'K3',
+  'LABORATORIUM MIKRO', 'LABORATORIUM PA', 'LABORATORIUM PK', 'LAIN-LAIN', 'LOGISTIK',
+  'ODC (KEMOTERAPI)', 'OK IBS', 'OK IGD', 'PPI', 'PPT', 'PUSDIKLAT', 'RUAI',
+  'RUANGAN ANAK', 'RUANGAN CAMAR', 'RUANGAN CATHLAB', 'RUANGAN CENDANA',
+  'RUANGAN ENGGANG GADING', 'RUANGAN HCU', 'RUANGAN HEMODIALISA', 'RUANGAN ICU',
+  'RUANGAN ICVCU', 'RUANGAN KERAPU', 'RUANGAN MAHONI', 'RUANGAN MERANTI',
+  'RUANGAN NICU', 'RUANGAN PERINATOLOGI', 'RUANGAN PICU', 'RUANGAN RAMIN',
+  'RUANGAN RAWAT INAP PJT', 'RUANGAN SINGKUT BULUH', 'THALASEMIA',
+  'UNIT PELAYANAN STROKE', 'UTDRS',
+];
+
+/* Jumlah insiden per unit per bulan [Jan,Feb,Mar,Apr,Mei,Jun,Jul,Agu,Sep,Okt,Nov,Des]
+   Index 3 = April, cocok dengan data bar chart asli */
+const UNIT_MONTHLY = [
+      /* 0  CASE MANAGER          */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 1  FISIOTERAPI           */[0, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 2  HHPO                  */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 3  IGD                   */[1, 2, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 4  IKFM                  */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 5  INSTALASI BEDAH SENT. */[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 6  INSTALASI FARMASI     */[1, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 7  INSTALASI GIZI        */[1, 0, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 8  INSTALASI PKRS        */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 9  INSTALASI RADIOLOGI   */[0, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 10 INSTALASI RADIONUKLIR */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 11 INSTALASI RADIOTERAPI */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 12 INSTALASI RAWAT INAP  */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 13 INSTALASI RAWAT JALAN */[1, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+      /* 14 IPFRS                 */[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 15 IPPP                  */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 16 IRM                   */[0, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 17 ISB                   */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 18 ISL                   */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 19 ISOLASI               */[1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 20 K3                    */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 21 LABORATORIUM MIKRO    */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 22 LABORATORIUM PA       */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 23 LABORATORIUM PK       */[2, 3, 4, 5, 3, 0, 0, 0, 0, 0, 0, 0],
+      /* 24 LAIN-LAIN             */[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 25 LOGISTIK              */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 26 ODC (KEMOTERAPI)      */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 27 OK IBS                */[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 28 OK IGD                */[3, 5, 8, 7, 4, 0, 0, 0, 0, 0, 0, 0],
+      /* 29 PPI                   */[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 30 PPT                   */[1, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 31 PUSDIKLAT             */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 32 RUAI                  */[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 33 RUANGAN ANAK          */[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 34 RUANGAN CAMAR         */[0, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 35 RUANGAN CATHLAB       */[1, 1, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 36 RUANGAN CENDANA       */[1, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+      /* 37 RUANGAN ENGGANG GAD.  */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 38 RUANGAN HCU           */[1, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 39 RUANGAN HEMODIALISA   */[0, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 40 RUANGAN ICU           */[1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 41 RUANGAN ICVCU         */[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 42 RUANGAN KERAPU        */[0, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 43 RUANGAN MAHONI        */[1, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+      /* 44 RUANGAN MERANTI       */[3, 4, 6, 7, 5, 0, 0, 0, 0, 0, 0, 0],
+      /* 45 RUANGAN NICU          */[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 46 RUANGAN PERINATOLOGI  */[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 47 RUANGAN PICU          */[1, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+      /* 48 RUANGAN RAMIN         */[2, 3, 3, 5, 3, 0, 0, 0, 0, 0, 0, 0],
+      /* 49 RUANGAN RAWAT INAP PJT*/[0, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+      /* 50 RUANGAN SINGKUT BULUH */[3, 5, 6, 7, 5, 0, 0, 0, 0, 0, 0, 0],
+      /* 51 THALASEMIA            */[0, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      /* 52 UNIT PELAYANAN STROKE */[2, 2, 3, 4, 3, 0, 0, 0, 0, 0, 0, 0],
+      /* 53 UTDRS                 */[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+let activeUnitMonth = { admin: 4, land: 4 };
+
+function buildTrenChart(canvasEl, year, grid, text) {
+  const rawData = TREN_DATA[year] || TREN_DATA[2026];
+  const labels = BULAN_LABELS;
+  const data = rawData;
+  const gradient = canvasEl.getContext('2d').createLinearGradient(0, 0, 0, 220);
+  gradient.addColorStop(0, 'rgba(16,185,129,0.28)');
+  gradient.addColorStop(1, 'rgba(16,185,129,0.0)');
+  return new Chart(canvasEl, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Jumlah Insiden',
+        data,
+        borderColor: '#10b981',
+        backgroundColor: gradient,
+        tension: 0.45,
+        fill: true,
+        pointRadius: 0,
+        pointHoverRadius: 6,
+        pointHoverBackgroundColor: '#10b981',
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 2,
+        borderWidth: 2.5,
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          displayColors: false,
+          backgroundColor: 'rgba(15,23,42,0.88)',
+          titleColor: '#94a3b8',
+          bodyColor: '#f8fafc',
+          bodyFont: { size: 13, weight: '700' },
+          padding: 10,
+          callbacks: {
+            title: (items) => items[0].label + '  ' + year,
+            label: (item) => 'Insiden: ' + item.raw,
           }
         }
-      });
-    }
-
-    function setTrenYear(year, ctx) {
-      activeTrenYear[ctx] = year;
-      const { grid, text } = getChartColors();
-      if (ctx === 'land') {
-        if (cb1) cb1.destroy();
-        const el = document.getElementById('c1-land');
-        if (el) cb1 = buildTrenChart(el, year, grid, text);
-      } else {
-        if (c1Chart) c1Chart.destroy();
-        const el = document.getElementById('c1');
-        if (el) c1Chart = buildTrenChart(el, year, grid, text);
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 }, color: text } },
+        y: { grid: { color: grid, borderDash: [5, 5] }, ticks: { font: { size: 11 }, color: text }, beginAtZero: true }
       }
     }
+  });
+}
 
-    let c1Chart = null, dKncChart = null, dKtdChart = null, dKtcChart = null, dKpcsChart = null, cUnitChart = null;
-    let cb1 = null, dKncB = null, dKtdB = null, dKtcB = null, dKpcsB = null, cUnitB = null; // for landing
-    function getChartColors() {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      return {
-        grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-        text: isDark ? '#94a3b8' : '#64748b',
-        ringBg: isDark ? '#334155' : '#e2e8f0'
-      };
+function setTrenYear(year, ctx) {
+  activeTrenYear[ctx] = year;
+  const { grid, text } = getChartColors();
+  if (ctx === 'land') {
+    if (cb1) cb1.destroy();
+    const el = document.getElementById('c1-land');
+    if (el) cb1 = buildTrenChart(el, year, grid, text);
+  } else {
+    if (c1Chart) c1Chart.destroy();
+    const el = document.getElementById('c1');
+    if (el) c1Chart = buildTrenChart(el, year, grid, text);
+  }
+}
+
+/* Helper: build sorted unit chart data for given month index */
+function buildUnitChartData(monthIdx) {
+  const raw = UNIT_MONTHLY.map((m, i) => ({ label: RAW_UNIT_NAMES[i], value: m[monthIdx] }));
+  const sorted = raw.filter(d => d.value > 0).sort((a, b) => b.value - a.value);
+  const n = sorted.length;
+  // Blue palette: dark (#1e40af) → light (#bfdbfe), top-3 get extra deep shade
+  const BLUE_DARK = [39, 68, 175];   // #1e40af
+  const BLUE_LIGHT = [147, 197, 253]; // #93c5fd
+  const colors = sorted.map((_, i) => {
+    const t = n > 1 ? i / (n - 1) : 0; // 0 = darkest (rank 1), 1 = lightest
+    const r = Math.round(BLUE_DARK[0] + t * (BLUE_LIGHT[0] - BLUE_DARK[0]));
+    const g = Math.round(BLUE_DARK[1] + t * (BLUE_LIGHT[1] - BLUE_DARK[1]));
+    const b = Math.round(BLUE_DARK[2] + t * (BLUE_LIGHT[2] - BLUE_DARK[2]));
+    return `rgb(${r},${g},${b})`;
+  });
+  // Top-3 border highlight
+  const borders = sorted.map((_, i) => i < 3 ? '#1e3a8a' : 'transparent');
+  const borderWidths = sorted.map((_, i) => i < 3 ? 1.5 : 0);
+  return { labels: sorted.map(d => d.label), values: sorted.map(d => d.value), colors, borders, borderWidths };
+}
+
+function setUnitMonth(month, ctx) {
+  activeUnitMonth[ctx] = month;
+  const monthIdx = month - 1;
+  const { labels, values, colors, borders, borderWidths } = buildUnitChartData(monthIdx);
+  if (ctx === 'land') {
+    if (cUnitB) {
+      cUnitB.data.labels = labels;
+      cUnitB.data.datasets[0].data = values;
+      cUnitB.data.datasets[0].backgroundColor = colors;
+      cUnitB.data.datasets[0].borderColor = borders;
+      cUnitB.data.datasets[0].borderWidth = borderWidths;
+      cUnitB.update();
     }
-    function initCharts() {
-      const { grid, text, ringBg } = getChartColors();
-      const destroy = (c) => { if (c) c.destroy(); };
-      [c1Chart, dKncChart, dKtdChart, dKtcChart, dKpcsChart, cUnitChart, cb1, dKncB, dKtdB, dKtcB, dKpcsB, cUnitB].forEach(destroy);
+  } else {
+    if (cUnitChart) {
+      cUnitChart.data.labels = labels;
+      cUnitChart.data.datasets[0].data = values;
+      cUnitChart.data.datasets[0].backgroundColor = colors;
+      cUnitChart.data.datasets[0].borderColor = borders;
+      cUnitChart.data.datasets[0].borderWidth = borderWidths;
+      cUnitChart.update();
+    }
+  }
+}
 
-      // 1. Line Chart: Tren Insiden Tahunan
-      const ctx1 = document.getElementById('c1');
-      if (ctx1) c1Chart = buildTrenChart(ctx1, activeTrenYear.admin, grid, text);
-      const ctx1Land = document.getElementById('c1-land');
-      if (ctx1Land) cb1 = buildTrenChart(ctx1Land, activeTrenYear.land, grid, text);
+let c1Chart = null, dKncChart = null, dKtdChart = null, dKtcChart = null, dKpcsChart = null, cUnitChart = null;
+let cb1 = null, dKncB = null, dKtdB = null, dKtcB = null, dKpcsB = null, cUnitB = null; // for landing
+function getChartColors() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {
+    grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+    text: isDark ? '#94a3b8' : '#64748b',
+    ringBg: isDark ? '#334155' : '#e2e8f0'
+  };
+}
+function initCharts() {
+  const { grid, text, ringBg } = getChartColors();
+  const destroy = (c) => { if (c) c.destroy(); };
+  [c1Chart, dKncChart, dKtdChart, dKtcChart, dKpcsChart, cUnitChart, cb1, dKncB, dKtdB, dKtcB, dKpcsB, cUnitB].forEach(destroy);
 
-      // 2. Mini Doughnuts: Verifikasi per Kategori
-      const dOptions = {
+  // Tren Insiden per Tahun dihapus — diganti chart insiden per unit per bulan
+
+
+  // 2. Mini Doughnuts: Verifikasi per Kategori
+  const dOptions = {
+    maintainAspectRatio: false,
+    cutout: '82%',
+    plugins: {
+      tooltip: { enabled: true, yAlign: 'bottom', displayColors: false },
+      legend: { display: false }
+    }
+  };
+  const mkDChart = (id, verified, pending, color) => {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    return new Chart(el, { type: 'doughnut', data: { labels: ['Selesai', 'Belum'], datasets: [{ data: [verified, pending], backgroundColor: [color, ringBg], borderWidth: 0, hoverOffset: 4, borderRadius: 20 }] }, options: dOptions });
+  };
+
+  // Injecting the numbers into the center of the ring
+  const injectNumber = (id, val, color) => {
+    const p = document.getElementById(id);
+    if (p && p.parentElement) {
+      let span = p.parentElement.querySelector('.donut-center-val');
+      if (!span) {
+        span = document.createElement('div');
+        span.className = 'donut-center-val';
+        span.style.cssText = `position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;pointer-events:none;color:${color}`;
+        p.parentElement.appendChild(span);
+      }
+      span.textContent = val;
+
+      // Cleanup sub-label if it exists
+      const lblBox = p.parentElement.parentElement;
+      if (lblBox) {
+        const lbl = lblBox.querySelector('.donut-lbl');
+        if (lbl) {
+          let sub = lbl.querySelector('.donut-pending-val');
+          if (sub) sub.remove();
+        }
+      }
+    }
+  };
+
+  const cBlue = '#0ea5e9', cGreen = '#10b981', cAmber = '#f59e0b', cRed = '#ef4444';
+
+  dKncChart = mkDChart('d-knc', 13, 5, cBlue); injectNumber('d-knc', '13', cBlue);
+  dKtdChart = mkDChart('d-ktd', 18, 12, cGreen); injectNumber('d-ktd', '18', cGreen);
+  dKtcChart = mkDChart('d-ktc', 10, 2, cAmber); injectNumber('d-ktc', '10', cAmber);
+  dKpcsChart = mkDChart('d-kpcs', 62, 14, cRed); injectNumber('d-kpcs', '62', cRed);
+
+  dKncB = mkDChart('d-knc-land', 13, 5, cBlue); injectNumber('d-knc-land', '13', cBlue);
+  dKtdB = mkDChart('d-ktd-land', 18, 12, cGreen); injectNumber('d-ktd-land', '18', cGreen);
+  dKtcB = mkDChart('d-ktc-land', 10, 2, cAmber); injectNumber('d-ktc-land', '10', cAmber);
+  dKpcsB = mkDChart('d-kpcs-land', 62, 14, cRed); injectNumber('d-kpcs-land', '62', cRed);
+
+  // 3. Vertical Bar: Jumlah Insiden per Unit (sorted DESC, blue gradient, top-3 highlighted)
+  const defaultMonthIdx = 3; // April
+
+  /* Inline plugin: draw value labels + top-3 rank badges above bars */
+  const barLabelPlugin = {
+    id: 'barLabels',
+    afterDatasetsDraw(chart) {
+      const { ctx, data } = chart;
+      const ds = chart.getDatasetMeta(0);
+      ctx.save();
+      ds.data.forEach((bar, i) => {
+        const val = data.datasets[0].data[i];
+        if (!val) return;
+        const x = bar.x, top = bar.y;
+        // Value number above bar
+        ctx.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = i < 3 ? '#1e40af' : '#64748b';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(val, x, top - 3);
+
+      });
+      ctx.restore();
+    }
+  };
+
+  // isAdmin=true  → klik bar masuk ke Tabel Pelaporan (hanya untuk admin)
+  // isAdmin=false → klik bar tidak melakukan apa-apa (untuk landing page)
+  const mkBarChart = (canvasId, isAdmin = false) => {
+    const el = document.getElementById(canvasId);
+    if (!el) return null;
+    const { labels, values, colors, borders, borderWidths } = buildUnitChartData(defaultMonthIdx);
+    return new Chart(el, {
+      type: 'bar',
+      plugins: [barLabelPlugin],
+      data: {
+        labels,
+        datasets: [{
+          label: 'Jumlah Insiden',
+          data: values,
+          backgroundColor: colors,
+          borderColor: borders,
+          borderWidth: borderWidths,
+          borderRadius: { topLeft: 5, topRight: 5 },
+          borderSkipped: false,
+          maxBarThickness: 22,
+          barPercentage: 0.72,
+          categoryPercentage: 0.85,
+        }]
+      },
+      options: {
         maintainAspectRatio: false,
-        cutout: '82%',
+        layout: { padding: { top: 28 } },
         plugins: {
-          tooltip: { enabled: true, yAlign: 'bottom', displayColors: false },
-          legend: { display: false }
-        }
-      };
-      const mkDChart = (id, verified, pending, color) => {
-        const el = document.getElementById(id);
-        if (!el) return null;
-        return new Chart(el, { type: 'doughnut', data: { labels: ['Selesai', 'Belum'], datasets: [{ data: [verified, pending], backgroundColor: [color, ringBg], borderWidth: 0, hoverOffset: 4, borderRadius: 20 }] }, options: dOptions });
-      };
-
-      // Injecting the numbers into the center of the ring
-      const injectNumber = (id, val, color) => {
-        const p = document.getElementById(id);
-        if (p && p.parentElement) {
-          let span = p.parentElement.querySelector('.donut-center-val');
-          if (!span) {
-            span = document.createElement('div');
-            span.className = 'donut-center-val';
-            span.style.cssText = `position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;pointer-events:none;color:${color}`;
-            p.parentElement.appendChild(span);
-          }
-          span.textContent = val;
-
-          // Cleanup sub-label if it exists
-          const lblBox = p.parentElement.parentElement;
-          if (lblBox) {
-            const lbl = lblBox.querySelector('.donut-lbl');
-            if (lbl) {
-              let sub = lbl.querySelector('.donut-pending-val');
-              if (sub) sub.remove();
+          legend: { display: false },
+          tooltip: {
+            displayColors: false,
+            backgroundColor: 'rgba(15,23,42,0.92)',
+            titleColor: '#93c5fd',
+            bodyColor: '#f8fafc',
+            titleFont: { size: 11, weight: '700' },
+            bodyFont: { size: 14, weight: '800' },
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              title: (items) => items[0].label,
+              label: (item) => item.raw + ' insiden',
             }
           }
-        }
-      };
+        },
+        onHover: (event, chartElement) => {
+          // Cursor pointer hanya aktif di chart admin
+          event.native.target.style.cursor =
+            (isAdmin() && chartElement[0]) ? 'pointer' : 'default';
+        },
+        onClick: (event, activeEls, chart) => {
+          // Landing page tidak boleh redirect ke halaman admin
+          if (!isAdmin() || !activeEls.length) return;
+          const unitName = chart.data.labels[activeEls[0].index];
+          const searchInput = document.getElementById('lap-search');
+          if (searchInput) {
+            searchInput.value = unitName;
+            renderFilteredLaporan();
+          }
+          const resetBtn = document.getElementById('lap-reset-btn');
+          if (resetBtn) resetBtn.style.display = 'inline-flex';
+          showPage('tabelPelaporan');
+        },
 
-      const cBlue = '#0ea5e9', cGreen = '#10b981', cAmber = '#f59e0b', cRed = '#ef4444';
-
-      dKncChart = mkDChart('d-knc', 13, 5, cBlue); injectNumber('d-knc', '13', cBlue);
-      dKtdChart = mkDChart('d-ktd', 18, 12, cGreen); injectNumber('d-ktd', '18', cGreen);
-      dKtcChart = mkDChart('d-ktc', 10, 2, cAmber); injectNumber('d-ktc', '10', cAmber);
-      dKpcsChart = mkDChart('d-kpcs', 62, 14, cRed); injectNumber('d-kpcs', '62', cRed);
-
-      dKncB = mkDChart('d-knc-land', 13, 5, cBlue); injectNumber('d-knc-land', '13', cBlue);
-      dKtdB = mkDChart('d-ktd-land', 18, 12, cGreen); injectNumber('d-ktd-land', '18', cGreen);
-      dKtcB = mkDChart('d-ktc-land', 10, 2, cAmber); injectNumber('d-ktc-land', '10', cAmber);
-      dKpcsB = mkDChart('d-kpcs-land', 62, 14, cRed); injectNumber('d-kpcs-land', '62', cRed);
-
-      // 3. Horizontal Bar: Insiden per Unit (Semua Ruangan via Scroll)
-      const rawUnitNames = [
-        'CASE MANAGER', 'FISIOTERAPI', 'HHPO', 'IGD', 'IKFM', 'INSTALASI BEDAH SENTRAL', 'INSTALASI FARMASI', 'INSTALASI GIZI',
-        'INSTALASI PKRS', 'INSTALASI RADIOLOGI', 'INSTALASI RADIONUKLIR', 'INSTALASI RADIOTERAPI', 'INSTALASI RAWAT INAP',
-        'INSTALASI RAWAT JALAN', 'IPFRS', 'IPPP', 'IRM', 'ISB', 'ISL', 'ISOLASI', 'K3', 'LABORATORIUM MIKRO', 'LABORATORIUM PA',
-        'LABORATORIUM PK', 'LAIN-LAIN', 'LOGISTIK', 'ODC (KEMOTERAPI)', 'OK IBS', 'OK IGD', 'PPI', 'PPT', 'PUSDIKLAT', 'RUAI',
-        'RUANGAN ANAK', 'RUANGAN CAMAR', 'RUANGAN CATHLAB', 'RUANGAN CENDANA', 'RUANGAN ENGGANG GADING', 'RUANGAN HCU',
-        'RUANGAN HEMODIALISA', 'RUANGAN ICU', 'RUANGAN ICVCU', 'RUANGAN KERAPU', 'RUANGAN MAHONI', 'RUANGAN MERANTI',
-        'RUANGAN NICU', 'RUANGAN PERINATOLOGI', 'RUANGAN PICU', 'RUANGAN RAMIN', 'RUANGAN RAWAT INAP PJT', 'RUANGAN SINGKUT BULUH',
-        'THALASEMIA', 'UNIT PELAYANAN STROKE', 'UTDRS'
-      ];
-
-      // Simulasi jumlah pelaporan berdasarkan gambar grafik lama
-      const rawUnitData = [
-        0, 1, 0, 2, 0, 1, 2, 2, 0, 2, 0, 0, 0, 3, 1, 0, 2, 0, 0, 2, 0, 0, 0, 5, 1, 0, 0, 1, 7, 1, 2, 0, 1, 1, 2, 3, 3, 0, 2, 2, 2, 1, 2, 3, 7, 1, 1, 3, 5, 2, 7, 2, 4, 0
-      ];
-
-      const sortedUnits = rawUnitNames.map((name, i) => ({ name, val: rawUnitData[i] })).sort((a, b) => b.val - a.val);
-      const unitNames = sortedUnits.map(u => u.name);
-      const unitData = sortedUnits.map(u => u.val);
-
-      const barOpts = {
-        type: 'bar',
-        data: { labels: unitNames, datasets: [{ label: 'Jumlah Laporan', data: unitData, backgroundColor: '#3b82f6', borderRadius: 4, maxBarThickness: 16 }] },
-        options: {
-          indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } },
-          onHover: (event, chartElement) => {
-            event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-          },
-          onClick: (e, activeEls) => {
-            if (activeEls.length > 0) {
-              const idx = activeEls[0].index;
-              const unitStr = unitNames[idx];
-
-              // KHUSUS hanya menargetkan input search milik tabel pelaporan
-              const tpSearch = document.getElementById('tc-search');
-              if (tpSearch) {
-                tpSearch.value = unitStr;
-                // Panggil fungsi render ulang daftar insiden agar langsung terfilter
-                renderFilteredLaporan && renderFilteredLaporan();
+        scales: {
+          x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: {
+              font: { size: 9, weight: '600' },
+              color: text,
+              maxRotation: 40,
+              minRotation: 30,
+              autoSkip: true,
+              padding: 6,
+              callback: function (val, idx) {
+                const lbl = this.getLabelForValue(val);
+                 return lbl.length > 11 ? lbl.substring(0, 10) + '…' : lbl;
               }
-
-              // Buka halaman tabel (di sistem Admin)
-              showPage('tabelPelaporan');
             }
           },
-          scales: {
-            x: { grid: { color: grid, borderDash: [5, 5] }, ticks: { font: { size: 11 }, color: text }, beginAtZero: true },
-            y: { grid: { display: false }, ticks: { font: { size: 10 }, color: text } }
+          y: {
+            grid: { color: grid, borderDash: [4, 4], drawBorder: false },
+            border: { display: false, dash: [4, 4] },
+            ticks: {
+              font: { size: 11 },
+              color: text,
+              stepSize: 1,
+              callback: (v) => Number.isInteger(v) ? v : ''
+            },
+            beginAtZero: true
           }
         }
-      };
+      }
+    });
+  };
 
-      const barHeight = Math.max(220, unitNames.length * 32);
+  cUnitChart = mkBarChart('c-unit', true);      // Admin: klik bar → Tabel Pelaporan
+  cUnitB = mkBarChart('c-unit-land', false); // Landing: klik bar dinonaktifkan
 
-      const barInner = document.getElementById('bar-inner');
-      const cUnitCtx = document.getElementById('c-unit');
-      if (barInner && cUnitCtx) { barInner.style.height = barHeight + 'px'; cUnitChart = new Chart(cUnitCtx, barOpts); }
+}
+function updateChartColors() { setTimeout(initCharts, 50); }
 
-      const barInnerLand = document.getElementById('bar-inner-land');
-      const cUnitCtxLand = document.getElementById('c-unit-land');
-      if (barInnerLand && cUnitCtxLand) { barInnerLand.style.height = barHeight + 'px'; cUnitB = new Chart(cUnitCtxLand, barOpts); }
-    }
-    function updateChartColors() { setTimeout(initCharts, 50); }
+function setDate() {
+  const el = document.getElementById('topbar-date'); if (!el) return;
+  const d = new Date();
+  const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  el.textContent = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
 
-    function setDate() {
-      const el = document.getElementById('topbar-date'); if (!el) return;
-      const d = new Date();
-      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-      el.textContent = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-    }
-
-    window.onload = function () {
-      setDate();
-      renderSidebars();
-      renderStats();
-      renderDashRows();
-      renderLaporan();
-      renderInvestigasi();
-      renderForms();
-      renderUserStats();
-      updateUserCounts();
-      renderUserTable();
-      initCharts();
-    };
+window.onload = function () {
+  setDate();
+  renderSidebars();
+  renderStats();
+  renderDashRows();
+  renderLaporan();
+  renderFilteredLaporan(); // inisialisasi info jumlah & filter tabel laporan
+  renderInvestigasi();
+  renderForms();
+  renderUserStats();
+  updateUserCounts();
+  renderUserTable();
+  initCharts();
+  bindMenuClicks();        // aktifkan klik sidebar data-driven
+};
