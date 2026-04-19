@@ -140,6 +140,9 @@ let currentUser = { id: 0, nama: 'Tamu', username: '', role: '', unit: '', color
 function isAdmin() {
   return currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
 }
+function isManagement() {
+  return ['Admin', 'Super Admin', 'Kepala Ruangan', 'Kepala Instalasi'].includes(currentUser.role);
+}
 function applyRBAC() {
   const ini = initials(currentUser.nama) || 'G';
   const col = currentUser.color || '#64748b';
@@ -247,12 +250,8 @@ function renderLaporan() {
     const col = AVCOL[i % AVCOL.length];
     const rep = `<div class="rep-cell"><div class="rep-av" style="background:${col}22;color:${col}">${initials(d.pelapor)}</div>${d.pelapor}</div>`;
     const isSent = d.terkirim === true;
-    const kirimBtn = isAdmin() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim' : 'Kirim Laporan'}" style="font-size:12px;padding:5px 9px">
-      <i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i>
-    </button>` : '';
-    const hapusBtn = isAdmin() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px">
-      <i class="ph ph-trash"></i>
-    </button>` : '';
+    const kirimBtn = isManagement() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim ke Investigasi' : 'Kirim ke Tabel Investigasi'}" style="font-size:12px;padding:5px 9px"><i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i></button>` : '';
+    const hapusBtn = isManagement() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px"><i class="ph ph-trash"></i></button>` : '';
     return `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td>
     <td style="white-space:nowrap">
       <div style="display:flex;align-items:center;gap:4px">
@@ -307,12 +306,8 @@ function renderFilteredLaporan() {
       const col = AVCOL[i % AVCOL.length];
       const rep = `<div class="rep-cell"><div class="rep-av" style="background:${col}22;color:${col}">${initials(d.pelapor)}</div>${d.pelapor}</div>`;
       const isSent = d.terkirim === true;
-      const kirimBtn = isAdmin() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim' : 'Kirim Laporan'}" style="font-size:12px;padding:5px 9px">
-        <i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i>
-      </button>` : '';
-      const hapusBtn = isAdmin() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px">
-        <i class="ph ph-trash"></i>
-      </button>` : '';
+      const kirimBtn = isManagement() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim ke Investigasi' : 'Kirim ke Tabel Investigasi'}" style="font-size:12px;padding:5px 9px"><i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i></button>` : '';
+      const hapusBtn = isManagement() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px"><i class="ph ph-trash"></i></button>` : '';
       return `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td>
         <td style="font-size:12px;color:var(--muted)">${d.tgl}</td>
         <td><b>${d.unit}</b></td><td>${rep}</td>
@@ -349,18 +344,31 @@ function resetLaporanFilter() {
 }
 
 function kirimLaporan(idx) {
-  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  if (!isManagement()) { showToast('Akses ditolak!'); return; }
   const d = INSIDEN[idx];
   if (!d) return;
-  if (d.terkirim) { showToast('ℹ️ Laporan #' + d.no + ' sudah pernah dikirim.'); return; }
-  if (!confirm('Kirim laporan #' + d.no + ' ke unit terkait?')) return;
+  if (d.terkirim) { showToast('Laporan #' + d.no + ' sudah pernah dikirim ke Tabel Investigasi.'); return; }
+  if (!confirm('Kirim laporan #' + d.no + ' ke Tabel Investigasi Sederhana?')) return;
   INSIDEN[idx].terkirim = true;
-  showToast('✉️ Laporan #' + d.no + ' berhasil dikirim!');
+  const now = new Date(), pz = n => String(n).padStart(2, '0');
+  const tglFmt = pz(now.getDate()) + '/' + pz(now.getMonth() + 1) + '/' + now.getFullYear();
+  const invNo = 'INV-' + String(INVESTIGASI.length + 1).padStart(3, '0');
+  INVESTIGASI.unshift({
+    no: invNo, tgl: tglFmt,
+    insiden: (d.formData && d.formData.kejadian && d.formData.kejadian.insiden) ? d.formData.kejadian.insiden : 'Insiden #' + d.no,
+    unit: d.unit.trim(),
+    investigator: currentUser.nama || d.pelapor,
+    grade: d.risiko === 'Tinggi' ? 'Tinggi' : d.risiko === 'Rendah' ? 'Rendah' : 'Sedang',
+    status: 'Belum'
+  });
+  showToast('Laporan #' + d.no + ' berhasil dikirim ke Tabel Investigasi!');
   renderLaporan();
+  renderFilteredLaporan();
+  renderInvestigasi();
 }
 
 function hapusLaporan(idx) {
-  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
+  if (!isManagement()) { showToast('Akses ditolak!'); return; }
   const d = INSIDEN[idx];
   if (!d) return;
   if (!confirm('Hapus laporan #' + d.no + '? Tindakan ini tidak dapat dibatalkan.')) return;
@@ -370,8 +378,8 @@ function hapusLaporan(idx) {
   renderDashRows();
 }
 function renderInvestigasi() {
-  const btnTxt = isAdmin() ? 'Investigasi' : 'Lihat Detail';
-  const btnIcon = isAdmin() ? 'ph-microscope' : 'ph-eye';
+  const btnTxt = isManagement() ? 'Investigasi' : 'Lihat Detail';
+  const btnIcon = isManagement() ? 'ph-microscope' : 'ph-eye';
   document.getElementById('inv-rows').innerHTML = INVESTIGASI.map((d, i) => `<tr>
     <td style="color:var(--muted);font-size:12px;font-weight:700">${d.no}</td>
     <td style="font-size:12px;color:var(--muted)">${d.tgl}</td>
@@ -403,7 +411,7 @@ function buildInvForm(inv) {
 let currentInvIdx = null;
 function openInvModal(idx) {
   const inv = INVESTIGASI[idx]; currentInvIdx = idx;
-  document.getElementById('inv-modal-title').innerHTML = (isAdmin() ? '<i class="ph ph-microscope"></i> Investigasi Sederhana' : '<i class="ph ph-eye"></i> Detail Investigasi') + ' — ' + inv.no;
+  document.getElementById('inv-modal-title').innerHTML = (isManagement() ? '<i class="ph ph-microscope"></i> Investigasi Sederhana' : '<i class="ph ph-eye"></i> Detail Investigasi') + ' — ' + inv.no;
   document.getElementById('inv-modal-meta').textContent = inv.tgl + ' · ' + inv.unit + ' · Investigator: ' + inv.investigator;
   document.getElementById('inv-modal-status').innerHTML = `${gradeBadge(inv.grade)}<span style="margin-left:4px">${inv.status === 'Selesai' ? '<span class="badge badge-s">✓ Selesai</span>' : inv.status === 'Proses' ? '<span class="badge badge-w">⏳ Proses</span>' : '<span class="badge badge-d">— Belum Dimulai</span>'}</span><span style="margin-left:auto;font-size:12px;color:var(--muted)">Insiden: <b>${inv.insiden}</b></span>`;
   buildInvForm(inv);
@@ -412,7 +420,7 @@ function openInvModal(idx) {
   const foot = document.querySelector('#inv-modal .modal-foot');
   if (foot) {
     const saveGroup = foot.querySelector('div[style*="display:flex"]');
-    if (saveGroup) saveGroup.style.display = isAdmin() ? 'flex' : 'none';
+    if (saveGroup) saveGroup.style.display = isManagement() ? 'flex' : 'none';
   }
 
   document.getElementById('inv-modal').classList.add('open');
@@ -420,8 +428,9 @@ function openInvModal(idx) {
 function closeInvModal() { document.getElementById('inv-modal').classList.remove('open'); currentInvIdx = null; }
 function resetInvForm() { if (currentInvIdx === null) return; buildInvForm(INVESTIGASI[currentInvIdx]); }
 function simpanInvestigasi() {
-  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
-  if (currentInvIdx === null) return; INVESTIGASI[currentInvIdx].status = 'Selesai'; renderInvestigasi(); closeInvModal(); showToast('Investigasi berhasil disimpan!'); }
+  if (!isManagement()) { showToast('Akses ditolak!'); return; }
+  if (currentInvIdx === null) return; INVESTIGASI[currentInvIdx].status = 'Selesai'; renderInvestigasi(); closeInvModal(); showToast('Investigasi berhasil disimpan!');
+}
 
 function renderForms() {
   document.getElementById('ff-pasien').innerHTML = FP_FIELDS.map(f => ffRow(f[0], f[1], f[2], f[3] === 'top')).join('');
@@ -496,7 +505,8 @@ function saveUser() {
 function toggleUserStatus(id) { const u = USERS.find(x => x.id === id); if (!u) return; u.status = u.status === 'Aktif' ? 'Nonaktif' : 'Aktif'; showToast(`${u.status === 'Aktif' ? '✅' : '⛔'} ${u.nama} → ${u.status}`); renderUserTable(); renderUserStats(); updateUserCounts(); }
 function deleteUser(id) {
   if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
-  const u = USERS.find(x => x.id === id); if (!u || u.isMe) return; if (!confirm(`Hapus akun "${u.nama}"?`)) return; USERS = USERS.filter(x => x.id !== id); showToast(`🗑️ Akun ${u.nama} dihapus.`); renderUserStats(); updateUserCounts(); renderUserTable(); }
+  const u = USERS.find(x => x.id === id); if (!u || u.isMe) return; if (!confirm(`Hapus akun "${u.nama}"?`)) return; USERS = USERS.filter(x => x.id !== id); showToast(`🗑️ Akun ${u.nama} dihapus.`); renderUserStats(); updateUserCounts(); renderUserTable();
+}
 
 const ADMIN_PAGES = ['dashboardAdmin', 'tabelPelaporan', 'tabelInvestigasi', 'pengguna', 'masterDataDynamic'];
 const PAGE_TITLE = { dashboardAdmin: 'Dashboard', tabelPelaporan: 'Tabel Pelaporan', tabelInvestigasi: 'Tabel Investigasi', pengguna: 'Pengguna', masterDataDynamic: 'Master Data' };
@@ -534,6 +544,10 @@ function showPage(id) {
     });
   }
 
+  if (id === 'tabelPelaporan') { renderLaporan(); renderFilteredLaporan(); }
+  if (id === 'tabelInvestigasi') { renderInvestigasi(); }
+  if (id === 'pengguna') { renderUserStats(); updateUserCounts(); renderUserTable(); }
+
   if (id === 'formPublic' || id === 'formNoPatient') {
     const now = new Date(), p = n => String(n).padStart(2, '0');
     const v = `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
@@ -556,13 +570,20 @@ function doLogin() {
   }
   currentUser = { ...found };
   applyRBAC();
+  renderLaporan();
+  renderFilteredLaporan();
+  renderInvestigasi();
+  renderUserStats();
+  updateUserCounts();
+  renderUserTable();
   showPage('dashboardAdmin');
-  const roleLabel = { 'Super Admin': '👑 Super Admin', Admin: '🛡️ Admin', 'Kepala Ruangan': '🏥 Kepala Ruangan', Pelapor: '📋 Pelapor' };
-  showToast('✅ Selamat datang, ' + found.nama + '! (' + (roleLabel[found.role] || found.role) + ')');
+  const roleLabel = { 'Super Admin': 'Super Admin', Admin: 'Admin', 'Kepala Ruangan': 'Kepala Ruangan', 'Kepala Instalasi': 'Kepala Instalasi', Pelapor: 'Pelapor' };
+  showToast('Selamat datang, ' + found.nama + '! (' + (roleLabel[found.role] || found.role) + ')');
 }
 function doLogout() {
   currentUser = { id: 0, nama: 'Tamu', username: '', role: '', unit: '', color: '#64748b' };
   applyRBAC();
+  renderUserTable();
   showPage('landing');
 }
 
@@ -584,15 +605,17 @@ function openDetail(d, idx) {
   document.getElementById('modal-meta').textContent = d.tgl + ' · ' + d.unit + ' · ' + d.pelapor;
   document.getElementById('modal-body').innerHTML = renderDetailBody(d);
   // RBAC: hanya Admin yang bisa verifikasi/tolak
-  document.getElementById('modal-foot').style.display = (!isAdmin() || d.status === 'Terverifikasi' || d.status === 'Ditolak') ? 'none' : 'flex';
+  document.getElementById('modal-foot').style.display = (!isManagement() || d.status === 'Terverifikasi' || d.status === 'Ditolak') ? 'none' : 'flex';
   document.getElementById('modal').classList.add('open');
 }
 function verifikasiInsiden() {
-  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
-  if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Terverifikasi'; closeModal(); renderLaporan(); renderDashRows(); showToast('✅ Insiden berhasil diverifikasi.'); }
+  if (!isManagement()) { showToast('Akses ditolak!'); return; }
+  if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Terverifikasi'; closeModal(); renderLaporan(); renderDashRows(); showToast('✅ Insiden berhasil diverifikasi.');
+}
 function tolakInsiden() {
-  if (!isAdmin()) { showToast('⛔ Akses ditolak!'); return; }
-  if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Ditolak'; closeModal(); renderLaporan(); renderDashRows(); showToast('❌ Insiden ditolak.'); }
+  if (!isManagement()) { showToast('Akses ditolak!'); return; }
+  if (currentDetailIdx === null) return; INSIDEN[currentDetailIdx].status = 'Ditolak'; closeModal(); renderLaporan(); renderDashRows(); showToast('❌ Insiden ditolak.');
+}
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 function openPrint() { closeModal(); showPage('print-pelaporan'); }
 window.addEventListener('click', e => {
@@ -695,8 +718,8 @@ function showMasterData(name) {
           </div>
           <div>
             ${isAdmin()
-              ? `<button class="btn-primary" style="background:${cfg.accent}; color:#fff; border:none; padding: 10px 22px; box-shadow: 0 4px 12px ${cfg.accent}44; font-weight:700" onclick="openMdAddModal('${name}')">＋ Tambah Data</button>`
-              : `<span style="display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:10px; background:rgba(255,255,255,0.4); backdrop-filter:blur(4px); color:var(--muted); font-size:12px; font-weight:700; border:1px solid var(--border)"><i class="ph ph-eye"></i> Mode Lihat Saja</span>`}
+      ? `<button class="btn-primary" style="background:${cfg.accent}; color:#fff; border:none; padding: 10px 22px; box-shadow: 0 4px 12px ${cfg.accent}44; font-weight:700" onclick="openMdAddModal('${name}')">＋ Tambah Data</button>`
+      : ''}
           </div>
         </div>
         
@@ -723,7 +746,7 @@ function showMasterData(name) {
 function renderMdTable(name) {
   const cfg = MD[name];
   const query = (document.getElementById('md-search')?.value || '').toLowerCase();
-  
+
   const filteredRows = cfg.rows.filter(row => {
     return !query || row.some(cell => cell.toString().toLowerCase().includes(query));
   });
@@ -738,11 +761,18 @@ function renderMdTable(name) {
     </div></td></tr>`;
   } else {
     tbodyHtml = filteredRows.map(row => {
+      const origIdx = cfg.rows.indexOf(row);
       const cells = row.map((cell, i) => {
         let content = cell;
         if (cfg.isMatrix && i > 0 && MX_CLR[cell]) content = `<span class="matrix-badge" style="${MX_CLR[cell]}">${cell}</span>`;
-        else if (cell === '✅ Aktif') content = `<span style="font-size:12px;font-weight:600;color:var(--success);display:flex;align-items:center;gap:4px"><i class="ph ph-check-circle"></i> Aktif</span>`;
-        else if (cell === '⛔ Nonaktif') content = `<span style="font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:4px"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
+        else if (cell === '✅ Aktif') {
+          const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer" title="Klik untuk menonaktifkan"` : '';
+          content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--success);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(34,197,94,0.1);transition:0.2s"><i class="ph ph-check-circle"></i> Aktif</span>`;
+        }
+        else if (cell === '⛔ Nonaktif') {
+          const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer" title="Klik untuk mengaktifkan"` : '';
+          content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(100,116,139,0.1);transition:0.2s"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
+        }
         else if (i === 0 && !cfg.isMatrix) content = `<span style="font-weight:700;color:var(--muted);font-size:12px">${cell}</span>`;
         return `<td>${content}</td>`;
       }).join('');
@@ -764,6 +794,17 @@ function renderMdTable(name) {
       </div>
     </div>
   `;
+}
+
+function toggleMdStatus(name, rowIdx, colIdx) {
+  if (!isManagement()) { showToast('Akses ditolak!'); return; }
+  const cfg = MD[name];
+  if (!cfg || !cfg.rows[rowIdx]) return;
+  const curr = cfg.rows[rowIdx][colIdx];
+  const next = curr === '✅ Aktif' ? '⛔ Nonaktif' : '✅ Aktif';
+  cfg.rows[rowIdx][colIdx] = next;
+  showToast(`${next.includes('Aktif') ? '✅' : '⛔'} Status diubah menjadi ${next.replace('✅ ', '').replace('⛔ ', '')}`);
+  renderMdTable(name);
 }
 
 /* ═══════════════════════════════════════════
@@ -1150,7 +1191,7 @@ function initCharts() {
               padding: 6,
               callback: function (val, idx) {
                 const lbl = this.getLabelForValue(val);
-                 return lbl.length > 11 ? lbl.substring(0, 10) + '…' : lbl;
+                return lbl.length > 11 ? lbl.substring(0, 10) + '…' : lbl;
               }
             }
           },
