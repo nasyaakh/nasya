@@ -1,0 +1,180 @@
+<ui:composition 
+  template="/WEB-INF/assets/template/form_template.xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+  <ui:define name="content">
+    
+    <!-- Eksternal CDN (Ditulis menggunakan standar XML) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+
+    <!-- Pemanggilan CSS JSF -->
+    <h:outputStylesheet library="css" name="Style.css"/>
+
+    <!-- ══════════════════════════
+         DASHBOARD ADMIN
+         ══════════════════════════ -->
+    <div id="dashboardAdmin" class="page active">
+      <div class="admin-layout">
+        <aside class="sidebar" id="sb-dashboard"></aside>
+        <div class="main-area">
+          <div class="topbar">
+            <div class="topbar-title">Dashboard <span>/ Ringkasan Insiden</span></div>
+            <div class="topbar-right">
+              <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle" onclick="toggleTheme()"></button></div>
+              <span style="font-size:12px;color:var(--muted)" id="topbar-date"></span>
+              <div class="topbar-avatar">A</div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="daily-alert alert-warn">
+              <div class="da-left">
+                <div class="da-pulse"></div>
+                <div>
+                  <div class="da-title">2 insiden baru masuk hari ini</div>
+                  <div class="da-sub">1 insiden risiko tinggi di unit <b>IGD</b> menunggu verifikasi segera</div>
+                </div>
+              </div>
+              <button class="da-btn" onclick="window.location.href='form_pelaporan.html'">Tinjau Laporan →</button>
+            </div>
+            <div class="stat-grid" id="stat-grid"></div>
+
+            <div class="chart-card" style="margin-bottom:18px">
+              <div class="chart-head">
+                <div>
+                  <h3 style="margin-bottom:4px">Jumlah Insiden per Ruangan</h3>
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"></div>
+                </div>
+                <!-- Tag select sudah disesuaikan agar tidak error di XML (tag img/br/hr tidak ada di sini, aman) -->
+                <select class="yr-select" id="month-sel-admin" onchange="setUnitMonth(parseInt(this.value),'admin')">
+                  <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
+                  <option value="4" selected="selected">April</option><option value="5">Mei</option><option value="6">Juni</option>
+                  <option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option>
+                  <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
+                </select>
+              </div>
+              <div style="position:relative; width:100%; height:320px;">
+                <canvas id="c-unit"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card" style="margin-bottom:18px">
+              <div class="chart-head" style="margin-bottom:8px">
+                <h3>Verifikasi per Kategori</h3>
+              </div>
+              <div class="donut-wrapper">
+                <div class="donut-box">
+                  <div style="height:80px;width:100%;position:relative"><canvas id="d-knc"></canvas></div>
+                  <div class="donut-lbl" style="color:#0ea5e9">KNC</div>
+                </div>
+                <div class="donut-box">
+                  <div style="height:80px;width:100%;position:relative"><canvas id="d-ktd"></canvas></div>
+                  <div class="donut-lbl" style="color:#10b981">KTD</div>
+                </div>
+                <div class="donut-box">
+                  <div style="height:80px;width:100%;position:relative"><canvas id="d-ktc"></canvas></div>
+                  <div class="donut-lbl" style="color:#f59e0b">KTC</div>
+                </div>
+                <div class="donut-box">
+                  <div style="height:80px;width:100%;position:relative"><canvas id="d-kpcs"></canvas></div>
+                  <div class="donut-lbl" style="color:#ef4444">KPCS</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-card">
+              <div class="table-head">
+                <h3>Insiden Terbaru</h3>
+                <button class="btn btn-navy" onclick="window.location.href='form_pelaporan.html'">Lihat Semua →</button>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th><th>Tanggal</th><th>Unit</th><th>Kategori</th><th>Status</th><th>Risiko</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-rows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Detail Insiden -->
+    <div id="modal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3 id="modal-title"><i class="ph ph-file-text" style="margin-right:6px"></i> Detail Insiden</h3>
+            <div id="modal-meta" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+          </div>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div id="modal-body" style="overflow-y:auto;flex:1"></div>
+        <div class="modal-foot" id="modal-foot">
+          <button class="btn-approve" onclick="verifikasiInsiden()">✓ Verifikasi</button>
+          <button class="btn btn-ghost" onclick="openPrint()" style="flex:1">🖨️ Cetak</button>
+          <button class="btn-reject" onclick="tolakInsiden()">✗ Tolak</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div id="g-topbar">
+      <div class="mt-logo">
+        <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
+        <div>
+          <div class="mt-name">SIDEKAP</div>
+          <div class="mt-sub" id="g-page-title"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="mt-av">A</div>
+        <button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()">
+          <span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
+    <div id="mobile-drawer">
+      <div class="mdr-head">
+        <div class="sb-icon"><i class="ph ph-hospital"></i></div>
+        <div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div>
+      </div>
+      <div class="mdr-nav" id="mdr-nav-content"></div>
+      <div class="mdr-foot">
+        <div class="sb-user">
+          <div class="sb-avatar">A</div>
+          <div style="flex:1;min-width:0">
+            <div class="sb-uname">Administrator</div>
+            <div class="sb-urole">Super Admin</div>
+          </div>
+          <button onclick="doLogout()" title="Keluar"
+            style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
+            onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
+            onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    
+    <!-- Pemanggilan Javascript JSF -->
+    <h:outputScript library="js" name="Script.js"/>
+    
+    <script>
+    //<![CDATA[
+      // Override navigasi MPA untuk halaman ini
+      document.addEventListener('DOMContentLoaded', () => {
+        // Pastikan halaman ini aktif tanpa showPage()
+        if (typeof initDashboard === 'function') initDashboard();
+      });
+    //]]>
+    </script>
+
+  </ui:define>
+</ui:composition>

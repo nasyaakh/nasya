@@ -15,6 +15,124 @@
 
   <!-- Local Stylesheet -->
   <link rel="stylesheet" href="Style.css">
+  <style>
+    @media(min-width:769px) {
+
+      .th-expand,
+      .col-expand {
+        display: none !important
+      }
+
+      .tp-expand-row {
+        display: none !important
+      }
+    }
+
+    @media(max-width:768px) {
+
+      .desktop-table .th-hide-mobile,
+      .desktop-table .col-hide-mobile {
+        display: none !important
+      }
+
+      .th-expand,
+      .col-expand {
+        display: table-cell !important
+      }
+
+      .col-expand {
+        text-align: center;
+        vertical-align: middle;
+        width: 36px;
+        padding: 4px !important
+      }
+
+      .expand-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg2);
+        color: var(--text);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .2s;
+        line-height: 1;
+        padding: 0
+      }
+
+      .expand-btn:hover,
+      .expand-btn.open {
+        background: var(--primary, #1e3a5f);
+        color: #fff;
+        border-color: var(--primary, #1e3a5f)
+      }
+
+      .tp-expand-row {
+        display: none
+      }
+
+      .tp-expand-row.open {
+        display: table-row
+      }
+
+      .tp-expand-content {
+        padding: 10px 14px 14px;
+        background: var(--bg2);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        animation: tpExpandDown .2s ease
+      }
+
+      @keyframes tpExpandDown {
+        from {
+          opacity: 0;
+          transform: translateY(-6px)
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0)
+        }
+      }
+
+      .tp-expand-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px
+      }
+
+      .tp-expand-label {
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .4px
+      }
+
+      .tp-expand-value {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text)
+      }
+
+      .tp-expand-action {
+        grid-column: 1/-1;
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 2px
+      }
+
+      .tp-main-row.is-open {
+        background: var(--bg2)
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -288,14 +406,14 @@
             <table class="desktop-table">
               <thead>
                 <tr>
-                  <th>No</th>
                   <th>Tanggal</th>
-                  <th>Unit</th>
+                  <th class="th-hide-mobile">Unit</th>
                   <th>Pelapor</th>
                   <th>Kategori</th>
-                  <th>Status</th>
-                  <th>Risiko</th>
-                  <th>Aksi</th>
+                  <th class="th-hide-mobile">Status</th>
+                  <th class="th-hide-mobile">Risiko</th>
+                  <th class="th-hide-mobile">Aksi</th>
+                  <th class="th-expand" style="width:40px"></th>
                 </tr>
               </thead>
               <tbody id="laporan-rows"></tbody>
@@ -358,14 +476,14 @@
             <table class="desktop-table">
               <thead>
                 <tr>
-                  <th>No</th>
                   <th>Tanggal</th>
                   <th>Insiden</th>
-                  <th>Unit</th>
-                  <th>Investigator</th>
+                  <th class="th-hide-mobile">Unit</th>
+                  <th class="th-hide-mobile">Investigator</th>
                   <th>Grade Risiko</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
+                  <th class="th-hide-mobile">Status</th>
+                  <th class="th-hide-mobile">Aksi</th>
+                  <th class="th-expand" style="width:40px"></th>
                 </tr>
               </thead>
               <tbody id="inv-rows"></tbody>
@@ -512,10 +630,11 @@
                 <tr>
                   <th>Pengguna</th>
                   <th>Role</th>
-                  <th>Unit</th>
-                  <th>Status</th>
-                  <th>Login Terakhir</th>
-                  <th style="text-align:center">Aksi</th>
+                  <th class="th-hide-mobile">Unit</th>
+                  <th class="th-hide-mobile">Status</th>
+                  <th class="th-hide-mobile">Login Terakhir</th>
+                  <th class="th-hide-mobile" style="text-align:center">Aksi</th>
+                  <th class="th-expand" style="width:40px"></th>
                 </tr>
               </thead>
               <tbody id="user-tbody"></tbody>
@@ -991,6 +1110,20 @@
   <div id="toast" class="toast"></div>
 
   <script src="Script.js"></script>
+  <script>
+    function toggleRowLap(id) {
+      var e = document.getElementById('lap-exp-' + id), b = document.getElementById('lap-btn-' + id), r = b.closest('tr'), o = e.classList.toggle('open');
+      b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
+    }
+    function toggleRowInv(id) {
+      var e = document.getElementById('inv-exp-' + id), b = document.getElementById('inv-btn-' + id), r = b.closest('tr'), o = e.classList.toggle('open');
+      b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
+    }
+    function toggleRowUser(id) {
+      var e = document.getElementById('usr-exp-' + id), b = document.getElementById('usr-btn-' + id), r = b.closest('tr'), o = e.classList.toggle('open');
+      b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
+    }
+  </script>
 </body>
 
 </html>

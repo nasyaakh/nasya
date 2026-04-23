@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="SIDEKAP — Sistem Pelaporan Insiden Keselamatan Pasien RSUD">
+  <title>SIDEKAP — Sistem Pelaporan Insiden Keselamatan Pasien</title>
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════
+       TOPBAR PUBLIK
+       Sama persis dengan tampilan Landing di index.html
+       (Logo kiri + Dark mode toggle + tombol Masuk Sistem)
+       ══════════════════════════ -->
+  <nav class="top-nav">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">🏥</div>
+      <div class="nav-logo-text">SIDEKAP</div>
+    </div>
+    <div class="nav-right">
+      <div class="theme-toggle-wrap">
+        <span id="theme-ico-landing">🌙</span>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Ganti tema"></button>
+      </div>
+      <button class="btn-accent btn" onclick="window.location.href='index.html'">Masuk Sistem →</button>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════
+       AREA KONTEN UTAMA (KOSONG)
+       Diisi oleh masing-masing halaman.
+       Di Java Payara/JSF:  <ui:insert name="content" />
+       Contoh penggunaan:   form_template_user.html mengisi bagian ini
+       ══════════════════════════ -->
+  <main id="tpl-content-area">
+    <!-- Konten halaman dimasukkan di sini -->
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="Script.js"></script>
+</body>
+</html>

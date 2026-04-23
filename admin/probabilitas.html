@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="SIDEKAP — Master Data Probabilitas">
+  <title>SIDEKAP — Probabilitas</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../Style.css">
+</head>
+<body>
+  <div id="probabilitas" class="page active">
+    <div class="admin-layout">
+      <aside class="sidebar" id="sb-probabilitas"></aside>
+      <div class="main-area">
+        <div class="topbar">
+          <div class="topbar-title">Master Data <span>/ Probabilitas</span></div>
+          <div class="topbar-right">
+            <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle" onclick="toggleTheme()"></button></div>
+            <span style="font-size:12px;color:var(--muted)" id="topbar-date"></span>
+            <div class="topbar-avatar">A</div>
+          </div>
+        </div>
+        <div class="content">
+          <div class="table-card">
+            <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <div><div style="font-size:15px;font-weight:800">Probabilitas</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Tingkat kemungkinan terjadinya insiden kembali</div></div>
+              <button class="btn btn-navy" onclick="openModal()" style="display:flex;align-items:center;gap:6px"><i class="ph ph-plus-circle"></i> Tambah Data</button>
+            </div>
+            <div class="lap-bar"><div class="lap-sw"><span class="lap-sw-ico">🔍</span><input type="text" id="pb-search" placeholder="Cari nama atau deskripsi probabilitas..." oninput="filterTable('pb-search','pb-rows')"></div></div>
+            <table class="desktop-table">
+              <thead><tr><th style="width:50px">No</th><th style="width:80px">Kode</th><th>Nama Probabilitas</th><th>Deskripsi</th><th style="width:160px">Frekuensi</th><th style="width:140px;text-align:center">Aksi</th></tr></thead>
+              <tbody id="pb-rows">
+                <tr><td>1</td><td><span class="kode-badge">1</span></td><td style="font-weight:600">Sangat Jarang</td><td style="color:var(--muted);font-size:13px">Insiden hampir tidak pernah terjadi dalam kondisi normal</td><td style="font-size:13px;color:var(--muted)">&lt; 1 kali / 5 tahun</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
+                <tr><td>2</td><td><span class="kode-badge">2</span></td><td style="font-weight:600">Jarang</td><td style="color:var(--muted);font-size:13px">Insiden pernah terjadi namun jarang dalam kegiatan normal</td><td style="font-size:13px;color:var(--muted)">&gt; 1 kali / 5 tahun</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
+                <tr><td>3</td><td><span class="kode-badge">3</span></td><td style="font-weight:600">Kadang-Kadang</td><td style="color:var(--muted);font-size:13px">Insiden kadang terjadi, dan mungkin berulang di masa depan</td><td style="font-size:13px;color:var(--muted)">&gt; 1 kali / tahun</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
+                <tr><td>4</td><td><span class="kode-badge">4</span></td><td style="font-weight:600">Sering</td><td style="color:var(--muted);font-size:13px">Insiden sering terjadi dan cenderung berulang secara rutin</td><td style="font-size:13px;color:var(--muted)">&gt; 1 kali / bulan</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
+                <tr><td>5</td><td><span class="kode-badge">5</span></td><td style="font-weight:600">Sangat Sering</td><td style="color:var(--muted);font-size:13px">Insiden terjadi hampir setiap saat dalam kegiatan operasional</td><td style="font-size:13px;color:var(--muted)">&gt; 1 kali / minggu</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
+              </tbody>
+            </table>
+            <div class="pgn"><div class="pgn-info">Menampilkan 1–5 dari 5 data</div><div class="pgn-btns"><button class="btn btn-ghost" disabled style="padding:5px 12px;font-size:12px">‹ Sebelumnya</button><button class="btn btn-navy" style="padding:5px 12px;font-size:12px">1</button><button class="btn btn-ghost" disabled style="padding:5px 12px;font-size:12px">Berikutnya ›</button></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pb-modal" class="modal-overlay" style="display:none">
+    <div class="modal-box" style="max-width:500px">
+      <div class="modal-head"><div><h3><i class="ph ph-plus-circle" style="margin-right:6px"></i> Tambah Probabilitas</h3></div><button class="modal-close" onclick="closeModal()">✕</button></div>
+      <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+        <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">KODE (Nilai)</label><input type="number" min="1" placeholder="Contoh: 6" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">NAMA PROBABILITAS</label><input type="text" placeholder="Nama tingkat probabilitas" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">DESKRIPSI</label><textarea rows="2" placeholder="Deskripsi probabilitas..." style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box;resize:vertical"></textarea></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">FREKUENSI</label><input type="text" placeholder="Contoh: > 1 kali / minggu" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box"></div>
+      </div>
+      <div class="modal-foot" style="justify-content:flex-end;gap:8px"><button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn-approve" style="flex:none;padding:10px 20px"><i class="ph ph-floppy-disk"></i> Simpan</button></div>
+    </div>
+  </div>
+
+  <div id="g-topbar"><div class="mt-logo"><div class="mt-logo-icon"><i class="ph ph-hospital"></i></div><div><div class="mt-name">SIDEKAP</div><div class="mt-sub" id="g-page-title"></div></div></div><div style="display:flex;align-items:center;gap:8px"><div class="mt-av">A</div><button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()"><span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span></button></div></div>
+  <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
+  <div id="mobile-drawer"><div class="mdr-head"><div class="sb-icon"><i class="ph ph-hospital"></i></div><div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div></div><div class="mdr-nav" id="mdr-nav-content"></div><div class="mdr-foot"><div class="sb-user"><div class="sb-avatar">A</div><div style="flex:1;min-width:0"><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div><button onclick="doLogout()" title="Keluar" style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button></div></div></div>
+  <style>.kode-badge{font-family:monospace;font-size:12px;background:var(--bg2);padding:2px 7px;border-radius:5px}</style>
+  <div id="toast" class="toast"></div>
+  <script src="../Script.js"></script>
+  <script>
+    function filterTable(i,t){const q=document.getElementById(i).value.toLowerCase();document.querySelectorAll('#'+t+' tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none');}
+    function openModal(){document.getElementById('pb-modal').style.display='flex';}
+    function closeModal(){document.getElementById('pb-modal').style.display='none';}
+    function editRow(btn){openModal();}
+    function hapusRow(btn){if(confirm('Yakin ingin menghapus?')){btn.closest('tr').remove();if(typeof showToast==='function')showToast('Data berhasil dihapus');}}
+  </script>
+</body>
+</html>

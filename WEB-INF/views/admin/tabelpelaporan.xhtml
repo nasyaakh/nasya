@@ -1,0 +1,175 @@
+<ui:composition
+  template="/WEB-INF/assets/template/form_template.xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+  <ui:define name="content">
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="Style.css"/>
+
+    <div id="tabelPelaporanMD" class="page active">
+      <div class="admin-layout">
+        <aside class="sidebar" id="sb-tabelPelaporanMD"></aside>
+        <div class="main-area">
+          <div class="topbar">
+            <div class="topbar-title">Tabel Data <span>/ Tabel Pelaporan</span></div>
+            <div class="topbar-right">
+              <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle" onclick="toggleTheme()"></button></div>
+              <span style="font-size:12px;color:var(--muted)" id="topbar-date"></span>
+              <div class="topbar-avatar">A</div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="table-card">
+              <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+                <div>
+                  <div style="font-size:15px;font-weight:800">Daftar Laporan Insiden</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px">Semua laporan insiden yang masuk ke sistem SIDEKAP</div>
+                </div>
+                <button class="btn btn-navy" onclick="openModal()" style="display:flex;align-items:center;gap:6px">
+                  <i class="ph ph-plus-circle"></i> Tambah Laporan
+                </button>
+              </div>
+
+              <!-- Chip summary -->
+              <div class="lap-chips">
+                <span class="chip chip-warn">&#9203; 7 menunggu review</span>
+                <div class="chip-sep"></div>
+                <span class="chip chip-red">&#128308; 2 belum ditangani &gt;24 jam</span>
+                <div class="chip-sep"></div>
+                <span class="chip chip-muted">&#128203; 30 total laporan bulan ini</span>
+              </div>
+
+              <!-- Filter bar -->
+              <div class="lap-bar">
+                <div class="lap-sw"><span class="lap-sw-ico">🔍</span><input type="text" id="tp-search" placeholder="Cari pelapor, unit, atau kategori..." oninput="filterTable('tp-search','tp-rows')"/></div>
+                <select class="lap-flt" onchange="filterTable('tp-search','tp-rows')"><option value="">Semua Kategori</option><option>KNC</option><option>KTD</option><option>KTC</option><option>KPCS</option></select>
+                <select class="lap-flt" onchange="filterTable('tp-search','tp-rows')"><option value="">Semua Status</option><option>Terverifikasi</option><option>Menunggu</option><option>Ditolak</option></select>
+                <select class="lap-flt" onchange="filterTable('tp-search','tp-rows')"><option value="">Semua Risiko</option><option>Tinggi</option><option>Sedang</option><option>Rendah</option></select>
+              </div>
+
+              <table class="desktop-table">
+                <thead>
+                  <tr>
+                    <th style="width:50px">No</th>
+                    <th style="width:100px">Tanggal</th>
+                    <th>Pelapor</th>
+                    <th>Unit</th>
+                    <th style="width:90px">Kategori</th>
+                    <th style="width:120px">Status</th>
+                    <th style="width:90px">Risiko</th>
+                    <th style="width:100px;text-align:center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tp-rows">
+                  <tr>
+                    <td>1</td>
+                    <td style="font-size:12px;color:var(--muted)">23 Apr 2026</td>
+                    <td><div style="font-weight:600;font-size:13px">Budi Wicaksono</div><div style="font-size:11px;color:var(--muted)">Perawat IGD</div></td>
+                    <td style="font-size:13px">Instalasi Gawat Darurat</td>
+                    <td><span class="badge-status" style="background:rgba(239,68,68,0.12);color:#dc2626">KTD</span></td>
+                    <td><span class="badge-status" style="background:rgba(245,158,11,0.12);color:#d97706">Menunggu</span></td>
+                    <td><span class="badge-status status-high">Tinggi</span></td>
+                    <td style="text-align:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="openModal()"><i class="ph ph-eye"></i> Detail</button></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td style="font-size:12px;color:var(--muted)">22 Apr 2026</td>
+                    <td><div style="font-weight:600;font-size:13px">Nur Fitria</div><div style="font-size:11px;color:var(--muted)">Perawat ICU</div></td>
+                    <td style="font-size:13px">Ruang ICU</td>
+                    <td><span class="badge-status" style="background:rgba(14,165,233,0.12);color:#0284c7">KNC</span></td>
+                    <td><span class="badge-status status-verified">Terverifikasi</span></td>
+                    <td><span class="badge-status" style="background:rgba(245,158,11,0.12);color:#d97706">Sedang</span></td>
+                    <td style="text-align:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="openModal()"><i class="ph ph-eye"></i> Detail</button></td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td style="font-size:12px;color:var(--muted)">21 Apr 2026</td>
+                    <td><div style="font-weight:600;font-size:13px">dr. Siti Rahma</div><div style="font-size:11px;color:var(--muted)">Kepala Ruangan Bedah</div></td>
+                    <td style="font-size:13px">Instalasi Bedah Sentral</td>
+                    <td><span class="badge-status" style="background:rgba(139,92,246,0.12);color:#7c3aed">KPCS</span></td>
+                    <td><span class="badge-status status-rejected">Ditolak</span></td>
+                    <td><span class="badge-status status-verified">Rendah</span></td>
+                    <td style="text-align:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="openModal()"><i class="ph ph-eye"></i> Detail</button></td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td style="font-size:12px;color:var(--muted)">20 Apr 2026</td>
+                    <td><div style="font-weight:600;font-size:13px">Rina Marlina</div><div style="font-size:11px;color:var(--muted)">Apoteker</div></td>
+                    <td style="font-size:13px">Instalasi Farmasi</td>
+                    <td><span class="badge-status" style="background:rgba(16,185,129,0.12);color:#059669">KTC</span></td>
+                    <td><span class="badge-status status-verified">Terverifikasi</span></td>
+                    <td><span class="badge-status" style="background:rgba(245,158,11,0.12);color:#d97706">Sedang</span></td>
+                    <td style="text-align:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="openModal()"><i class="ph ph-eye"></i> Detail</button></td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td style="font-size:12px;color:var(--muted)">19 Apr 2026</td>
+                    <td><div style="font-weight:600;font-size:13px">Ahmad Fauzi</div><div style="font-size:11px;color:var(--muted)">Analis Laboratorium</div></td>
+                    <td style="font-size:13px">Instalasi Laboratorium</td>
+                    <td><span class="badge-status" style="background:rgba(14,165,233,0.12);color:#0284c7">KNC</span></td>
+                    <td><span class="badge-status" style="background:rgba(245,158,11,0.12);color:#d97706">Menunggu</span></td>
+                    <td><span class="badge-status status-high">Tinggi</span></td>
+                    <td style="text-align:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="openModal()"><i class="ph ph-eye"></i> Detail</button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="pgn">
+                <div class="pgn-info">Menampilkan 1–5 dari 30 data</div>
+                <div class="pgn-btns">
+                  <button class="btn btn-ghost" disabled="disabled" style="padding:5px 12px;font-size:12px">&#8249; Sebelumnya</button>
+                  <button class="btn btn-navy" style="padding:5px 12px;font-size:12px">1</button>
+                  <button class="btn btn-ghost" style="padding:5px 12px;font-size:12px">2</button>
+                  <button class="btn btn-ghost" style="padding:5px 12px;font-size:12px">3</button>
+                  <button class="btn btn-ghost" style="padding:5px 12px;font-size:12px">Berikutnya &#8250;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Detail Laporan -->
+    <div id="tp-modal" class="modal-overlay" style="display:none">
+      <div class="modal-box" style="max-width:560px">
+        <div class="modal-head">
+          <div><h3><i class="ph ph-file-text" style="margin-right:6px"></i> Detail Laporan Insiden</h3><div style="font-size:11px;color:var(--muted);margin-top:2px">INS/2026/04/0001 &#8226; 23 April 2026</div></div>
+          <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+        </div>
+        <div style="padding:18px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:var(--bg2);padding:12px;border-radius:10px"><div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:4px">PELAPOR</div><div style="font-weight:700;font-size:13px">Budi Wicaksono</div></div>
+            <div style="background:var(--bg2);padding:12px;border-radius:10px"><div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:4px">UNIT</div><div style="font-weight:700;font-size:13px">Instalasi Gawat Darurat</div></div>
+            <div style="background:var(--bg2);padding:12px;border-radius:10px"><div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:4px">KATEGORI</div><span class="badge-status" style="background:rgba(239,68,68,0.12);color:#dc2626">KTD</span></div>
+            <div style="background:var(--bg2);padding:12px;border-radius:10px"><div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:4px">TINGKAT RISIKO</div><span class="badge-status status-high">Tinggi</span></div>
+          </div>
+          <div style="background:var(--bg2);padding:12px;border-radius:10px"><div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:6px">KRONOLOGI KEJADIAN</div><div style="font-size:13px;color:var(--text);line-height:1.6">Pasien diberikan obat antihipertensi dengan dosis dua kali lipat dari yang seharusnya. Kesalahan terjadi akibat label resep yang tidak terbaca dengan jelas. Pasien mengalami penurunan tekanan darah mendadak dan membutuhkan penanganan segera.</div></div>
+        </div>
+        <div class="modal-foot" style="justify-content:space-between">
+          <button class="btn btn-ghost" onclick="closeModal()">Tutup</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn-approve" style="flex:none;padding:10px 16px" onclick="closeModal();if(typeof showToast==='function')showToast('Laporan berhasil diverifikasi')">&#10003; Verifikasi</button>
+            <button class="btn-reject" style="padding:10px 16px" onclick="closeModal();if(typeof showToast==='function')showToast('Laporan ditolak')">&#10007; Tolak</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="g-topbar"><div class="mt-logo"><div class="mt-logo-icon"><i class="ph ph-hospital"></i></div><div><div class="mt-name">SIDEKAP</div><div class="mt-sub" id="g-page-title"></div></div></div><div style="display:flex;align-items:center;gap:8px"><div class="mt-av">A</div><button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()"><span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span></button></div></div>
+    <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
+    <div id="mobile-drawer"><div class="mdr-head"><div class="sb-icon"><i class="ph ph-hospital"></i></div><div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div></div><div class="mdr-nav" id="mdr-nav-content"></div><div class="mdr-foot"><div class="sb-user"><div class="sb-avatar">A</div><div style="flex:1;min-width:0"><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div><button onclick="doLogout()" title="Keluar" style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button></div></div></div>
+    <div id="toast" class="toast"></div>
+    <h:outputScript library="js" name="Script.js"/>
+    <script>//<![CDATA[
+      function filterTable(i,t){const q=document.getElementById(i).value.toLowerCase();document.querySelectorAll('#'+t+' tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none');}
+      function openModal(){document.getElementById('tp-modal').style.display='flex';}
+      function closeModal(){document.getElementById('tp-modal').style.display='none';}
+    //]]></script>
+
+  </ui:define>
+
+</ui:composition>

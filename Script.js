@@ -246,26 +246,22 @@ function renderDashRows() {
 }
 function renderLaporan() {
   const tbody = document.getElementById('laporan-rows');
+  if (!tbody) return;
   tbody.innerHTML = INSIDEN.map((d, i) => {
     const col = AVCOL[i % AVCOL.length];
     const rep = `<div class="rep-cell"><div class="rep-av" style="background:${col}22;color:${col}">${initials(d.pelapor)}</div>${d.pelapor}</div>`;
     const isSent = d.terkirim === true;
     const kirimBtn = isManagement() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim ke Investigasi' : 'Kirim ke Tabel Investigasi'}" style="font-size:12px;padding:5px 9px"><i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i></button>` : '';
     const hapusBtn = isManagement() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px"><i class="ph ph-trash"></i></button>` : '';
-    return `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td>
-    <td style="white-space:nowrap">
-      <div style="display:flex;align-items:center;gap:4px">
-        <button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button>
-        <button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>
-        ${kirimBtn}
-        ${hapusBtn}
-      </div>
-    </td></tr>`;
+    const aksi = `<div style="display:flex;align-items:center;gap:4px"><button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button><button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>${kirimBtn}${hapusBtn}</div>`;
+    return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td class="col-hide-mobile">${stsBadge(d.status)}</td><td class="col-hide-mobile">${riskHtml(d.risiko)}</td><td class="col-hide-mobile" style="white-space:nowrap">${aksi}</td><td class="col-expand"><button class="expand-btn" id="lap-btn-${i}" onclick="toggleRowLap(${i})" title="Lihat detail">&#8250;</button></td></tr>
+    <tr class="tp-expand-row" id="lap-exp-${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBadge(d.status)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Risiko</span><span>${riskHtml(d.risiko)}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksi}</div></div></td></tr>`;
   }).join('');
   tbody.querySelectorAll('.detail-btn').forEach(b => b.addEventListener('click', () => openDetail(INSIDEN[+b.dataset.idx], +b.dataset.idx)));
   tbody.querySelectorAll('.lap-btn-kirim').forEach(b => b.addEventListener('click', () => kirimLaporan(+b.dataset.idx)));
   tbody.querySelectorAll('.lap-btn-hapus').forEach(b => b.addEventListener('click', () => hapusLaporan(+b.dataset.idx)));
   const cards = document.getElementById('laporan-cards');
+  if (!cards) return;
   cards.innerHTML = INSIDEN.map((d, i) => `<div class="inc-card" data-idx="${i}"><div class="ic-top"><div class="ic-num">#${d.no}</div>${katBadge(d.kat)}${stsBadge(d.status)}</div><div style="margin-bottom:5px"><div class="ic-unit"><i class="ph ph-hospital"></i> ${d.unit}</div><div class="ic-meta">${d.pelapor} · ${d.tgl}</div></div><div style="display:flex;align-items:center">${riskHtml(d.risiko)}<span style="flex:1"></span><span style="font-size:16px;color:var(--muted)"><i class="ph ph-caret-right"></i></span></div></div>`).join('');
   cards.querySelectorAll('.inc-card').forEach(c => c.addEventListener('click', () => openDetail(INSIDEN[+c.dataset.idx], +c.dataset.idx)));
 }
@@ -296,6 +292,7 @@ function renderFilteredLaporan() {
 
   // Render ke tbody
   const tbody = document.getElementById('laporan-rows');
+  if (!tbody) return;
   if (!filtered.length) {
     tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
       <div class="es-icon" style="font-size:32px"><i class="ph ph-magnifying-glass"></i></div>
@@ -308,17 +305,9 @@ function renderFilteredLaporan() {
       const isSent = d.terkirim === true;
       const kirimBtn = isManagement() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim ke Investigasi' : 'Kirim ke Tabel Investigasi'}" style="font-size:12px;padding:5px 9px"><i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i></button>` : '';
       const hapusBtn = isManagement() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px"><i class="ph ph-trash"></i></button>` : '';
-      return `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td>
-        <td style="font-size:12px;color:var(--muted)">${d.tgl}</td>
-        <td><b>${d.unit}</b></td><td>${rep}</td>
-        <td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td>
-        <td style="white-space:nowrap">
-          <div style="display:flex;align-items:center;gap:4px">
-            <button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button>
-            <button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>
-            ${kirimBtn}${hapusBtn}
-          </div>
-        </td></tr>`;
+      const aksi = `<div style="display:flex;align-items:center;gap:4px"><button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button><button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>${kirimBtn}${hapusBtn}</div>`;
+      return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td class="col-hide-mobile">${stsBadge(d.status)}</td><td class="col-hide-mobile">${riskHtml(d.risiko)}</td><td class="col-hide-mobile" style="white-space:nowrap">${aksi}</td><td class="col-expand"><button class="expand-btn" id="lap-btn-f${i}" onclick="toggleRowLap('f${i}')" title="Lihat detail">&#8250;</button></td></tr>
+      <tr class="tp-expand-row" id="lap-exp-f${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBadge(d.status)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Risiko</span><span>${riskHtml(d.risiko)}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksi}</div></div></td></tr>`;
     }).join('');
     tbody.querySelectorAll('.detail-btn').forEach(b => b.addEventListener('click', () => openDetail(INSIDEN[+b.dataset.idx], +b.dataset.idx)));
     tbody.querySelectorAll('.lap-btn-kirim').forEach(b => b.addEventListener('click', () => kirimLaporan(+b.dataset.idx)));
@@ -380,15 +369,13 @@ function hapusLaporan(idx) {
 function renderInvestigasi() {
   const btnTxt = isManagement() ? 'Investigasi' : 'Lihat Detail';
   const btnIcon = isManagement() ? 'ph-microscope' : 'ph-eye';
-  document.getElementById('inv-rows').innerHTML = INVESTIGASI.map((d, i) => `<tr>
-    <td style="color:var(--muted);font-size:12px;font-weight:700">${d.no}</td>
-    <td style="font-size:12px;color:var(--muted)">${d.tgl}</td>
-    <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.insiden}</td>
-    <td><b>${d.unit}</b></td><td>${d.investigator}</td>
-    <td>${gradeBadge(d.grade)}</td>
-    <td>${d.status === 'Selesai' ? '<span class="badge badge-s">✓ Selesai</span>' : d.status === 'Proses' ? '<span class="badge badge-w">⏳ Proses</span>' : '<span class="badge badge-d">— Belum</span>'}</td>
-    <td><button class="btn btn-navy" style="font-size:11px;padding:5px 10px;display:inline-flex;align-items:center;gap:4px" onclick="openInvModal(${i})"><i class="ph ${btnIcon}"></i> ${btnTxt}</button></td>
-  </tr>`).join('');
+  const invEl = document.getElementById('inv-rows'); if (!invEl) return;
+  invEl.innerHTML = INVESTIGASI.map((d, i) => {
+    const stsBdg = d.status === 'Selesai' ? '<span class="badge badge-s">✓ Selesai</span>' : d.status === 'Proses' ? '<span class="badge badge-w">⏳ Proses</span>' : '<span class="badge badge-d">— Belum</span>';
+    const actBtn = `<button class="btn btn-navy" style="font-size:11px;padding:5px 10px;display:inline-flex;align-items:center;gap:4px" onclick="openInvModal(${i})"><i class="ph ${btnIcon}"></i> ${btnTxt}</button>`;
+    return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.insiden}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td class="col-hide-mobile">${d.investigator}</td><td>${gradeBadge(d.grade)}</td><td class="col-hide-mobile">${stsBdg}</td><td class="col-hide-mobile">${actBtn}</td><td class="col-expand"><button class="expand-btn" id="inv-btn-${i}" onclick="toggleRowInv(${i})" title="Lihat detail">&#8250;</button></td></tr>
+    <tr class="tp-expand-row" id="inv-exp-${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Investigator</span><span class="tp-expand-value">${d.investigator}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBdg}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${actBtn}</div></div></td></tr>`;
+  }).join('');
 }
 
 /* ════════════════════════════
@@ -475,15 +462,21 @@ function getFilteredUsers() {
 function renderUserTable() {
   const filtered = getFilteredUsers();
   const tbody = document.getElementById('user-tbody');
-  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="es-icon" style="font-size:32px"><i class="ph ph-user"></i></div><p>Tidak ada pengguna yang sesuai filter.</p></div></td></tr>`; }
-  else { tbody.innerHTML = filtered.map(u => `<tr><td><div class="user-avatar-cell"><div class="ua-circle" style="background:${u.color}22;color:${u.color}">${initials(u.nama)}</div><div><div class="ua-name">${u.nama}${u.isMe ? '<span class="ua-you">Anda</span>' : ''}</div><div class="ua-email">@${u.username} · ${u.email}</div></div></div></td><td>${roleBadge(u.role)}</td><td><span class="unit-badge">${u.unit}</span></td><td><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></td><td style="font-size:11px;color:var(--muted)">${u.lastLogin.replace(' ', '<br>')}</td><td><div class="act-btns"><button class="act-btn" title="Edit" onclick="openEditUserModal(${u.id})"><i class="ph ph-pencil-simple"></i></button><button class="act-btn" title="Toggle Status" onclick="toggleUserStatus(${u.id})">${u.status === 'Aktif' ? '<i class="ph ph-lock-key"></i>' : '<i class="ph ph-lock-key-open"></i>'}</button>${!u.isMe ? `<button class="act-btn danger" title="Hapus" onclick="deleteUser(${u.id})"><i class="ph ph-trash"></i></button>` : '<div style="width:28px"></div>'}</div></td></tr>`).join(''); }
+  if (!tbody) return;
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="es-icon" style="font-size:32px"><i class="ph ph-user"></i></div><p>Tidak ada pengguna yang sesuai filter.</p></div></td></tr>`; }
+  else { tbody.innerHTML = filtered.map(u => {
+    const aksiBtns = `<div class="act-btns"><button class="act-btn" title="Edit" onclick="openEditUserModal(${u.id})"><i class="ph ph-pencil-simple"></i></button><button class="act-btn" title="Toggle Status" onclick="toggleUserStatus(${u.id})">${u.status === 'Aktif' ? '<i class="ph ph-lock-key"></i>' : '<i class="ph ph-lock-key-open"></i>'}</button>${!u.isMe ? `<button class="act-btn danger" title="Hapus" onclick="deleteUser(${u.id})"><i class="ph ph-trash"></i></button>` : '<div style="width:28px"></div>'}</div>`;
+    return `<tr class="tp-main-row"><td><div class="user-avatar-cell"><div class="ua-circle" style="background:${u.color}22;color:${u.color}">${initials(u.nama)}</div><div><div class="ua-name">${u.nama}${u.isMe ? '<span class="ua-you">Anda</span>' : ''}</div><div class="ua-email">@${u.username} · ${u.email}</div></div></div></td><td>${roleBadge(u.role)}</td><td class="col-hide-mobile"><span class="unit-badge">${u.unit}</span></td><td class="col-hide-mobile"><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></td><td class="col-hide-mobile" style="font-size:11px;color:var(--muted)">${u.lastLogin.replace(' ', '<br>')}</td><td class="col-hide-mobile">${aksiBtns}</td><td class="col-expand"><button class="expand-btn" id="usr-btn-${u.id}" onclick="toggleRowUser(${u.id})" title="Lihat detail">&#8250;</button></td></tr>
+    <tr class="tp-expand-row" id="usr-exp-${u.id}"><td colspan="7" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${u.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></span></div><div class="tp-expand-item"><span class="tp-expand-label">Login Terakhir</span><span class="tp-expand-value" style="font-size:11px">${u.lastLogin}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksiBtns}</div></div></td></tr>`;
+  }).join(''); }
   // RBAC: sembunyikan tombol aksi untuk non-Admin
   if (!isAdmin()) {
     tbody.querySelectorAll('.act-btns').forEach(el => {
       el.parentElement.innerHTML = '<span style="font-size:11px;color:var(--muted);padding:0 8px;display:inline-flex;align-items:center;gap:4px"><i class="ph ph-eye"></i> Lihat Saja</span>';
     });
   }
-  document.getElementById('user-pgn-info').textContent = `Menampilkan ${filtered.length} dari ${USERS.length} pengguna`;
+  const pgnEl = document.getElementById('user-pgn-info');
+  if (pgnEl) pgnEl.textContent = `Menampilkan ${filtered.length} dari ${USERS.length} pengguna`;
 }
 function openUserModal() { editingUserId = null; document.getElementById('um-title').textContent = '👤 Tambah Pengguna Baru'; document.getElementById('um-meta').textContent = 'Isi data lengkap pengguna';['uf-nama', 'uf-username', 'uf-email', 'uf-password'].forEach(id => document.getElementById(id).value = ''); document.getElementById('uf-role').value = ''; document.getElementById('uf-unit').value = ''; document.getElementById('uf-status').value = 'Aktif'; document.getElementById('uf-unit-note').style.display = 'none'; document.getElementById('user-modal').classList.add('open'); }
 function openEditUserModal(id) { const u = USERS.find(x => x.id === id); if (!u) return; editingUserId = id; document.getElementById('um-title').textContent = '✏️ Edit Pengguna'; document.getElementById('um-meta').textContent = `Mengubah data @${u.username}`; document.getElementById('uf-nama').value = u.nama; document.getElementById('uf-username').value = u.username; document.getElementById('uf-email').value = u.email; document.getElementById('uf-role').value = u.role; document.getElementById('uf-unit').value = u.unit; document.getElementById('uf-password').value = ''; document.getElementById('uf-status').value = u.status; handleRoleChange(); document.getElementById('user-modal').classList.add('open'); }
@@ -1226,17 +1219,18 @@ function setDate() {
 }
 
 window.onload = function () {
-  setDate();
-  renderSidebars();
-  renderStats();
-  renderDashRows();
-  renderLaporan();
-  renderFilteredLaporan(); // inisialisasi info jumlah & filter tabel laporan
-  renderInvestigasi();
-  renderForms();
-  renderUserStats();
-  updateUserCounts();
-  renderUserTable();
-  initCharts();
-  bindMenuClicks();        // aktifkan klik sidebar data-driven
+  const safe = (fn) => { try { fn(); } catch(e) { console.warn('[onload]', e.message); } };
+  safe(setDate);
+  safe(renderSidebars);
+  safe(renderStats);
+  safe(renderDashRows);
+  safe(renderLaporan);
+  safe(renderFilteredLaporan);
+  safe(renderInvestigasi);
+  safe(renderForms);
+  safe(renderUserStats);
+  safe(updateUserCounts);
+  safe(renderUserTable);
+  safe(initCharts);
+  safe(bindMenuClicks);
 };

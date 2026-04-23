@@ -1,0 +1,169 @@
+<ui:composition 
+  template="/WEB-INF/assets/template/form_template.xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+  <ui:define name="content">
+
+    <!-- Eksternal CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+
+    <!-- Pemanggilan CSS JSF -->
+    <h:outputStylesheet library="css" name="Style.css"/>
+
+    <!-- ══════════════════════════
+         TABEL INVESTIGASI
+         ══════════════════════════ -->
+    <div id="tabelInvestigasi" class="page active">
+      <div class="admin-layout">
+        <aside class="sidebar" id="sb-tabelInvestigasi"></aside>
+        <div class="main-area">
+          <div class="topbar">
+            <div class="topbar-title">Tabel Data <span>/ Tabel Investigasi Sederhana</span></div>
+            <div class="topbar-right">
+              <div class="theme-toggle-wrap"><button class="theme-toggle" onclick="toggleTheme()"></button></div>
+              <div class="topbar-avatar">A</div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="inv-grid">
+              <div class="inv-stat">
+                <div class="inv-stat-val" style="color:#4ade80">12</div>
+                <div class="inv-stat-lbl">Investigasi Selesai</div>
+              </div>
+              <div class="inv-stat">
+                <div class="inv-stat-val" style="color:#facc15">5</div>
+                <div class="inv-stat-lbl">Sedang Proses</div>
+              </div>
+              <div class="inv-stat">
+                <div class="inv-stat-val" style="color:#f87171">3</div>
+                <div class="inv-stat-lbl">Belum Dimulai</div>
+              </div>
+            </div>
+            <div class="table-card">
+              <div class="table-head">
+                <h3>Daftar Investigasi Sederhana</h3>
+                <div class="tbl-controls">
+                  <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" placeholder="Cari insiden..." /></div>
+                  <select class="flt">
+                    <option>Semua Grade</option><option>Rendah</option>
+                    <option>Sedang</option><option>Tinggi</option><option>Ekstrem</option>
+                  </select>
+                </div>
+              </div>
+              <table class="desktop-table">
+                <thead>
+                  <tr>
+                    <th>No</th><th>Tanggal</th><th>Insiden</th><th>Unit</th>
+                    <th>Investigator</th><th>Grade Risiko</th><th>Status</th><th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="inv-rows"></tbody>
+              </table>
+              <div class="pgn">
+                <div class="pgn-info" id="inv-pgn-info"></div>
+                <div class="pgn-btns" id="inv-pgn-btns"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Investigasi -->
+    <div id="inv-modal" class="modal-overlay">
+      <div class="modal-box" style="max-width:760px">
+        <div class="modal-head">
+          <div>
+            <h3 id="inv-modal-title"><i class="ph ph-microscope" style="margin-right:6px"></i> Investigasi Sederhana</h3>
+            <div id="inv-modal-meta" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+          </div>
+          <button class="modal-close" onclick="closeInvModal()">✕</button>
+        </div>
+        <div style="overflow-y:auto;flex:1">
+          <div id="inv-modal-status"
+            style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--bg2)">
+          </div>
+          <div style="padding:14px 16px">
+            <div style="background:#e8e8e8;border-radius:10px;overflow:hidden">
+              <div class="form-kop">
+                <div style="font-size:32px;color:var(--primary);flex-shrink:0;background:rgba(59,130,246,0.1);padding:10px;border-radius:12px;display:flex;align-items:center;justify-content:center">
+                  <i class="ph ph-hospital"></i>
+                </div>
+                <div>
+                  <div class="kop-title">Formulir Investigasi Sederhana</div>
+                  <div class="kop-sub">Di Rumah Sakit Umum Daerah Dokter Soedarso</div>
+                </div>
+              </div>
+              <div class="form-judul">
+                <div class="jd-main">Investigasi Sederhana</div>
+                <div class="jd-rah">DOKUMEN INTERNAL — RAHASIA</div>
+              </div>
+              <div class="ff-sec">A. Identitas Insiden</div>
+              <div class="ff-body" id="inv-f-identitas"></div>
+              <div class="ff-sec">B. Analisis Penyebab Langsung</div>
+              <div class="ff-body" id="inv-f-penyebab"></div>
+              <div class="ff-sec">C. Faktor Kontribusi</div>
+              <div class="ff-body" id="inv-f-faktor"></div>
+              <div class="ff-sec">D. Rekomendasi &amp; Tindak Lanjut</div>
+              <div class="ff-body" id="inv-f-rekomendasi"></div>
+              <div class="ff-sec">E. Grading Risiko</div>
+              <div class="ff-body" id="inv-f-grading"></div>
+              <div class="ff-sec">F. Investigator</div>
+              <div class="ff-body" id="inv-f-investigator"></div>
+              <div class="ff-close"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot" style="justify-content:space-between">
+          <button class="btn btn-ghost" onclick="closeInvModal()">✕ Tutup</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost" onclick="resetInvForm()">↺ Bersihkan</button>
+            <button class="btn-approve" style="flex:none;padding:10px 20px" onclick="simpanInvestigasi()">💾 Simpan Investigasi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div id="g-topbar">
+      <div class="mt-logo">
+        <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
+        <div><div class="mt-name">SIDEKAP</div><div class="mt-sub" id="g-page-title"></div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="mt-av">A</div>
+        <button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()">
+          <span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
+    <div id="mobile-drawer">
+      <div class="mdr-head">
+        <div class="sb-icon"><i class="ph ph-hospital"></i></div>
+        <div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div>
+      </div>
+      <div class="mdr-nav" id="mdr-nav-content"></div>
+      <div class="mdr-foot">
+        <div class="sb-user">
+          <div class="sb-avatar">A</div>
+          <div style="flex:1;min-width:0"><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div>
+          <button onclick="doLogout()" title="Keluar"
+            style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
+            onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
+            onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <!-- Pemanggilan Javascript JSF -->
+    <h:outputScript library="js" name="Script.js"/>
+
+  </ui:define>
+</ui:composition>

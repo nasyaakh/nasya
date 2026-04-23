@@ -1,0 +1,113 @@
+<ui:composition 
+  template="/WEB-INF/assets/template/form_template.xhtml"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+  <ui:define name="content">
+
+    <!-- Eksternal CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+
+    <!-- Pemanggilan CSS JSF (webapp root, tanpa ../) -->
+    <h:outputStylesheet library="css" name="Style.css"/>
+
+    <!-- ══════════════════════════
+         TOPBAR PUBLIK
+         ══════════════════════════ -->
+    <nav class="top-nav">
+      <div class="nav-logo">
+        <div class="nav-logo-icon">🏥</div>
+        <div class="nav-logo-text">SIDEKAP</div>
+      </div>
+      <div class="nav-right">
+        <div class="theme-toggle-wrap">
+          <span id="theme-ico-landing">🌙</span>
+          <button class="theme-toggle" onclick="toggleTheme()" title="Ganti tema"></button>
+        </div>
+        <button class="btn-accent btn" onclick="window.location.href='index.html'">Masuk Sistem →</button>
+      </div>
+    </nav>
+
+    <!-- ══════════════════════════
+         HERO SECTION
+         ══════════════════════════ -->
+    <div class="hero-wrapper">
+      <div class="hero">
+        <h1 style="margin-top:0;">Pelaporan Insiden <em>Cepat</em> &amp; Transparan</h1>
+        <p>Platform digital pelaporan insiden keselamatan pasien yang terintegrasi untuk RSUD Dokter Soedarso.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="window.location.href='form_pelaporan_publik.html'">📋 Laporkan Insiden</button>
+          <button class="btn-outline" onclick="window.location.href='form_pelaporan_tanpa_pasien.html'">📄 Laporan Tanpa Pasien</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════
+         GRAFIK PUBLIK
+         ══════════════════════════ -->
+    <div style="max-width:1200px; margin: 0 auto; padding: 0 48px 80px; width: 100%;">
+
+      <!-- Grafik Bar: Jumlah Insiden per Ruangan -->
+      <div class="chart-card" style="margin-bottom:18px">
+        <div class="chart-head">
+          <div>
+            <h3 style="margin-bottom:4px">Jumlah Insiden per Ruangan</h3>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"></div>
+          </div>
+          <select class="yr-select" id="month-sel-land" onchange="setUnitMonth(parseInt(this.value),'land')">
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4" selected="selected">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+        </div>
+        <div style="position:relative; width:100%; height:320px;">
+          <canvas id="c-unit-land"></canvas>
+        </div>
+      </div>
+
+      <!-- Grafik Donut: Verifikasi per Kategori -->
+      <div class="chart-card" style="margin-bottom:18px">
+        <div class="chart-head" style="margin-bottom:8px">
+          <h3>Verifikasi per Kategori</h3>
+        </div>
+        <div class="donut-wrapper">
+          <div class="donut-box">
+            <div style="height:80px;width:100%;position:relative"><canvas id="d-knc-land"></canvas></div>
+            <div class="donut-lbl" style="color:#0ea5e9">KNC</div>
+          </div>
+          <div class="donut-box">
+            <div style="height:80px;width:100%;position:relative"><canvas id="d-ktd-land"></canvas></div>
+            <div class="donut-lbl" style="color:#10b981">KTD</div>
+          </div>
+          <div class="donut-box">
+            <div style="height:80px;width:100%;position:relative"><canvas id="d-ktc-land"></canvas></div>
+            <div class="donut-lbl" style="color:#f59e0b">KTC</div>
+          </div>
+          <div class="donut-box">
+            <div style="height:80px;width:100%;position:relative"><canvas id="d-kpcs-land"></canvas></div>
+            <div class="donut-lbl" style="color:#ef4444">KPCS</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <!-- Pemanggilan Javascript JSF -->
+    <h:outputScript library="js" name="Script.js"/>
+
+  </ui:define>
+</ui:composition>

@@ -1,0 +1,23 @@
+<!--
+  nav_user.html
+  Komponen Navigasi Publik / Pelapor (Fragment).
+  Hanya berisi list menu, tanpa tag html/head/body.
+  Di Java Payara: <jsp:include page="nav_user.jsp" />
+-->
+
+<!-- SEKSI: Beranda -->
+<div class="tpl-section-label">Beranda</div>
+
+<a class="tpl-nav-link" href="index.html" id="nav-beranda">
+  <i class="ph ph-house"></i> Dashboard
+</a>
+
+<!-- SEKSI: Formulir -->
+<div class="tpl-section-label" style="margin-top:8px">Formulir</div>
+
+<a class="tpl-nav-link" href="form_template_user.html" id="nav-form-pasien">
+  <i class="ph ph-file-text"></i> Pelaporan Insiden
+</a>
+<a class="tpl-nav-link" href="form_template_nopatient.html" id="nav-form-no-pasien">
+  <i class="ph ph-file-dashed"></i> Pelaporan Insiden Tanpa Pasien
+</a>

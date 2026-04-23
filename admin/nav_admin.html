@@ -1,0 +1,70 @@
+<!--
+  nav_admin.html
+  Komponen Sidebar Navigasi Admin.
+  Digunakan oleh: form_dashboard.html, form_pelaporan.html, form_investigasi_sederhana.html
+  Cara penggunaan: Di-fetch dan diinjeksi ke dalam elemen <aside class="sidebar"> oleh Script.js
+  Dalam arsitektur Java Payara: digantikan dengan <jsp:include page="nav_admin.jsp" />
+-->
+<div class="sb-header">
+  <div class="sb-icon"><i class="ph ph-hospital"></i></div>
+  <div>
+    <div class="sb-brand">SIDEKAP</div>
+    <div class="sb-tagline">Admin Panel</div>
+  </div>
+</div>
+
+<nav class="sb-nav">
+  <div class="sb-section-label">Menu Utama</div>
+  <a class="sb-item" href="form_dashboard.html" id="nav-dashboard">
+    <i class="ph ph-squares-four sb-ico"></i>
+    <span class="sb-label">Dashboard</span>
+  </a>
+  <a class="sb-item" href="form_pelaporan.html" id="nav-pelaporan">
+    <i class="ph ph-file-text sb-ico"></i>
+    <span class="sb-label">Tabel Pelaporan</span>
+  </a>
+  <a class="sb-item" href="form_investigasi_sederhana.html" id="nav-investigasi">
+    <i class="ph ph-microscope sb-ico"></i>
+    <span class="sb-label">Investigasi Sederhana</span>
+  </a>
+
+  <div class="sb-section-label" style="margin-top:12px">Master Data</div>
+  <a class="sb-item" href="form_pengguna.html" id="nav-pengguna">
+    <i class="ph ph-users sb-ico"></i>
+    <span class="sb-label">Manajemen Pengguna</span>
+  </a>
+</nav>
+
+<div class="sb-footer">
+  <div class="sb-user">
+    <div class="sb-avatar" id="sb-avatar-init">A</div>
+    <div style="flex:1;min-width:0">
+      <div class="sb-uname" id="sb-uname-text">Administrator</div>
+      <div class="sb-urole" id="sb-urole-text">Super Admin</div>
+    </div>
+    <button onclick="doLogout()" title="Keluar"
+      style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
+      onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
+      onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'">
+      <i class="ph ph-sign-out"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Tandai menu aktif berdasarkan URL file yang sedang dibuka
+  (function() {
+    const path = window.location.pathname.split('/').pop();
+    const map = {
+      'form_dashboard.html': 'nav-dashboard',
+      'form_pelaporan.html': 'nav-pelaporan',
+      'form_investigasi_sederhana.html': 'nav-investigasi',
+      'form_pengguna.html': 'nav-pengguna',
+    };
+    const activeId = map[path];
+    if (activeId) {
+      const el = document.getElementById(activeId);
+      if (el) el.classList.add('active');
+    }
+  })();
+</script>

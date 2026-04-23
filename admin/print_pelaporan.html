@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="SIDEKAP — Cetak Pelaporan Insiden">
+  <title>SIDEKAP — Cetak Laporan</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../Style.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════
+       CETAK PELAPORAN
+       ══════════════════════════ -->
+  <div id="print-pelaporan" class="page active">
+    <div style="background:#d1d5db;min-height:100vh;padding:20px">
+      <div class="print-btn-bar">
+        <button class="btn btn-ghost" onclick="window.history.back()">← Kembali</button>
+        <button class="btn btn-navy" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+      </div>
+      <div class="print-wrap" id="print-content">
+        <div class="print-header">
+          <div class="print-logo-box">🏥</div>
+          <div>
+            <div class="print-rs-name">Rumah Sakit Umum Daerah Dokter Soedarso</div>
+            <div class="print-rs-sub">Jl. Dr. Soedarso, Pontianak, Kalimantan Barat | Telp. (0561) 737701</div>
+          </div>
+        </div>
+        <div class="print-title">
+          <h2>Laporan Insiden Keselamatan Pasien</h2>
+          <div class="rah">RAHASIA — UNTUK KEPERLUAN INTERNAL</div>
+        </div>
+        <div class="print-sec">A. Data Pasien</div>
+        <table class="print-table">
+          <tr>
+            <td class="lbl">No. Rekam Medis</td><td id="pr-mr">-</td>
+            <td class="lbl">Nama Pasien</td><td id="pr-nama">-</td>
+          </tr>
+          <tr>
+            <td class="lbl">Jenis Kelamin</td><td id="pr-kel">-</td>
+            <td class="lbl">Umur</td><td id="pr-umur">-</td>
+          </tr>
+          <tr>
+            <td class="lbl">Kelompok Umur</td><td id="pr-kumur">-</td>
+            <td class="lbl">Penanggung</td><td id="pr-penanggung">-</td>
+          </tr>
+          <tr>
+            <td class="lbl">Tgl Masuk RS</td><td id="pr-masuk">-</td>
+            <td class="lbl"></td><td></td>
+          </tr>
+        </table>
+        <div class="print-sec">B. Rincian Kejadian</div>
+        <table class="print-table">
+          <tr><td class="lbl">Tanggal &amp; Waktu</td><td colspan="3" id="pr-tgl">-</td></tr>
+          <tr><td class="lbl">Insiden</td><td colspan="3" id="pr-insiden">-</td></tr>
+          <tr><td class="lbl">Kronologis</td><td colspan="3" id="pr-kronologis">-</td></tr>
+          <tr>
+            <td class="lbl">Jenis Insiden</td><td id="pr-jenis">-</td>
+            <td class="lbl">Akibat</td><td id="pr-akibat">-</td>
+          </tr>
+          <tr>
+            <td class="lbl">Unit Terkait</td><td id="pr-unit">-</td>
+            <td class="lbl">Tindakan Oleh</td><td id="pr-tindakanoleh">-</td>
+          </tr>
+          <tr><td class="lbl">Tindakan Segera</td><td colspan="3" id="pr-tindakan">-</td></tr>
+        </table>
+        <div class="print-sec">C. Data Pelapor</div>
+        <table class="print-table">
+          <tr>
+            <td class="lbl">Tanggal Lapor</td><td id="pr-tgllap">-</td>
+            <td class="lbl">Pembuat Laporan</td><td id="pr-pembuat">-</td>
+          </tr>
+        </table>
+        <div class="print-footer">
+          <div class="print-ttd">
+            <div class="print-ttd-box"></div>
+            <div class="print-ttd-name">Pelapor</div>
+            <div style="font-size:11px;color:#64748b">(................................)</div>
+          </div>
+          <div class="print-ttd">
+            <div class="print-ttd-box"></div>
+            <div class="print-ttd-name">Kepala Ruangan</div>
+            <div style="font-size:11px;color:#64748b">(................................)</div>
+          </div>
+          <div class="print-ttd">
+            <div class="print-ttd-box"></div>
+            <div class="print-ttd-name">Direktur RS</div>
+            <div style="font-size:11px;color:#64748b">(................................)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="../Script.js"></script>
+  <script>
+    // Isi data cetak dari localStorage jika tersedia
+    document.addEventListener('DOMContentLoaded', () => {
+      const printData = JSON.parse(sessionStorage.getItem('sidekap_print') || 'null');
+      if (printData) {
+        const d = printData;
+        const fill = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+        if (d.pasien) {
+          fill('pr-mr', d.pasien.mr);
+          fill('pr-nama', d.pasien.nama);
+          fill('pr-kel', d.pasien.kelamin);
+          fill('pr-umur', d.pasien.umur + ' tahun');
+          fill('pr-kumur', d.pasien.kelompokUmur);
+          fill('pr-penanggung', d.pasien.penanggung);
+          fill('pr-masuk', d.pasien.tglMasuk);
+        }
+        if (d.kejadian) {
+          fill('pr-tgl', d.kejadian.tglWaktu);
+          fill('pr-insiden', d.kejadian.insiden);
+          fill('pr-kronologis', d.kejadian.kronologis);
+          fill('pr-jenis', d.kejadian.jenisInsiden);
+          fill('pr-akibat', d.kejadian.akibat);
+          fill('pr-unit', d.kejadian.unitTerkait);
+          fill('pr-tindakanoleh', d.kejadian.tindakanOleh);
+          fill('pr-tindakan', d.kejadian.tindakan);
+        }
+        if (d.pelapor) {
+          fill('pr-tgllap', d.pelapor.tglLapor);
+          fill('pr-pembuat', d.pelapor.pembuat);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
