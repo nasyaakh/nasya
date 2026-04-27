@@ -104,6 +104,7 @@
             <div class="topbar-avatar">A</div>
           </div>
         </div>
+        
         <div class="content">
           <div class="inv-grid">
             <div class="inv-stat">
@@ -137,14 +138,14 @@
             <table class="desktop-table">
               <thead>
                 <tr>
-                  <th>No</th>
                   <th>Tanggal</th>
-                  <th>Insiden</th>
-                  <th>Unit</th>
-                  <th>Investigator</th>
-                  <th>Grade Risiko</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
+                  <th style="text-align:center">Insiden</th>
+                  <th class="th-hide-mobile">Unit</th>
+                  <th class="th-hide-mobile">Investigator</th>
+                  <th class="th-hide-mobile">Grade Risiko</th>
+                  <th class="th-hide-mobile">Status</th>
+                  <th class="th-hide-mobile">Aksi</th>
+                  <th class="th-expand" style="width:40px"></th>
                 </tr>
               </thead>
               <tbody id="inv-rows"></tbody>
@@ -157,7 +158,6 @@
         </div>
       </div>
     </div>
-  </div>
 
   <!-- Modal Investigasi -->
   <div id="inv-modal" class="modal-overlay">
@@ -270,6 +270,20 @@
       b.innerHTML = open ? '&#8964;' : '&#8250;';
       r.classList.toggle('is-open', open);
     }
+  </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedUser = localStorage.getItem('sidekap_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+      } else {
+        currentUser = USERS[0]; // Default admin
+      }
+      if(typeof applyRBAC === 'function') applyRBAC();
+      if(typeof renderLaporan === 'function') renderLaporan();
+      if(typeof renderFilteredLaporan === 'function') renderFilteredLaporan();
+      if(typeof renderInvestigasi === 'function') renderInvestigasi();
+    });
   </script>
 </body>
 

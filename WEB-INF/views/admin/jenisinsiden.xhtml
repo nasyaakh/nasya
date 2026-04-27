@@ -10,61 +10,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <h:outputStylesheet library="css" name="Style.css"/>
 
-    <div id="jenisInsiden" class="page active">
-      <div class="admin-layout">
-        <aside class="sidebar" id="sb-jenisInsiden"></aside>
-        <div class="main-area">
-          <div class="topbar">
-            <div class="topbar-title">Master Data <span>/ Jenis Insiden</span></div>
-            <div class="topbar-right">
-              <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle" onclick="toggleTheme()"></button></div>
-              <span style="font-size:12px;color:var(--muted)" id="topbar-date"></span>
-              <div class="topbar-avatar">A</div>
-            </div>
+    <div id="masterDataDynamic" class="page active">
+    <div class="admin-layout">
+      <aside class="sidebar" id="sb-masterDataDynamic"></aside>
+      <div class="main-area">
+        <div class="topbar">
+          <div class="topbar-title">Master Data <span id="mdd-title" style="color:var(--muted);font-weight:600"></span>
           </div>
-          <div class="content">
-            <div class="table-card">
-              <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-                <div><div style="font-size:15px;font-weight:800">Jenis Insiden</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Klasifikasi jenis insiden keselamatan pasien</div></div>
-                <button class="btn btn-navy" onclick="openModal()" style="display:flex;align-items:center;gap:6px"><i class="ph ph-plus-circle"></i> Tambah Data</button>
-              </div>
-              <div class="lap-bar">
-                <div class="lap-sw"><span class="lap-sw-ico">🔍</span><input type="text" id="ji-search" placeholder="Cari kode, nama, atau kategori..." oninput="filterTable('ji-search','ji-rows')"/></div>
-                <select class="lap-flt" onchange="filterTable('ji-search','ji-rows')"><option value="">Semua Kategori</option><option>Medikasi</option><option>Prosedur</option><option>Laboratorium</option><option>Administrasi</option></select>
-              </div>
-              <table class="desktop-table">
-                <thead><tr><th style="width:50px">No</th><th style="width:100px">Kode</th><th>Nama Jenis Insiden</th><th style="width:140px">Kategori</th><th>Deskripsi</th><th style="width:140px;text-align:center">Aksi</th></tr></thead>
-                <tbody id="ji-rows">
-                  <tr><td>1</td><td><span class="kode-badge">JI-001</span></td><td style="font-weight:600">Kesalahan Pemberian Obat</td><td><span class="badge-status" style="background:rgba(14,165,233,0.12);color:#0284c7">Medikasi</span></td><td style="color:var(--muted);font-size:13px">Pemberian obat yang salah jenis, dosis, atau pasien yang tidak tepat</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
-                  <tr><td>2</td><td><span class="kode-badge">JI-002</span></td><td style="font-weight:600">Kesalahan Prosedur Operasi</td><td><span class="badge-status" style="background:rgba(16,185,129,0.12);color:#059669">Prosedur</span></td><td style="color:var(--muted);font-size:13px">Kesalahan dalam pelaksanaan tindakan bedah atau prosedur invasif</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
-                  <tr><td>3</td><td><span class="kode-badge">JI-003</span></td><td style="font-weight:600">Kesalahan Identifikasi Pasien</td><td><span class="badge-status" style="background:rgba(245,158,11,0.12);color:#d97706">Administrasi</span></td><td style="color:var(--muted);font-size:13px">Tindakan medis dilakukan pada pasien yang salah identitas</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
-                  <tr><td>4</td><td><span class="kode-badge">JI-004</span></td><td style="font-weight:600">Kesalahan Hasil Laboratorium</td><td><span class="badge-status" style="background:rgba(139,92,246,0.12);color:#7c3aed">Laboratorium</span></td><td style="color:var(--muted);font-size:13px">Pelaporan atau interpretasi hasil laboratorium yang tidak akurat</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
-                  <tr><td>5</td><td><span class="kode-badge">JI-005</span></td><td style="font-weight:600">Pasien Jatuh</td><td><span class="badge-status" style="background:rgba(16,185,129,0.12);color:#059669">Prosedur</span></td><td style="color:var(--muted);font-size:13px">Insiden pasien terjatuh saat dalam perawatan di lingkungan rumah sakit</td><td style="text-align:center"><div style="display:flex;gap:6px;justify-content:center"><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editRow(this)"><i class="ph ph-pencil-simple"></i> Edit</button><button class="btn" style="padding:5px 10px;font-size:12px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)" onclick="hapusRow(this)"><i class="ph ph-trash"></i> Hapus</button></div></td></tr>
-                </tbody>
-              </table>
-              <div class="pgn"><div class="pgn-info">Menampilkan 1–5 dari 5 data</div><div class="pgn-btns"><button class="btn btn-ghost" disabled="disabled" style="padding:5px 12px;font-size:12px">&#8249; Sebelumnya</button><button class="btn btn-navy" style="padding:5px 12px;font-size:12px">1</button><button class="btn btn-ghost" disabled="disabled" style="padding:5px 12px;font-size:12px">Berikutnya &#8250;</button></div></div>
-            </div>
+          <div class="topbar-right">
+            <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle" onclick="toggleTheme()"></button></div>
+            <span style="font-size:12px;color:var(--muted)" id="topbar-date"></span>
+            <div class="topbar-avatar">A</div>
           </div>
         </div>
+        <div class="content" id="mdd-content"></div>
       </div>
     </div>
-
-    <div id="ji-modal" class="modal-overlay" style="display:none">
-      <div class="modal-box" style="max-width:500px">
-        <div class="modal-head"><div><h3><i class="ph ph-plus-circle" style="margin-right:6px"></i> Tambah Jenis Insiden</h3></div><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
-        <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
-          <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">KODE</label><input type="text" placeholder="Contoh: JI-006" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box"/></div>
-          <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">NAMA JENIS INSIDEN</label><input type="text" placeholder="Nama jenis insiden" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box"/></div>
-          <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">KATEGORI</label><select style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box"><option>Medikasi</option><option>Prosedur</option><option>Laboratorium</option><option>Administrasi</option></select></div>
-          <div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">DESKRIPSI</label><textarea rows="3" placeholder="Deskripsi jenis insiden..." style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px;box-sizing:border-box;resize:vertical"></textarea></div>
-        </div>
-        <div class="modal-foot" style="justify-content:flex-end;gap:8px"><button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn-approve" style="flex:none;padding:10px 20px"><i class="ph ph-floppy-disk"></i> Simpan</button></div>
+  </div>
+  
+  <div id="md-add-modal" class="modal-overlay" style="display:none">
+    <div class="modal-box" style="max-width:500px">
+      <div class="modal-head">
+        <div>
+          <h3 id="mda-title">Tambah Data</h3>
+        </div><button class="modal-close" onclick="closeMdAddModal()">✕</button>
       </div>
+      <div style="padding:18px;display:flex;flex-direction:column;gap:14px" id="mda-form"></div>
+      <div class="modal-foot" style="justify-content:flex-end;gap:8px"><button class="btn btn-ghost"
+          onclick="closeMdAddModal()">Batal</button><button class="btn-approve" style="flex:none;padding:10px 20px"
+          onclick="saveMdAddModal()"><i class="ph ph-floppy-disk"></i> Simpan</button></div>
     </div>
-
-    <div id="g-topbar"><div class="mt-logo"><div class="mt-logo-icon"><i class="ph ph-hospital"></i></div><div><div class="mt-name">SIDEKAP</div><div class="mt-sub" id="g-page-title"></div></div></div><div style="display:flex;align-items:center;gap:8px"><div class="mt-av">A</div><button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()"><span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span></button></div></div>
+  </div>
+  
+  <div id="g-topbar"><div class="mt-logo"><div class="mt-logo-icon"><i class="ph ph-hospital"></i></div><div>
+        <div class="mt-name">SIDEKAP</div>
+        <div class="mt-sub" id="g-page-title"></div>
+      </div></div><div style="display:flex;align-items:center;gap:8px"><div class="mt-av">A</div><button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()"><span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span></button></div></div>
     <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
-    <div id="mobile-drawer"><div class="mdr-head"><div class="sb-icon"><i class="ph ph-hospital"></i></div><div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div></div><div class="mdr-nav" id="mdr-nav-content"></div><div class="mdr-foot"><div class="sb-user"><div class="sb-avatar">A</div><div style="flex:1;min-width:0"><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div><button onclick="doLogout()" title="Keluar" style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button></div></div></div>
+    <div id="mobile-drawer"><div class="mdr-head"><div class="sb-icon"><i class="ph ph-hospital"></i></div><div>
+        <div class="mdr-title">SIDEKAP</div>
+        <div class="mdr-subtitle">Admin Panel</div>
+      </div></div><div class="mdr-nav" id="mdr-nav-content"></div><div class="mdr-foot"><div class="sb-user"><div class="sb-avatar">A</div><div style="flex:1;min-width:0">
+          <div class="sb-uname">Administrator</div>
+          <div class="sb-urole">Super Admin</div>
+        </div><button onclick="doLogout()" title="Keluar" style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background=\'var(--border2)\';this.style.color=\'var(--text)\'"><i
+            class="ph ph-sign-out"></i></button></div></div></div>
     <style>.kode-badge{font-family:monospace;font-size:12px;background:var(--bg2);padding:2px 7px;border-radius:5px}</style>
     <div id="toast" class="toast"></div>
     <h:outputScript library="js" name="Script.js"/>
@@ -74,7 +64,15 @@
       function closeModal(){document.getElementById('ji-modal').style.display='none';}
       function editRow(btn){openModal();}
       function hapusRow(btn){if(confirm('Yakin ingin menghapus?')){btn.closest('tr').remove();if(typeof showToast==='function')showToast('Data berhasil dihapus');}}
-    //]]></script>
+    //]]>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof showMasterData === 'function') {
+         let o = showPage; showPage = function(){};
+         showMasterData('Jenis Insiden');
+         showPage = o;
+      }
+    });
+  </script>
 
   </ui:define>
 

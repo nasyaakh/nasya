@@ -552,6 +552,7 @@ body {
 }
 
 .mdr-head {
+  background: #1e3a5f;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1482,7 +1483,8 @@ thead th {
   text-transform: uppercase;
   padding: 9px 13px;
   text-align: left;
-  border-bottom: 1px solid var(--border)
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap
 }
 
 tbody td {
@@ -1499,6 +1501,26 @@ tbody tr:last-child td {
 
 tbody tr:hover {
   background: var(--table-hover)
+}
+
+/* ── Aturan kolom tabel dasar ── */
+.th-expand,
+.col-expand {
+  display: none !important;
+}
+
+.th-hide-mobile,
+.col-hide-mobile {
+  display: table-cell;
+}
+
+/* ── EXPAND ROWS — tersembunyi secara default, muncul hanya di mobile saat di-klik ── */
+.tp-expand-row {
+  display: none
+}
+
+.tp-main-row.is-open {
+  background: var(--bg2)
 }
 
 .pgn {
@@ -1976,7 +1998,9 @@ tbody tr:hover {
 .user-avatar-cell {
   display: flex;
   align-items: center;
-  gap: 10px
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden
 }
 
 .ua-circle {
@@ -1995,12 +2019,20 @@ tbody tr:hover {
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 1px;
-  color: var(--text)
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px
 }
 
 .ua-email {
   font-size: 11px;
-  color: var(--muted)
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px
 }
 
 .ua-you {
@@ -2021,7 +2053,9 @@ tbody tr:hover {
   padding: 3px 9px;
   border-radius: 99px;
   font-size: 11px;
-  font-weight: 700
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0
 }
 
 [data-theme="dark"] .rb-superadmin {
@@ -2778,7 +2812,7 @@ select.ff-in {
    ══════════════════════════════════════ */
 #g-topbar {
   display: none !important;
-  background: var(--sb-bg);
+  background: #1e3a5f !important;
   padding: 0 14px;
   height: 52px;
   align-items: center;
@@ -2790,6 +2824,7 @@ select.ff-in {
   z-index: 85;
   border-bottom: 1px solid rgba(255, 255, 255, .06);
 }
+
 
 #g-topbar .mt-logo {
   display: flex;
@@ -2810,7 +2845,7 @@ select.ff-in {
 
 #g-topbar .mt-name {
   font-family: 'DM Serif Display', serif;
-  color: #fff;
+  color: #ffffff;
   font-size: 16px
 }
 
@@ -2997,27 +3032,42 @@ select.ff-in {
   .desktop-table {
     display: table !important;
     width: 100%;
-    table-layout: fixed;
+    table-layout: auto;
+  }
+
+  /* ── Toggle Kolom di Mobile ── */
+  .th-hide-mobile,
+  .col-hide-mobile {
+    display: none !important;
+  }
+
+  .th-expand,
+  .col-expand {
+    display: table-cell !important;
   }
 
   .desktop-table th,
   .desktop-table td {
-    padding: 6px 3px !important;
-    font-size: 9px !important;
-    white-space: normal !important;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    padding: 8px 8px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
   }
 
-  .desktop-table .badge,
+  /* Khusus matriks grading — badge bisa wrap */
   .matrix-badge {
-    font-size: 7.5px !important;
-    padding: 3px 2px !important;
-    white-space: normal;
-    text-align: center;
-    letter-spacing: -0.5px;
-    width: 100%;
-    box-sizing: border-box;
+    font-size: 10px !important;
+    padding: 2px 5px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Batas text user agar tidak overflow terlalu jauh */
+  .desktop-table .user-avatar-cell {
+    max-width: 160px;
+  }
+
+  .desktop-table .ua-name,
+  .desktop-table .ua-email {
+    max-width: 120px;
   }
 
   .mobile-list {
@@ -3027,6 +3077,59 @@ select.ff-in {
   .table-card {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch
+  }
+
+  /* Expand row — tampilkan saat open di mobile */
+  .tp-expand-row.open {
+    display: table-row
+  }
+
+  .tp-expand-content {
+    padding: 10px 14px 14px;
+    background: var(--bg2);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    animation: tpExpandDown .2s ease
+  }
+
+  @keyframes tpExpandDown {
+    from {
+      opacity: 0;
+      transform: translateY(-6px)
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0)
+    }
+  }
+
+  .tp-expand-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px
+  }
+
+  .tp-expand-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .4px
+  }
+
+  .tp-expand-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text)
+  }
+
+  .tp-expand-action {
+    grid-column: 1/-1;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 2px
   }
 
   .pgn {
@@ -3210,4 +3313,152 @@ select.ff-in {
   border-color: #ef4444;
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(239, 68, 68, .2);
+}
+
+/* ══════════════════════════════════════
+   MASTER DATA — MOBILE RESPONSIVE
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+  #md-table-body-target table {
+    table-layout: fixed;
+    width: 100% !important;
+    min-width: unset !important;
+  }
+
+  #md-table-body-target table th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 6px !important;
+    padding: 5px 3px !important;
+    text-align: center;
+  }
+
+  #md-table-body-target table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px !important;
+    padding: 5px 3px !important;
+    text-align: center;
+  }
+
+  #md-table-body-target table th:nth-child(1) {
+    text-align: left;
+    width: 30%;
+    font-size: 8px !important;
+  }
+
+  #md-table-body-target table td:nth-child(1) {
+    text-align: left;
+    width: 30%;
+    font-size: 9px !important;
+  }
+
+  .matrix-badge {
+    font-size: 8px !important;
+    padding: 2px 4px !important;
+  }
+}
+
+/* ══════════════════════════════════════
+   MASTER DATA — HEADER CARD MOBILE
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+  #masterDataDynamic .pg-header-bar {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+    margin-bottom: 12px;
+  }
+
+  #masterDataDynamic .pg-header-bar>div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  #masterDataDynamic .pg-header-bar>div>div:first-child {
+    font-size: 12px !important;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  #masterDataDynamic .pg-header-bar>div>div:last-child {
+    font-size: 10px !important;
+    opacity: 0.7;
+    display: none;
+    /* sembunyikan deskripsi */
+  }
+
+  #masterDataDynamic .pg-header-bar>button {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 10px !important;
+    padding: 5px 8px !important;
+    min-width: fit-content;
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 7px;
+  }
+
+  .stat-card {
+    padding: 8px !important;
+    gap: 6px !important;
+  }
+
+  .stat-val {
+    font-size: 16px !important;
+  }
+
+  .stat-lbl {
+    font-size: 9px !important;
+  }
+
+  .stat-icon {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 12px !important;
+  }
+}
+/* ═══════════════════════════════════════
+   RESPONSIVITAS TABEL (GLOBAL)
+   ═══════════════════════════════════════ */
+@media (min-width: 769px) {
+  .th-expand, .col-expand { display: none !important; }
+  .tp-expand-row { display: none !important; }
+}
+
+@media (max-width: 768px) {
+  .desktop-table .th-hide-mobile,
+  .desktop-table .col-hide-mobile { display: none !important; }
+  
+  .th-expand, .col-expand { display: table-cell !important; }
+  .col-expand { text-align: center; vertical-align: middle; width: 40px; padding: 4px !important; }
+
+  /* Tombol Expand */
+  .expand-btn {
+    width: 28px; height: 28px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--bg2);
+    color: var(--text); cursor: pointer; font-size: 16px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all .2s; line-height: 1; padding: 0;
+  }
+  .expand-btn:hover, .expand-btn.open {
+    background: var(--primary, #1e3a5f); color: #fff;
+    border-color: var(--primary, #1e3a5f);
+  }
+
+  /* Expand Row */
+  .tp-expand-row { display: none; }
+  .tp-expand-row.open { display: table-row; }
+
+  /* Konten Internal Expand */
 }

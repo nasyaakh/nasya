@@ -28,45 +28,55 @@
               <div class="topbar-avatar">A</div>
             </div>
           </div>
-          <div class="content">
-            <div class="inv-grid">
-              <div class="inv-stat">
-                <div class="inv-stat-val" style="color:#4ade80">12</div>
-                <div class="inv-stat-lbl">Investigasi Selesai</div>
-              </div>
-              <div class="inv-stat">
-                <div class="inv-stat-val" style="color:#facc15">5</div>
-                <div class="inv-stat-lbl">Sedang Proses</div>
-              </div>
-              <div class="inv-stat">
-                <div class="inv-stat-val" style="color:#f87171">3</div>
-                <div class="inv-stat-lbl">Belum Dimulai</div>
+          
+        <div class="content">
+          <div class="inv-grid">
+            <div class="inv-stat">
+              <div class="inv-stat-val" style="color:#4ade80">12</div>
+              <div class="inv-stat-lbl">Investigasi Selesai</div>
+            </div>
+            <div class="inv-stat">
+              <div class="inv-stat-val" style="color:#facc15">5</div>
+              <div class="inv-stat-lbl">Sedang Proses</div>
+            </div>
+            <div class="inv-stat">
+              <div class="inv-stat-val" style="color:#f87171">3</div>
+              <div class="inv-stat-lbl">Belum Dimulai</div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-head">
+              <h3>Daftar Investigasi Sederhana</h3>
+              <div class="tbl-controls">
+                <div class="search-wrap"><span class="search-ico">🔍</span><input type="text"
+                    placeholder="Cari insiden..."></div>
+                <select class="flt">
+                  <option>Semua Grade</option>
+                  <option>Rendah</option>
+                  <option>Sedang</option>
+                  <option>Tinggi</option>
+                  <option>Ekstrem</option>
+                </select>
               </div>
             </div>
-            <div class="table-card">
-              <div class="table-head">
-                <h3>Daftar Investigasi Sederhana</h3>
-                <div class="tbl-controls">
-                  <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" placeholder="Cari insiden..." /></div>
-                  <select class="flt">
-                    <option>Semua Grade</option><option>Rendah</option>
-                    <option>Sedang</option><option>Tinggi</option><option>Ekstrem</option>
-                  </select>
-                </div>
-              </div>
-              <table class="desktop-table">
-                <thead>
-                  <tr>
-                    <th>No</th><th>Tanggal</th><th>Insiden</th><th>Unit</th>
-                    <th>Investigator</th><th>Grade Risiko</th><th>Status</th><th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="inv-rows"></tbody>
-              </table>
-              <div class="pgn">
-                <div class="pgn-info" id="inv-pgn-info"></div>
-                <div class="pgn-btns" id="inv-pgn-btns"></div>
-              </div>
+            <table class="desktop-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th style="text-align:center">Insiden</th>
+                  <th class="th-hide-mobile">Unit</th>
+                  <th class="th-hide-mobile">Investigator</th>
+                  <th class="th-hide-mobile">Grade Risiko</th>
+                  <th class="th-hide-mobile">Status</th>
+                  <th class="th-hide-mobile">Aksi</th>
+                  <th class="th-expand" style="width:40px"></th>
+                </tr>
+              </thead>
+              <tbody id="inv-rows"></tbody>
+            </table>
+            <div class="pgn">
+              <div class="pgn-info" id="inv-pgn-info"></div>
+              <div class="pgn-btns" id="inv-pgn-btns"></div>
             </div>
           </div>
         </div>
@@ -132,7 +142,10 @@
     <div id="g-topbar">
       <div class="mt-logo">
         <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
-        <div><div class="mt-name">SIDEKAP</div><div class="mt-sub" id="g-page-title"></div></div>
+        <div>
+        <div class="mt-name">SIDEKAP</div>
+        <div class="mt-sub" id="g-page-title"></div>
+      </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="mt-av">A</div>
@@ -145,17 +158,24 @@
     <div id="mobile-drawer">
       <div class="mdr-head">
         <div class="sb-icon"><i class="ph ph-hospital"></i></div>
-        <div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div>
+        <div>
+        <div class="mdr-title">SIDEKAP</div>
+        <div class="mdr-subtitle">Admin Panel</div>
+      </div>
       </div>
       <div class="mdr-nav" id="mdr-nav-content"></div>
       <div class="mdr-foot">
         <div class="sb-user">
           <div class="sb-avatar">A</div>
-          <div style="flex:1;min-width:0"><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div>
+          <div style="flex:1;min-width:0">
+          <div class="sb-uname">Administrator</div>
+          <div class="sb-urole">Super Admin</div>
+        </div>
           <button onclick="doLogout()" title="Keluar"
             style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
             onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
-            onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
+            onmouseout="this.style.background=\'var(--border2)\';this.style.color=\'var(--text)\'"><i
+            class="ph ph-sign-out"></i></button>
         </div>
       </div>
     </div>

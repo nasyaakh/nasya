@@ -242,8 +242,38 @@ function renderStats() {
   document.getElementById('stat-grid').style.gridTemplateColumns = 'repeat(5,1fr)';
 }
 function renderDashRows() {
-  document.getElementById('dash-rows').innerHTML = INSIDEN.slice(0, 4).map(d => `<tr><td style="color:var(--muted);font-weight:700;font-size:12px">#${d.no}</td><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td><b>${d.unit}</b></td><td>${katBadge(d.kat)}</td><td>${stsBadge(d.status)}</td><td>${riskHtml(d.risiko)}</td></tr>`).join('');
+  document.getElementById('dash-rows').innerHTML = INSIDEN.slice(0, 4).map((d, i) => `
+    <tr class="tp-main-row" style="cursor:pointer">
+      <td style="font-size:12px;color:var(--muted)">${d.tgl}</td>
+      <td><b>${d.unit}</b></td>
+      <td>${katBadge(d.kat)}</td>
+      <td class="col-hide-mobile">${stsBadge(d.status)}</td>
+      <td class="col-hide-mobile">${riskHtml(d.risiko)}</td>
+      <td class="col-expand" style="width:36px;text-align:center;padding:4px">
+        <button class="expand-btn" id="dash-btn-${i}" onclick="toggleDashRow(${i})" title="Lihat detail">&#8250;</button>
+      </td>
+    </tr>
+    <tr class="tp-expand-row" id="dash-exp-${i}">
+      <td colspan="6" style="padding:0;border:none">
+        <div class="tp-expand-content">
+          <div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div>
+          <div class="tp-expand-item"><span class="tp-expand-label">Kategori</span><span>${katBadge(d.kat)}</span></div>
+          <div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBadge(d.status)}</span></div>
+          <div class="tp-expand-item"><span class="tp-expand-label">Risiko</span><span>${riskHtml(d.risiko)}</span></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
 }
+
+function toggleDashRow(i) {
+  const exp = document.getElementById('dash-exp-' + i);
+  const row = exp?.previousElementSibling;
+  if (!exp) return;
+  const isOpen = exp.classList.toggle('open');
+  if (btn) { btn.classList.toggle('open', isOpen); btn.innerHTML = isOpen ? '&#8964;' : '&#8250;'; }
+}
+
 function renderLaporan() {
   const tbody = document.getElementById('laporan-rows');
   if (!tbody) return;
@@ -253,9 +283,9 @@ function renderLaporan() {
     const isSent = d.terkirim === true;
     const kirimBtn = isManagement() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim ke Investigasi' : 'Kirim ke Tabel Investigasi'}" style="font-size:12px;padding:5px 9px"><i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i></button>` : '';
     const hapusBtn = isManagement() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px"><i class="ph ph-trash"></i></button>` : '';
-    const aksi = `<div style="display:flex;align-items:center;gap:4px"><button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button><button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>${kirimBtn}${hapusBtn}</div>`;
-    return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td class="col-hide-mobile">${stsBadge(d.status)}</td><td class="col-hide-mobile">${riskHtml(d.risiko)}</td><td class="col-hide-mobile" style="white-space:nowrap">${aksi}</td><td class="col-expand"><button class="expand-btn" id="lap-btn-${i}" onclick="toggleRowLap(${i})" title="Lihat detail">&#8250;</button></td></tr>
-    <tr class="tp-expand-row" id="lap-exp-${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBadge(d.status)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Risiko</span><span>${riskHtml(d.risiko)}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksi}</div></div></td></tr>`;
+    const aksi = `<div style="display:flex;align-items:center;gap:4px;justify-content:center"><button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button><button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>${kirimBtn}${hapusBtn}</div>`;
+    return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td>${rep}</td><td class="col-hide-mobile">${katBadge(d.kat)}</td><td class="col-hide-mobile">${stsBadge(d.status)}</td><td class="col-hide-mobile">${riskHtml(d.risiko)}</td><td class="col-hide-mobile" style="white-space:nowrap;text-align:center">${aksi}</td><td class="col-expand"><button class="expand-btn" id="lap-btn-${i}" onclick="toggleRowLap(${i})" title="Lihat detail">&#8250;</button></td></tr>
+    <tr class="tp-expand-row" id="lap-exp-${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Kategori</span><span>${katBadge(d.kat)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBadge(d.status)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Risiko</span><span>${riskHtml(d.risiko)}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksi}</div></div></td></tr>`;
   }).join('');
   tbody.querySelectorAll('.detail-btn').forEach(b => b.addEventListener('click', () => openDetail(INSIDEN[+b.dataset.idx], +b.dataset.idx)));
   tbody.querySelectorAll('.lap-btn-kirim').forEach(b => b.addEventListener('click', () => kirimLaporan(+b.dataset.idx)));
@@ -305,9 +335,9 @@ function renderFilteredLaporan() {
       const isSent = d.terkirim === true;
       const kirimBtn = isManagement() ? `<button class="btn lap-btn-kirim${isSent ? ' sent' : ''}" data-idx="${i}" title="${isSent ? 'Sudah Dikirim ke Investigasi' : 'Kirim ke Tabel Investigasi'}" style="font-size:12px;padding:5px 9px"><i class="ph ${isSent ? 'ph-check-circle' : 'ph-paper-plane-tilt'}"></i></button>` : '';
       const hapusBtn = isManagement() ? `<button class="btn lap-btn-hapus" data-idx="${i}" title="Hapus Laporan" style="font-size:12px;padding:5px 9px"><i class="ph ph-trash"></i></button>` : '';
-      const aksi = `<div style="display:flex;align-items:center;gap:4px"><button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button><button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>${kirimBtn}${hapusBtn}</div>`;
-      return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td>${rep}</td><td>${katBadge(d.kat)}</td><td class="col-hide-mobile">${stsBadge(d.status)}</td><td class="col-hide-mobile">${riskHtml(d.risiko)}</td><td class="col-hide-mobile" style="white-space:nowrap">${aksi}</td><td class="col-expand"><button class="expand-btn" id="lap-btn-f${i}" onclick="toggleRowLap('f${i}')" title="Lihat detail">&#8250;</button></td></tr>
-      <tr class="tp-expand-row" id="lap-exp-f${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBadge(d.status)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Risiko</span><span>${riskHtml(d.risiko)}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksi}</div></div></td></tr>`;
+      const aksi = `<div style="display:flex;align-items:center;gap:4px;justify-content:center"><button class="btn btn-navy detail-btn" data-idx="${i}" style="font-size:11px;padding:5px 10px">Detail</button><button class="btn btn-ghost" onclick="openPrint()" title="Cetak" style="font-size:13px;padding:4px 7px"><i class="ph ph-printer"></i></button>${kirimBtn}${hapusBtn}</div>`;
+      return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td>${rep}</td><td class="col-hide-mobile">${katBadge(d.kat)}</td><td class="col-hide-mobile">${stsBadge(d.status)}</td><td class="col-hide-mobile">${riskHtml(d.risiko)}</td><td class="col-hide-mobile" style="white-space:nowrap;text-align:center">${aksi}</td><td class="col-expand"><button class="expand-btn" id="lap-btn-f${i}" onclick="toggleRowLap('f${i}')" title="Lihat detail">&#8250;</button></td></tr>
+      <tr class="tp-expand-row" id="lap-exp-f${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Kategori</span><span>${katBadge(d.kat)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBadge(d.status)}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Risiko</span><span>${riskHtml(d.risiko)}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksi}</div></div></td></tr>`;
     }).join('');
     tbody.querySelectorAll('.detail-btn').forEach(b => b.addEventListener('click', () => openDetail(INSIDEN[+b.dataset.idx], +b.dataset.idx)));
     tbody.querySelectorAll('.lap-btn-kirim').forEach(b => b.addEventListener('click', () => kirimLaporan(+b.dataset.idx)));
@@ -373,8 +403,8 @@ function renderInvestigasi() {
   invEl.innerHTML = INVESTIGASI.map((d, i) => {
     const stsBdg = d.status === 'Selesai' ? '<span class="badge badge-s">✓ Selesai</span>' : d.status === 'Proses' ? '<span class="badge badge-w">⏳ Proses</span>' : '<span class="badge badge-d">— Belum</span>';
     const actBtn = `<button class="btn btn-navy" style="font-size:11px;padding:5px 10px;display:inline-flex;align-items:center;gap:4px" onclick="openInvModal(${i})"><i class="ph ${btnIcon}"></i> ${btnTxt}</button>`;
-    return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.insiden}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td class="col-hide-mobile">${d.investigator}</td><td>${gradeBadge(d.grade)}</td><td class="col-hide-mobile">${stsBdg}</td><td class="col-hide-mobile">${actBtn}</td><td class="col-expand"><button class="expand-btn" id="inv-btn-${i}" onclick="toggleRowInv(${i})" title="Lihat detail">&#8250;</button></td></tr>
-    <tr class="tp-expand-row" id="inv-exp-${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Investigator</span><span class="tp-expand-value">${d.investigator}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBdg}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${actBtn}</div></div></td></tr>`;
+    return `<tr class="tp-main-row"><td style="font-size:12px;color:var(--muted)">${d.tgl}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.insiden}</td><td class="col-hide-mobile"><b>${d.unit}</b></td><td class="col-hide-mobile">${d.investigator}</td><td class="col-hide-mobile">${gradeBadge(d.grade)}</td><td class="col-hide-mobile">${stsBdg}</td><td class="col-hide-mobile">${actBtn}</td><td class="col-expand"><button class="expand-btn" id="inv-btn-${i}" onclick="toggleRowInv(${i})" title="Lihat detail">&#8250;</button></td></tr>
+    <tr class="tp-expand-row" id="inv-exp-${i}"><td colspan="8" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${d.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Investigator</span><span class="tp-expand-value">${d.investigator}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span>${stsBdg}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Grade Risiko</span><span>${gradeBadge(d.grade)}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${actBtn}</div></div></td></tr>`;
   }).join('');
 }
 
@@ -464,11 +494,13 @@ function renderUserTable() {
   const tbody = document.getElementById('user-tbody');
   if (!tbody) return;
   if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="es-icon" style="font-size:32px"><i class="ph ph-user"></i></div><p>Tidak ada pengguna yang sesuai filter.</p></div></td></tr>`; }
-  else { tbody.innerHTML = filtered.map(u => {
-    const aksiBtns = `<div class="act-btns"><button class="act-btn" title="Edit" onclick="openEditUserModal(${u.id})"><i class="ph ph-pencil-simple"></i></button><button class="act-btn" title="Toggle Status" onclick="toggleUserStatus(${u.id})">${u.status === 'Aktif' ? '<i class="ph ph-lock-key"></i>' : '<i class="ph ph-lock-key-open"></i>'}</button>${!u.isMe ? `<button class="act-btn danger" title="Hapus" onclick="deleteUser(${u.id})"><i class="ph ph-trash"></i></button>` : '<div style="width:28px"></div>'}</div>`;
-    return `<tr class="tp-main-row"><td><div class="user-avatar-cell"><div class="ua-circle" style="background:${u.color}22;color:${u.color}">${initials(u.nama)}</div><div><div class="ua-name">${u.nama}${u.isMe ? '<span class="ua-you">Anda</span>' : ''}</div><div class="ua-email">@${u.username} · ${u.email}</div></div></div></td><td>${roleBadge(u.role)}</td><td class="col-hide-mobile"><span class="unit-badge">${u.unit}</span></td><td class="col-hide-mobile"><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></td><td class="col-hide-mobile" style="font-size:11px;color:var(--muted)">${u.lastLogin.replace(' ', '<br>')}</td><td class="col-hide-mobile">${aksiBtns}</td><td class="col-expand"><button class="expand-btn" id="usr-btn-${u.id}" onclick="toggleRowUser(${u.id})" title="Lihat detail">&#8250;</button></td></tr>
+  else {
+    tbody.innerHTML = filtered.map(u => {
+      const aksiBtns = `<div class="act-btns"><button class="act-btn" title="Edit" onclick="openEditUserModal(${u.id})"><i class="ph ph-pencil-simple"></i></button><button class="act-btn" title="Toggle Status" onclick="toggleUserStatus(${u.id})">${u.status === 'Aktif' ? '<i class="ph ph-lock-key"></i>' : '<i class="ph ph-lock-key-open"></i>'}</button>${!u.isMe ? `<button class="act-btn danger" title="Hapus" onclick="deleteUser(${u.id})"><i class="ph ph-trash"></i></button>` : '<div style="width:28px"></div>'}</div>`;
+      return `<tr class="tp-main-row"><td><div class="user-avatar-cell"><div class="ua-circle" style="background:${u.color}22;color:${u.color}">${initials(u.nama)}</div><div><div class="ua-name">${u.nama}${u.isMe ? '<span class="ua-you">Anda</span>' : ''}</div><div class="ua-email">@${u.username} · ${u.email}</div></div></div></td><td>${roleBadge(u.role)}</td><td class="col-hide-mobile"><span class="unit-badge">${u.unit}</span></td><td class="col-hide-mobile"><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></td><td class="col-hide-mobile" style="font-size:11px;color:var(--muted)">${u.lastLogin.replace(' ', '<br>')}</td><td class="col-hide-mobile">${aksiBtns}</td><td class="col-expand"><button class="expand-btn" id="usr-btn-${u.id}" onclick="toggleRowUser(${u.id})" title="Lihat detail">&#8250;</button></td></tr>
     <tr class="tp-expand-row" id="usr-exp-${u.id}"><td colspan="7" style="padding:0;border:none"><div class="tp-expand-content"><div class="tp-expand-item"><span class="tp-expand-label">Unit</span><span class="tp-expand-value">${u.unit}</span></div><div class="tp-expand-item"><span class="tp-expand-label">Status</span><span><span class="status-dot ${u.status === 'Aktif' ? 'sd-aktif' : 'sd-nonaktif'}">${u.status}</span></span></div><div class="tp-expand-item"><span class="tp-expand-label">Login Terakhir</span><span class="tp-expand-value" style="font-size:11px">${u.lastLogin}</span></div><div class="tp-expand-action" style="border-top:1px dashed var(--border);margin-top:8px;padding-top:10px;gap:4px">${aksiBtns}</div></div></td></tr>`;
-  }).join(''); }
+    }).join('');
+  }
   // RBAC: sembunyikan tombol aksi untuk non-Admin
   if (!isAdmin()) {
     tbody.querySelectorAll('.act-btns').forEach(el => {
@@ -744,32 +776,53 @@ function renderMdTable(name) {
     return !query || row.some(cell => cell.toString().toLowerCase().includes(query));
   });
 
-  const thead = cfg.cols.map(c => `<th>${c}</th>`).join('');
+  const thead = cfg.cols.map((c, i) => `<th${i > 1 ? ' class="th-hide-mobile"' : ''}>${c}</th>`).join('') + `<th class="th-expand" style="width:40px"></th>`;
   let tbodyHtml = '';
 
   if (filteredRows.length === 0) {
-    tbodyHtml = `<tr><td colspan="${cfg.cols.length}"><div class="empty-state" style="padding: 40px; text-align: center; color: var(--muted)">
+    tbodyHtml = `<tr><td colspan="${cfg.cols.length}"><div class="empty-state">
       <div style="font-size: 32px; margin-bottom: 8px"><i class="ph ph-mask-sad"></i></div>
       <p>Tidak ada data yang cocok dengan pencarian.</p>
     </div></td></tr>`;
   } else {
-    tbodyHtml = filteredRows.map(row => {
+    tbodyHtml = filteredRows.map((row, rowIdx) => {
       const origIdx = cfg.rows.indexOf(row);
       const cells = row.map((cell, i) => {
         let content = cell;
         if (cfg.isMatrix && i > 0 && MX_CLR[cell]) content = `<span class="matrix-badge" style="${MX_CLR[cell]}">${cell}</span>`;
         else if (cell === '✅ Aktif') {
-          const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer" title="Klik untuk menonaktifkan"` : '';
-          content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--success);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(34,197,94,0.1);transition:0.2s"><i class="ph ph-check-circle"></i> Aktif</span>`;
+          const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer"` : '';
+          content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--success);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(34,197,94,0.1)"><i class="ph ph-check-circle"></i> Aktif</span>`;
         }
         else if (cell === '⛔ Nonaktif') {
-          const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer" title="Klik untuk mengaktifkan"` : '';
-          content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(100,116,139,0.1);transition:0.2s"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
+          const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer"` : '';
+          content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(100,116,139,0.1)"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
         }
         else if (i === 0 && !cfg.isMatrix) content = `<span style="font-weight:700;color:var(--muted);font-size:12px">${cell}</span>`;
-        return `<td>${content}</td>`;
+        return `<td${i > 1 ? ' class="col-hide-mobile"' : ''}>${content}</td>`;
       }).join('');
-      return `<tr>${cells}</tr>`;
+
+      // Expand row berisi semua kolom secara lengkap
+      const expandContent = cfg.cols.map((col, i) => {
+        let val = row[i] || '—';
+        if (cfg.isMatrix && i > 0 && MX_CLR[val]) val = `<span class="matrix-badge" style="${MX_CLR[val]}">${val}</span>`;
+        else if (val === '✅ Aktif') val = `<span style="color:var(--success);font-weight:700">✅ Aktif</span>`;
+        else if (val === '⛔ Nonaktif') val = `<span style="color:var(--muted);font-weight:700">⛔ Nonaktif</span>`;
+        return `<div class="tp-expand-item"><span class="tp-expand-label">${col}</span><span class="tp-expand-value">${val}</span></div>`;
+      }).join('');
+
+      return `
+  <tr class="tp-main-row md-clickable-row">
+    ${cells}
+    <td class="col-expand">
+      <button class="expand-btn" id="md-btn-${rowIdx}" onclick="toggleMdRow(${rowIdx})" title="Lihat detail">&#8250;</button>
+    </td>
+  </tr>
+  <tr class="tp-expand-row" id="md-exp-${rowIdx}">
+    <td colspan="${cfg.cols.length + 1}" style="padding:0;border:none">
+      <div class="tp-expand-content">${expandContent}</div>
+    </td>
+  </tr>`;
     }).join('');
   }
 
@@ -789,15 +842,14 @@ function renderMdTable(name) {
   `;
 }
 
-function toggleMdStatus(name, rowIdx, colIdx) {
-  if (!isManagement()) { showToast('Akses ditolak!'); return; }
-  const cfg = MD[name];
-  if (!cfg || !cfg.rows[rowIdx]) return;
-  const curr = cfg.rows[rowIdx][colIdx];
-  const next = curr === '✅ Aktif' ? '⛔ Nonaktif' : '✅ Aktif';
-  cfg.rows[rowIdx][colIdx] = next;
-  showToast(`${next.includes('Aktif') ? '✅' : '⛔'} Status diubah menjadi ${next.replace('✅ ', '').replace('⛔ ', '')}`);
-  renderMdTable(name);
+function toggleMdRow(rowIdx) {
+  const exp = document.getElementById('md-exp-' + rowIdx);
+  const row = exp?.previousElementSibling;
+  const caret = document.querySelector('.md-caret-' + rowIdx);
+  if (!exp) return;
+  const isOpen = exp.classList.toggle('open');
+  if (row) row.classList.toggle('is-open', isOpen);
+  if (caret) caret.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
 }
 
 /* ═══════════════════════════════════════════
@@ -1219,7 +1271,7 @@ function setDate() {
 }
 
 window.onload = function () {
-  const safe = (fn) => { try { fn(); } catch(e) { console.warn('[onload]', e.message); } };
+  const safe = (fn) => { try { fn(); } catch (e) { console.warn('[onload]', e.message); } };
   safe(setDate);
   safe(renderSidebars);
   safe(renderStats);
@@ -1234,3 +1286,26 @@ window.onload = function () {
   safe(initCharts);
   safe(bindMenuClicks);
 };
+
+/* ════════════════════════════
+   FUNGSI TOGGLE EXPAND MOBILE
+   ════════════════════════════ */
+function toggleRowLap(id) {
+  let e = document.getElementById('lap-exp-' + id), b = document.getElementById('lap-btn-' + id);
+  if(!b) b = document.getElementById('lap-btn-f' + id); if(!e) e = document.getElementById('lap-exp-f' + id);
+  if (!b || !e) return;
+  let r = b.closest('tr'), o = e.classList.toggle('open');
+  b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
+}
+function toggleRowInv(id) {
+  let e = document.getElementById('inv-exp-' + id), b = document.getElementById('inv-btn-' + id);
+  if (!b || !e) return;
+  let r = b.closest('tr'), o = e.classList.toggle('open');
+  b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
+}
+function toggleRowUser(id) {
+  let e = document.getElementById('usr-exp-' + id), b = document.getElementById('usr-btn-' + id);
+  if (!b || !e) return;
+  let r = b.closest('tr'), o = e.classList.toggle('open');
+  b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
+}

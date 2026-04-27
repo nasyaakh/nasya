@@ -129,5 +129,19 @@
       }
     });
   </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedUser = localStorage.getItem('sidekap_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+      } else {
+        currentUser = USERS[0]; // Default admin
+      }
+      if(typeof applyRBAC === 'function') applyRBAC();
+      if(typeof renderLaporan === 'function') renderLaporan();
+      if(typeof renderFilteredLaporan === 'function') renderFilteredLaporan();
+      if(typeof renderInvestigasi === 'function') renderInvestigasi();
+    });
+  </script>
 </body>
 </html>

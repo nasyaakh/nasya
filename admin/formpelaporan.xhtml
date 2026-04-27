@@ -28,57 +28,67 @@
               <div class="topbar-avatar">A</div>
             </div>
           </div>
-          <div class="content">
-            <div class="table-card">
-              <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border)">
-                <div style="font-size:15px;font-weight:800">Daftar Insiden</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Semua laporan insiden yang masuk ke sistem</div>
+          
+        <div class="content">
+          <div class="table-card">
+            <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border)">
+              <div style="font-size:15px;font-weight:800">Daftar Insiden</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Semua laporan insiden yang masuk ke sistem
               </div>
-              <div class="lap-chips">
-                <span class="chip chip-warn">⏳ 7 menunggu review</span>
-                <div class="chip-sep"></div>
-                <span class="chip chip-red">🔴 2 belum ditangani &gt;24 jam</span>
-                <div class="chip-sep"></div>
-                <span class="chip chip-muted">📋 30 total laporan bulan ini</span>
-              </div>
-              <div class="lap-bar">
-                <div class="lap-sw"><span class="lap-sw-ico">🔍</span><input type="text" id="lap-search" placeholder="Cari nomor, unit, pelapor, kategori..." oninput="renderFilteredLaporan()" /></div>
-                <select class="lap-flt" id="lap-flt-kat" onchange="renderFilteredLaporan()">
-                  <option value="">Semua Kategori</option>
-                  <option value="KNC">KNC</option><option value="KTD">KTD</option>
-                  <option value="KPCS">KPCS</option><option value="KTC">KTC</option>
-                </select>
-                <select class="lap-flt" id="lap-flt-sts" onchange="renderFilteredLaporan()">
-                  <option value="">Semua Status</option>
-                  <option value="Terverifikasi">Terverifikasi</option>
-                  <option value="Menunggu">Menunggu</option>
-                  <option value="Ditolak">Ditolak</option>
-                </select>
-                <select class="lap-flt" id="lap-flt-risk" onchange="renderFilteredLaporan()">
-                  <option value="">Semua Risiko</option>
-                  <option value="Tinggi">Tinggi</option>
-                  <option value="Sedang">Sedang</option>
-                  <option value="Rendah">Rendah</option>
-                </select>
-                <button id="lap-reset-btn" class="btn btn-ghost" onclick="resetLaporanFilter()"
-                  style="display:none;font-size:12px;padding:6px 12px;white-space:nowrap">
-                  <i class="ph ph-x-circle"></i> Reset Filter
-                </button>
-              </div>
-              <table class="desktop-table">
-                <thead>
-                  <tr>
-                    <th>No</th><th>Tanggal</th><th>Unit</th><th>Pelapor</th>
-                    <th>Kategori</th><th>Status</th><th>Risiko</th><th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="laporan-rows"></tbody>
-              </table>
-              <div class="mobile-list" id="laporan-cards"></div>
-              <div class="pgn">
-                <div class="pgn-info" id="lap-pgn-info"></div>
-                <div class="pgn-btns" id="lap-pgn-btns"></div>
-              </div>
+            </div>
+            <div class="lap-chips">
+              <span class="chip chip-warn">⏳ 7 menunggu review</span>
+              <div class="chip-sep"></div>
+              <span class="chip chip-red">🔴 2 belum ditangani &gt;24 jam</span>
+              <div class="chip-sep"></div>
+              <span class="chip chip-muted">📋 30 total laporan bulan ini</span>
+            </div>
+            <div class="lap-bar">
+              <div class="lap-sw"><span class="lap-sw-ico">🔍</span><input type="text" id="lap-search"
+                  placeholder="Cari nomor, unit, pelapor, kategori..." oninput="renderFilteredLaporan()"></div>
+              <select class="lap-flt" id="lap-flt-kat" onchange="renderFilteredLaporan()">
+                <option value="">Semua Kategori</option>
+                <option value="KNC">KNC</option>
+                <option value="KTD">KTD</option>
+                <option value="KPCS">KPCS</option>
+                <option value="KTC">KTC</option>
+              </select>
+              <select class="lap-flt" id="lap-flt-sts" onchange="renderFilteredLaporan()">
+                <option value="">Semua Status</option>
+                <option value="Terverifikasi">Terverifikasi</option>
+                <option value="Menunggu">Menunggu</option>
+                <option value="Ditolak">Ditolak</option>
+              </select>
+              <select class="lap-flt" id="lap-flt-risk" onchange="renderFilteredLaporan()">
+                <option value="">Semua Risiko</option>
+                <option value="Tinggi">Tinggi</option>
+                <option value="Sedang">Sedang</option>
+                <option value="Rendah">Rendah</option>
+              </select>
+              <button id="lap-reset-btn" class="btn btn-ghost" onclick="resetLaporanFilter()"
+                style="display:none;font-size:12px;padding:6px 12px;white-space:nowrap">
+                <i class="ph ph-x-circle"></i> Reset Filter
+              </button>
+            </div>
+            <table class="desktop-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th class="th-hide-mobile">Unit</th>
+                  <th>Pelapor</th>
+                  <th class="th-hide-mobile">Kategori</th>
+                  <th class="th-hide-mobile">Status</th>
+                  <th class="th-hide-mobile">Risiko</th>
+                  <th class="th-hide-mobile" style="text-align: center;">Aksi</th>
+                  <th class="th-expand" style="width:40px"></th>
+                </tr>
+              </thead>
+              <tbody id="laporan-rows"></tbody>
+            </table>
+            <div class="mobile-list" id="laporan-cards"></div>
+            <div class="pgn">
+              <div class="pgn-info" id="lap-pgn-info"></div>
+              <div class="pgn-btns" id="lap-pgn-btns"></div>
             </div>
           </div>
         </div>
@@ -108,7 +118,10 @@
     <div id="g-topbar">
       <div class="mt-logo">
         <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
-        <div><div class="mt-name">SIDEKAP</div><div class="mt-sub" id="g-page-title"></div></div>
+        <div>
+        <div class="mt-name">SIDEKAP</div>
+        <div class="mt-sub" id="g-page-title"></div>
+      </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="mt-av">A</div>
@@ -121,17 +134,24 @@
     <div id="mobile-drawer">
       <div class="mdr-head">
         <div class="sb-icon"><i class="ph ph-hospital"></i></div>
-        <div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div>
+        <div>
+        <div class="mdr-title">SIDEKAP</div>
+        <div class="mdr-subtitle">Admin Panel</div>
+      </div>
       </div>
       <div class="mdr-nav" id="mdr-nav-content"></div>
       <div class="mdr-foot">
         <div class="sb-user">
           <div class="sb-avatar">A</div>
-          <div style="flex:1;min-width:0"><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div>
+          <div style="flex:1;min-width:0">
+          <div class="sb-uname">Administrator</div>
+          <div class="sb-urole">Super Admin</div>
+        </div>
           <button onclick="doLogout()" title="Keluar"
             style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
             onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
-            onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
+            onmouseout="this.style.background=\'var(--border2)\';this.style.color=\'var(--text)\'"><i
+            class="ph ph-sign-out"></i></button>
         </div>
       </div>
     </div>

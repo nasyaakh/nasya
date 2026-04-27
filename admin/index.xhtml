@@ -93,7 +93,12 @@
               <table>
                 <thead>
                   <tr>
-                    <th>#</th><th>Tanggal</th><th>Unit</th><th>Kategori</th><th>Status</th><th>Risiko</th>
+                    <th>Tanggal</th>
+                  <th>Unit</th>
+                  <th>Kategori</th>
+                  <th class="col-hide-mobile">Status</th>
+                  <th class="col-hide-mobile">Risiko</th>
+                  <th class="th-expand" style="width:36px"></th>
                   </tr>
                 </thead>
                 <tbody id="dash-rows"></tbody>
@@ -143,7 +148,10 @@
     <div id="mobile-drawer">
       <div class="mdr-head">
         <div class="sb-icon"><i class="ph ph-hospital"></i></div>
-        <div><div class="mdr-title">SIDEKAP</div><div class="mdr-subtitle">Admin Panel</div></div>
+        <div>
+        <div class="mdr-title">SIDEKAP</div>
+        <div class="mdr-subtitle">Admin Panel</div>
+      </div>
       </div>
       <div class="mdr-nav" id="mdr-nav-content"></div>
       <div class="mdr-foot">
@@ -156,7 +164,8 @@
           <button onclick="doLogout()" title="Keluar"
             style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
             onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
-            onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i class="ph ph-sign-out"></i></button>
+            onmouseout="this.style.background=\'var(--border2)\';this.style.color=\'var(--text)\'"><i
+            class="ph ph-sign-out"></i></button>
         </div>
       </div>
     </div>
