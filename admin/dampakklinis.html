@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="SIDEKAP — Master Data Dampak Klinis">
   <title>SIDEKAP — Dampak Klinis</title>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../Style.css">
 </head>
+
 <body>
 
   <!-- ══════════════════════════
@@ -22,7 +25,8 @@
           <div class="topbar-title">Master Data <span id="mdd-title" style="color:var(--muted);font-weight:600"></span>
           </div>
           <div class="topbar-right">
-            <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle" onclick="toggleTheme()"></button></div>
+            <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle"
+                onclick="toggleTheme()"></button></div>
             <span style="font-size:12px;color:var(--muted)" id="topbar-date"></span>
             <div class="topbar-avatar">A</div>
           </div>
@@ -31,8 +35,8 @@
       </div>
     </div>
   </div>
-  
-  <div id="md-add-modal" class="modal-overlay" style="display:none">
+
+  <div id="md-add-modal" class="modal-overlay">
     <div class="modal-box" style="max-width:500px">
       <div class="modal-head">
         <div>
@@ -45,7 +49,7 @@
           onclick="saveMdAddModal()"><i class="ph ph-floppy-disk"></i> Simpan</button></div>
     </div>
   </div>
-  
+
   <div id="g-topbar">
     <div class="mt-logo">
       <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
@@ -90,72 +94,12 @@
 
   <div id="toast" class="toast"></div>
   <script src="../Script.js"></script>
-  <script>
-    // ── Filter tabel ──
-    function filterDampakKlinis() {
-      const q = document.getElementById('dk-search').value.toLowerCase();
-      const rows = document.querySelectorAll('#dk-rows tr');
-      rows.forEach(r => r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none');
-      document.getElementById('dk-reset-btn').style.display = q ? 'inline-flex' : 'none';
-    }
-    function resetDKFilter() {
-      document.getElementById('dk-search').value = '';
-      filterDampakKlinis();
-    }
-    // ── Modal ──
-    function openTambahModal() {
-      document.getElementById('dk-modal-title').innerHTML = '<i class="ph ph-plus-circle" style="margin-right:6px"></i> Tambah Dampak Klinis';
-      document.getElementById('dk-f-kode').value = '';
-      document.getElementById('dk-f-nama').value = '';
-      document.getElementById('dk-f-deskripsi').value = '';
-      document.getElementById('dk-modal').style.display = 'flex';
-    }
-    function closeDKModal() { document.getElementById('dk-modal').style.display = 'none'; }
-    function simpanDK() {
-      const kode = document.getElementById('dk-f-kode').value.trim();
-      const nama = document.getElementById('dk-f-nama').value.trim();
-      if (!kode || !nama) { alert('Kode dan nama wajib diisi!'); return; }
-      closeDKModal();
-      if (typeof showToast === 'function') showToast('Data dampak klinis berhasil disimpan');
-    }
-    function editRow(btn) {
-      const row = btn.closest('tr');
-      const cells = row.querySelectorAll('td');
-      document.getElementById('dk-modal-title').innerHTML = '<i class="ph ph-pencil-simple" style="margin-right:6px"></i> Edit Dampak Klinis';
-      document.getElementById('dk-f-kode').value = cells[1].innerText.trim();
-      document.getElementById('dk-f-nama').value = cells[2].innerText.trim();
-      document.getElementById('dk-f-deskripsi').value = cells[3].innerText.trim();
-      document.getElementById('dk-modal').style.display = 'flex';
-    }
-    function hapusRow(btn) {
-      if (confirm('Yakin ingin menghapus data ini?')) {
-        btn.closest('tr').remove();
-        if (typeof showToast === 'function') showToast('Data berhasil dihapus');
-      }
-    }
-  </script>
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof showMasterData === 'function') {
-         let o = showPage; showPage = function(){};
-         showMasterData('Dampak Klinis');
-         showPage = o;
-      }
-    });
-  </script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedUser = localStorage.getItem('sidekap_user');
-      if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-      } else {
-        currentUser = USERS[0]; // Default admin
-      }
-      if(typeof applyRBAC === 'function') applyRBAC();
-      if(typeof renderLaporan === 'function') renderLaporan();
-      if(typeof renderFilteredLaporan === 'function') renderFilteredLaporan();
-      if(typeof renderInvestigasi === 'function') renderInvestigasi();
+  <script>
+    window.addEventListener('load', function () {
+      showMasterData('Dampak Klinis');
     });
   </script>
 </body>
+
 </html>

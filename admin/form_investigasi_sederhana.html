@@ -11,81 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="../Style.css">
-  <style>
-    /* ── Desktop: sembunyikan kolom expand ── */
-    @media(min-width:769px){
-      .th-expand,.col-expand{display:none!important}
-      .tp-expand-row{display:none!important}
-    }
-    /* ── Mobile: expandable row ── */
-    @media(max-width:768px){
-      .desktop-table .th-hide-mobile,
-      .desktop-table .col-hide-mobile{display:none!important}
-      .th-expand,.col-expand{display:table-cell!important}
-      .col-expand{text-align:center;vertical-align:middle;width:40px;padding:4px!important}
-
-      /* tombol expand */
-      .expand-btn{
-        width:28px;height:28px;border-radius:7px;
-        border:1px solid var(--border);background:var(--bg2);
-        color:var(--text);cursor:pointer;font-size:16px;font-weight:700;
-        display:inline-flex;align-items:center;justify-content:center;
-        transition:all .2s;line-height:1;padding:0;
-      }
-      .expand-btn:hover,.expand-btn.open{
-        background:var(--primary,#1e3a5f);color:#fff;
-        border-color:var(--primary,#1e3a5f);
-      }
-
-      /* expand row: tersembunyi default */
-      .tp-expand-row{display:none}
-      .tp-expand-row.open{display:table-row}
-
-      /* panel konten */
-      .tp-expand-content{
-        padding:12px 16px 14px;
-        background:var(--bg2);
-        border-top:2px solid var(--primary,#1e3a5f);
-        animation:tpExpandDown .2s ease;
-      }
-      @keyframes tpExpandDown{
-        from{opacity:0;transform:translateY(-6px)}
-        to{opacity:1;transform:translateY(0)}
-      }
-
-      /* item label : nilai */
-      .tp-expand-item{
-        display:flex;align-items:flex-start;
-        gap:0;padding:5px 0;
-        border-bottom:1px dashed var(--border2,rgba(0,0,0,.07));
-      }
-      .tp-expand-item:last-of-type{border-bottom:none}
-
-      .tp-expand-label{
-        font-size:11px;font-weight:700;
-        color:var(--muted);min-width:90px;flex-shrink:0;
-        padding-top:1px;
-      }
-      /* titik dua otomatis via CSS */
-      .tp-expand-label::after{content:" :";margin-right:6px}
-
-      .tp-expand-value{
-        font-size:12px;font-weight:600;color:var(--text);
-        flex:1;
-      }
-
-      /* baris tombol aksi */
-      .tp-expand-action{
-        display:flex;justify-content:flex-end;
-        padding-top:10px;margin-top:4px;
-        border-top:1px dashed var(--border);
-        gap:6px;
-      }
-
-      /* highlight baris yang terbuka */
-      .tp-main-row.is-open{background:var(--bg2)}
-    }
-  </style>
 </head>
 
 <body>
@@ -104,7 +29,7 @@
             <div class="topbar-avatar">A</div>
           </div>
         </div>
-        
+
         <div class="content">
           <div class="inv-grid">
             <div class="inv-stat">
@@ -159,132 +84,120 @@
       </div>
     </div>
 
-  <!-- Modal Investigasi -->
-  <div id="inv-modal" class="modal-overlay">
-    <div class="modal-box" style="max-width:760px">
-      <div class="modal-head">
-        <div>
-          <h3 id="inv-modal-title"><i class="ph ph-microscope" style="margin-right:6px"></i> Investigasi Sederhana</h3>
-          <div id="inv-modal-meta" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+    <!-- Modal Investigasi -->
+    <div id="inv-modal" class="modal-overlay">
+      <div class="modal-box" style="max-width:760px">
+        <div class="modal-head">
+          <div>
+            <h3 id="inv-modal-title"><i class="ph ph-microscope" style="margin-right:6px"></i> Investigasi Sederhana
+            </h3>
+            <div id="inv-modal-meta" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+          </div>
+          <button class="modal-close" onclick="closeInvModal()">✕</button>
         </div>
-        <button class="modal-close" onclick="closeInvModal()">✕</button>
-      </div>
-      <div style="overflow-y:auto;flex:1">
-        <div id="inv-modal-status"
-          style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--bg2)">
+        <div style="overflow-y:auto;flex:1">
+          <div id="inv-modal-status"
+            style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--bg2)">
+          </div>
+          <div style="padding:14px 16px">
+            <div style="background:#e8e8e8;border-radius:10px;overflow:hidden">
+              <div class="form-kop">
+                <div
+                  style="font-size:32px;color:var(--primary);flex-shrink:0;background:rgba(59,130,246,0.1);padding:10px;border-radius:12px;display:flex;align-items:center;justify-content:center">
+                  <i class="ph ph-hospital"></i>
+                </div>
+                <div>
+                  <div class="kop-title">Formulir Investigasi Sederhana</div>
+                  <div class="kop-sub">Di Rumah Sakit Umum Daerah Dokter Soedarso</div>
+                </div>
+              </div>
+              <div class="form-judul">
+                <div class="jd-main">Investigasi Sederhana</div>
+                <div class="jd-rah">DOKUMEN INTERNAL — RAHASIA</div>
+              </div>
+              <div class="ff-sec">A. Identitas Insiden</div>
+              <div class="ff-body" id="inv-f-identitas"></div>
+              <div class="ff-sec">B. Analisis Penyebab Langsung</div>
+              <div class="ff-body" id="inv-f-penyebab"></div>
+              <div class="ff-sec">C. Faktor Kontribusi</div>
+              <div class="ff-body" id="inv-f-faktor"></div>
+              <div class="ff-sec">D. Rekomendasi &amp; Tindak Lanjut</div>
+              <div class="ff-body" id="inv-f-rekomendasi"></div>
+              <div class="ff-sec">E. Grading Risiko</div>
+              <div class="ff-body" id="inv-f-grading"></div>
+              <div class="ff-sec">F. Investigator</div>
+              <div class="ff-body" id="inv-f-investigator"></div>
+              <div class="ff-close"></div>
+            </div>
+          </div>
         </div>
-        <div style="padding:14px 16px">
-          <div style="background:#e8e8e8;border-radius:10px;overflow:hidden">
-            <div class="form-kop">
-              <div
-                style="font-size:32px;color:var(--primary);flex-shrink:0;background:rgba(59,130,246,0.1);padding:10px;border-radius:12px;display:flex;align-items:center;justify-content:center">
-                <i class="ph ph-hospital"></i>
-              </div>
-              <div>
-                <div class="kop-title">Formulir Investigasi Sederhana</div>
-                <div class="kop-sub">Di Rumah Sakit Umum Daerah Dokter Soedarso</div>
-              </div>
-            </div>
-            <div class="form-judul">
-              <div class="jd-main">Investigasi Sederhana</div>
-              <div class="jd-rah">DOKUMEN INTERNAL — RAHASIA</div>
-            </div>
-            <div class="ff-sec">A. Identitas Insiden</div>
-            <div class="ff-body" id="inv-f-identitas"></div>
-            <div class="ff-sec">B. Analisis Penyebab Langsung</div>
-            <div class="ff-body" id="inv-f-penyebab"></div>
-            <div class="ff-sec">C. Faktor Kontribusi</div>
-            <div class="ff-body" id="inv-f-faktor"></div>
-            <div class="ff-sec">D. Rekomendasi &amp; Tindak Lanjut</div>
-            <div class="ff-body" id="inv-f-rekomendasi"></div>
-            <div class="ff-sec">E. Grading Risiko</div>
-            <div class="ff-body" id="inv-f-grading"></div>
-            <div class="ff-sec">F. Investigator</div>
-            <div class="ff-body" id="inv-f-investigator"></div>
-            <div class="ff-close"></div>
+        <div class="modal-foot" style="justify-content:space-between">
+          <button class="btn btn-ghost" onclick="closeInvModal()">✕ Tutup</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost" onclick="resetInvForm()">↺ Bersihkan</button>
+            <button class="btn-approve" style="flex:none;padding:10px 20px" onclick="simpanInvestigasi()">💾 Simpan
+              Investigasi</button>
           </div>
         </div>
       </div>
-      <div class="modal-foot" style="justify-content:space-between">
-        <button class="btn btn-ghost" onclick="closeInvModal()">✕ Tutup</button>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost" onclick="resetInvForm()">↺ Bersihkan</button>
-          <button class="btn-approve" style="flex:none;padding:10px 20px" onclick="simpanInvestigasi()">💾 Simpan
-            Investigasi</button>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div id="g-topbar">
+      <div class="mt-logo">
+        <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
+        <div>
+          <div class="mt-name">SIDEKAP</div>
+          <div class="mt-sub" id="g-page-title"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="mt-av">A</div>
+        <button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()">
+          <span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
+    <div id="mobile-drawer">
+      <div class="mdr-head">
+        <div class="sb-icon"><i class="ph ph-hospital"></i></div>
+        <div>
+          <div class="mdr-title">SIDEKAP</div>
+          <div class="mdr-subtitle">Admin Panel</div>
+        </div>
+      </div>
+      <div class="mdr-nav" id="mdr-nav-content"></div>
+      <div class="mdr-foot">
+        <div class="sb-user">
+          <div class="sb-avatar">A</div>
+          <div style="flex:1;min-width:0">
+            <div class="sb-uname">Administrator</div>
+            <div class="sb-urole">Super Admin</div>
+          </div>
+          <button onclick="doLogout()" title="Keluar"
+            style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
+            onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
+            onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i
+              class="ph ph-sign-out"></i></button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Mobile Top Bar -->
-  <div id="g-topbar">
-    <div class="mt-logo">
-      <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
-      <div>
-        <div class="mt-name">SIDEKAP</div>
-        <div class="mt-sub" id="g-page-title"></div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div class="mt-av">A</div>
-      <button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()">
-        <span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span>
-      </button>
-    </div>
-  </div>
-  <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
-  <div id="mobile-drawer">
-    <div class="mdr-head">
-      <div class="sb-icon"><i class="ph ph-hospital"></i></div>
-      <div>
-        <div class="mdr-title">SIDEKAP</div>
-        <div class="mdr-subtitle">Admin Panel</div>
-      </div>
-    </div>
-    <div class="mdr-nav" id="mdr-nav-content"></div>
-    <div class="mdr-foot">
-      <div class="sb-user">
-        <div class="sb-avatar">A</div>
-        <div style="flex:1;min-width:0">
-          <div class="sb-uname">Administrator</div>
-          <div class="sb-urole">Super Admin</div>
-        </div>
-        <button onclick="doLogout()" title="Keluar"
-          style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
-          onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
-          onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i
-            class="ph ph-sign-out"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast"></div>
-  <script src="../Script.js"></script>
-  <script>
-    function toggleRowInv(id) {
-      var e = document.getElementById('inv-exp-' + id);
-      var b = document.getElementById('inv-btn-' + id);
-      var r = b.closest('tr');
-      var open = e.classList.toggle('open');
-      b.classList.toggle('open', open);
-      b.innerHTML = open ? '&#8964;' : '&#8250;';
-      r.classList.toggle('is-open', open);
-    }
-  </script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedUser = localStorage.getItem('sidekap_user');
-      if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-      } else {
-        currentUser = USERS[0]; // Default admin
-      }
-      if(typeof applyRBAC === 'function') applyRBAC();
-      if(typeof renderLaporan === 'function') renderLaporan();
-      if(typeof renderFilteredLaporan === 'function') renderFilteredLaporan();
-      if(typeof renderInvestigasi === 'function') renderInvestigasi();
-    });
-  </script>
+    <div id="toast" class="toast"></div>
+    <script src="../Script.js"></script>
+    <script>
+      window.addEventListener('load', function () {
+        const savedUser = localStorage.getItem('sidekap_user');
+        if (savedUser) {
+          currentUser = JSON.parse(savedUser);
+        } else {
+          currentUser = USERS[0];
+        }
+        applyRBAC();
+        renderInvestigasi();
+      });
+    </script>
 </body>
 
 </html>

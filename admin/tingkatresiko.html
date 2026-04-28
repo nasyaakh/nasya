@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="SIDEKAP — Master Data Tingkat Risiko">
   <title>SIDEKAP — Tingkat Risiko</title>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../Style.css">
 </head>
+
 <body>
   <div id="masterDataDynamic" class="page active">
     <div class="admin-layout">
@@ -18,7 +21,8 @@
           <div class="topbar-title">Master Data <span id="mdd-title" style="color:var(--muted);font-weight:600"></span>
           </div>
           <div class="topbar-right">
-            <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle" onclick="toggleTheme()"></button></div>
+            <div class="theme-toggle-wrap"><span id="theme-ico-admin">🌙</span><button class="theme-toggle"
+                onclick="toggleTheme()"></button></div>
             <span style="font-size:12px;color:var(--muted)" id="topbar-date"></span>
             <div class="topbar-avatar">A</div>
           </div>
@@ -27,8 +31,8 @@
       </div>
     </div>
   </div>
-  
-  <div id="md-add-modal" class="modal-overlay" style="display:none">
+
+  <div id="md-add-modal" class="modal-overlay">
     <div class="modal-box" style="max-width:500px">
       <div class="modal-head">
         <div>
@@ -41,52 +45,58 @@
           onclick="saveMdAddModal()"><i class="ph ph-floppy-disk"></i> Simpan</button></div>
     </div>
   </div>
-  
-  <div id="g-topbar"><div class="mt-logo"><div class="mt-logo-icon"><i class="ph ph-hospital"></i></div><div>
+
+  <div id="g-topbar">
+    <div class="mt-logo">
+      <div class="mt-logo-icon"><i class="ph ph-hospital"></i></div>
+      <div>
         <div class="mt-name">SIDEKAP</div>
         <div class="mt-sub" id="g-page-title"></div>
-      </div></div><div style="display:flex;align-items:center;gap:8px"><div class="mt-av">A</div><button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()"><span class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span></button></div></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="mt-av">A</div><button class="hamburger-btn" id="g-hamburger" onclick="toggleMobileDrawer()"><span
+          class="hb-bar"></span><span class="hb-bar"></span><span class="hb-bar"></span></button>
+    </div>
+  </div>
   <div id="mobile-overlay" onclick="toggleMobileDrawer()"></div>
-  <div id="mobile-drawer"><div class="mdr-head"><div class="sb-icon"><i class="ph ph-hospital"></i></div><div>
+  <div id="mobile-drawer">
+    <div class="mdr-head">
+      <div class="sb-icon"><i class="ph ph-hospital"></i></div>
+      <div>
         <div class="mdr-title">SIDEKAP</div>
         <div class="mdr-subtitle">Admin Panel</div>
-      </div></div><div class="mdr-nav" id="mdr-nav-content"></div><div class="mdr-foot"><div class="sb-user"><div class="sb-avatar">A</div><div style="flex:1;min-width:0">
+      </div>
+    </div>
+    <div class="mdr-nav" id="mdr-nav-content"></div>
+    <div class="mdr-foot">
+      <div class="sb-user">
+        <div class="sb-avatar">A</div>
+        <div style="flex:1;min-width:0">
           <div class="sb-uname">Administrator</div>
           <div class="sb-urole">Super Admin</div>
-        </div><button onclick="doLogout()" title="Keluar" style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='var(--danger)';this.style.color='#fff'" onmouseout="this.style.background=\'var(--border2)\';this.style.color=\'var(--text)\'"><i
-            class="ph ph-sign-out"></i></button></div></div></div>
-  <style>.kode-badge{font-family:monospace;font-size:12px;background:var(--bg2);padding:2px 7px;border-radius:5px}</style>
+        </div><button onclick="doLogout()" title="Keluar"
+          style="width:28px;height:28px;border-radius:7px;background:var(--border2);border:none;cursor:pointer;font-size:14px;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .2s"
+          onmouseover="this.style.background='var(--danger)';this.style.color='#fff'"
+          onmouseout="this.style.background='var(--border2)';this.style.color='var(--text)'"><i
+            class="ph ph-sign-out"></i></button>
+      </div>
+    </div>
+  </div>
   <div id="toast" class="toast"></div>
   <script src="../Script.js"></script>
   <script>
-    function filterTable(i,t){const q=document.getElementById(i).value.toLowerCase();document.querySelectorAll('#'+t+' tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none');}
-    function openModal(){document.getElementById('tr-modal').style.display='flex';}
-    function closeModal(){document.getElementById('tr-modal').style.display='none';}
-    function editRow(btn){openModal();}
-    function hapusRow(btn){if(confirm('Yakin ingin menghapus?')){btn.closest('tr').remove();if(typeof showToast==='function')showToast('Data berhasil dihapus');}}
-  </script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof showMasterData === 'function') {
-         let o = showPage; showPage = function(){};
-         showMasterData('Tingkat Risiko');
-         showPage = o;
-      }
-    });
-  </script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('load', function () {
       const savedUser = localStorage.getItem('sidekap_user');
       if (savedUser) {
         currentUser = JSON.parse(savedUser);
       } else {
-        currentUser = USERS[0]; // Default admin
+        currentUser = USERS[0];
       }
-      if(typeof applyRBAC === 'function') applyRBAC();
-      if(typeof renderLaporan === 'function') renderLaporan();
-      if(typeof renderFilteredLaporan === 'function') renderFilteredLaporan();
-      if(typeof renderInvestigasi === 'function') renderInvestigasi();
+      applyRBAC();
+      showMasterData('Tingkat Risiko');
     });
   </script>
 </body>
+
 </html>

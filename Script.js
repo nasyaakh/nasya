@@ -232,10 +232,13 @@ function mkPelapor(id) { return [ffRow(1, 'Tanggal Lapor *', `<input type="datet
 
 function renderSidebars() {
   ['sb-dashboard', 'sb-tabelPelaporan', 'sb-tabelInvestigasi', 'sb-pengguna', 'sb-masterDataDynamic'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
     const active = id.replace('sb-', '');
-    document.getElementById(id).innerHTML = mkSidebar(active);
+    el.innerHTML = mkSidebar(active);
   });
 }
+
 function renderStats() {
   const cards = [{ i: '<i class="ph ph-file-text"></i>', c: 'si-blue', v: 30, l: 'Total Insiden' }, { i: '<i class="ph ph-check-circle"></i>', c: 'si-green', v: 20, l: 'Terverifikasi' }, { i: '<i class="ph ph-hourglass"></i>', c: 'si-yellow', v: 7, l: 'Menunggu Review' }, { i: '<i class="ph ph-warning-circle"></i>', c: 'si-red', v: 3, l: 'Risiko Tinggi' }, { i: '<i class="ph ph-microscope"></i>', c: 'si-purple', v: 20, l: 'Sudah Investigasi' }];
   document.getElementById('stat-grid').innerHTML = cards.map(x => `<div class="stat-card"><div class="stat-icon ${x.c}">${x.i}</div><div><div class="stat-val">${x.v}</div><div class="stat-lbl">${x.l}</div></div></div>`).join('');
@@ -268,10 +271,12 @@ function renderDashRows() {
 
 function toggleDashRow(i) {
   const exp = document.getElementById('dash-exp-' + i);
-  const row = exp?.previousElementSibling;
   if (!exp) return;
+  const btn = document.getElementById('dash-btn-' + i); // ← tambah
+  const row = exp.previousElementSibling;
   const isOpen = exp.classList.toggle('open');
   if (btn) { btn.classList.toggle('open', isOpen); btn.innerHTML = isOpen ? '&#8964;' : '&#8250;'; }
+  if (row) row.classList.toggle('is-open', isOpen);
 }
 
 function renderLaporan() {
@@ -594,6 +599,7 @@ function doLogin() {
     return;
   }
   currentUser = { ...found };
+  localStorage.setItem('sidekap_user', JSON.stringify(currentUser)); // ← TAMBAH DISINI
   applyRBAC();
   renderLaporan();
   renderFilteredLaporan();
@@ -605,8 +611,10 @@ function doLogin() {
   const roleLabel = { 'Super Admin': 'Super Admin', Admin: 'Admin', 'Kepala Ruangan': 'Kepala Ruangan', 'Kepala Instalasi': 'Kepala Instalasi', Pelapor: 'Pelapor' };
   showToast('Selamat datang, ' + found.nama + '! (' + (roleLabel[found.role] || found.role) + ')');
 }
+
 function doLogout() {
   currentUser = { id: 0, nama: 'Tamu', username: '', role: '', unit: '', color: '#64748b' };
+  localStorage.removeItem('sidekap_user'); // ← TAMBAH DISINI
   applyRBAC();
   renderUserTable();
   showPage('landing');
@@ -767,7 +775,6 @@ function showMasterData(name) {
   renderMdTable(name);
   showPage('masterDataDynamic');
 }
-
 function renderMdTable(name) {
   const cfg = MD[name];
   const query = (document.getElementById('md-search')?.value || '').toLowerCase();
@@ -776,7 +783,15 @@ function renderMdTable(name) {
     return !query || row.some(cell => cell.toString().toLowerCase().includes(query));
   });
 
-  const thead = cfg.cols.map((c, i) => `<th${i > 1 ? ' class="th-hide-mobile"' : ''}>${c}</th>`).join('') + `<th class="th-expand" style="width:40px"></th>`;
+  // ✅ FIX: isMatrix → semua kolom tampil, tidak disembunyikan di mobile
+  const thead = cfg.cols.map((c, i) => {
+    const hide = (!cfg.isMatrix && i > 1) ? ' class="th-hide-mobile"' : '';
+    const style = cfg.isMatrix
+      ? ` style="font-size:10px;padding:6px 4px;text-align:${i === 0 ? 'left' : 'center'};word-break:break-word;line-height:1.3"`
+      : '';
+    return `<th${hide}${style}>${c}</th>`;
+  }).join('') + `<th class="th-expand" style="width:40px"></th>`;
+
   let tbodyHtml = '';
 
   if (filteredRows.length === 0) {
@@ -789,17 +804,24 @@ function renderMdTable(name) {
       const origIdx = cfg.rows.indexOf(row);
       const cells = row.map((cell, i) => {
         let content = cell;
-        if (cfg.isMatrix && i > 0 && MX_CLR[cell]) content = `<span class="matrix-badge" style="${MX_CLR[cell]}">${cell}</span>`;
-        else if (cell === '✅ Aktif') {
+        if (cfg.isMatrix && i > 0 && MX_CLR[cell]) {
+          content = `<span class="matrix-badge" style="${MX_CLR[cell]}">${cell}</span>`;
+        } else if (cell === '✅ Aktif') {
           const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer"` : '';
           content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--success);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(34,197,94,0.1)"><i class="ph ph-check-circle"></i> Aktif</span>`;
-        }
-        else if (cell === '⛔ Nonaktif') {
+        } else if (cell === '⛔ Nonaktif') {
           const act = isManagement() ? ` onclick="toggleMdStatus('${name}', ${origIdx}, ${i})" style="cursor:pointer"` : '';
           content = `<span${act} class="md-status-badge" style="font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(100,116,139,0.1)"><i class="ph ph-minus-circle"></i> Nonaktif</span>`;
+        } else if (i === 0 && !cfg.isMatrix) {
+          content = `<span style="font-weight:700;color:var(--muted);font-size:12px">${cell}</span>`;
         }
-        else if (i === 0 && !cfg.isMatrix) content = `<span style="font-weight:700;color:var(--muted);font-size:12px">${cell}</span>`;
-        return `<td${i > 1 ? ' class="col-hide-mobile"' : ''}>${content}</td>`;
+
+        // ✅ FIX: isMatrix → jangan sembunyikan kolom, tambah style compact
+        const hide = (!cfg.isMatrix && i > 1) ? ' class="col-hide-mobile"' : '';
+        const tdStyle = cfg.isMatrix
+          ? ` style="text-align:${i === 0 ? 'left' : 'center'};padding:6px 3px;font-size:${i === 0 ? '11px' : '12px'}"`
+          : '';
+        return `<td${hide}${tdStyle}>${content}</td>`;
       }).join('');
 
       // Expand row berisi semua kolom secara lengkap
@@ -811,26 +833,39 @@ function renderMdTable(name) {
         return `<div class="tp-expand-item"><span class="tp-expand-label">${col}</span><span class="tp-expand-value">${val}</span></div>`;
       }).join('');
 
+      // ✅ FIX: isMatrix → sembunyikan tombol expand (tidak perlu karena semua kolom sudah tampil)
+      const expandBtn = `<td class="col-expand"><button class="expand-btn" id="md-btn-${rowIdx}" onclick="toggleMdRow(${rowIdx})" title="Lihat detail">&#8250;</button></td>`;
+
+      const expandRow = `<tr class="tp-expand-row" id="md-exp-${rowIdx}">
+        <td colspan="${cfg.cols.length + 1}" style="padding:0;border:none">
+        <div class="tp-expand-content">${expandContent}</div>
+        </td>
+      </tr>`;
+
       return `
   <tr class="tp-main-row md-clickable-row">
     ${cells}
-    <td class="col-expand">
-      <button class="expand-btn" id="md-btn-${rowIdx}" onclick="toggleMdRow(${rowIdx})" title="Lihat detail">&#8250;</button>
-    </td>
+    ${expandBtn}
   </tr>
-  <tr class="tp-expand-row" id="md-exp-${rowIdx}">
-    <td colspan="${cfg.cols.length + 1}" style="padding:0;border:none">
-      <div class="tp-expand-content">${expandContent}</div>
-    </td>
-  </tr>`;
+  ${expandRow}`;
     }).join('');
   }
 
   document.getElementById('md-table-body-target').innerHTML = `
-    <table class="desktop-table">
-      <thead><tr>${thead}</tr></thead>
-      <tbody>${tbodyHtml}</tbody>
-    </table>
+  <table class="desktop-table"${cfg.isMatrix ? ' style="table-layout:fixed;width:100%"' : ''}>
+  ${cfg.isMatrix ? `
+  <colgroup>
+    <col style="width:28%">
+    <col style="width:12%">
+    <col style="width:12%">
+    <col style="width:12%">
+    <col style="width:12%">
+    <col style="width:12%">
+    <col style="width:12%">
+  </colgroup>` : ''}
+  <thead><tr>${thead}</tr></thead>
+  <tbody>${tbodyHtml}</tbody>
+  </table>
     <div class="pgn" style="padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center">
       <div class="pgn-info" style="font-size: 12px; color: var(--muted)">Menampilkan ${filteredRows.length} dari ${cfg.rows.length} data</div>
       <div class="pgn-btns" style="display: flex; gap: 4px">
@@ -1284,7 +1319,6 @@ window.onload = function () {
   safe(updateUserCounts);
   safe(renderUserTable);
   safe(initCharts);
-  safe(bindMenuClicks);
 };
 
 /* ════════════════════════════
@@ -1292,7 +1326,7 @@ window.onload = function () {
    ════════════════════════════ */
 function toggleRowLap(id) {
   let e = document.getElementById('lap-exp-' + id), b = document.getElementById('lap-btn-' + id);
-  if(!b) b = document.getElementById('lap-btn-f' + id); if(!e) e = document.getElementById('lap-exp-f' + id);
+  if (!b) b = document.getElementById('lap-btn-f' + id); if (!e) e = document.getElementById('lap-exp-f' + id);
   if (!b || !e) return;
   let r = b.closest('tr'), o = e.classList.toggle('open');
   b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
@@ -1308,4 +1342,22 @@ function toggleRowUser(id) {
   if (!b || !e) return;
   let r = b.closest('tr'), o = e.classList.toggle('open');
   b.classList.toggle('open', o); b.innerHTML = o ? '&#8964;' : '&#8250;'; r.classList.toggle('is-open', o);
+}
+
+function toggleMdStatus(name, origIdx, colIdx) {
+  if (!isManagement()) {
+    if (typeof showToast === 'function') showToast('Akses ditolak!');
+    return;
+  }
+
+  if (confirm('Ubah status data ini?')) {
+    const row = MD[name].rows[origIdx];
+    if (row[colIdx] === '✅ Aktif') {
+      row[colIdx] = '⛔ Nonaktif';
+    } else if (row[colIdx] === '⛔ Nonaktif') {
+      row[colIdx] = '✅ Aktif';
+    }
+    if (typeof showToast === 'function') showToast('Status berhasil diubah');
+    renderMdTable(name);
+  }
 }
