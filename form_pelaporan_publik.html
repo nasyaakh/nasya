@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="SIDEKAP — Sistem Pelaporan Insiden Keselamatan Pasien RSUD Dokter Soedarso">
+  <title>SIDEKAP — Laporan Insiden</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="Style.css">
+  <style>
+    /* Pastikan .page langsung aktif di halaman terpisah ini */
+    .page { display: block !important; opacity: 1 !important; visibility: visible !important; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════
+     FORM DENGAN PASIEN
+     ══════════════════════════ -->
+  <div id="formPublic" class="page active">
+    <div style="min-height:100vh;background:#e8e8e8">
+      <nav class="form-navbar">
+        <div class="fn-logo">
+          <div class="fn-icon">🏥</div>
+          <div>
+            <div class="fn-name">SIDEKAP</div>
+            <div class="fn-sub">Formulir Publik</div>
+          </div>
+        </div>
+        <button class="fn-back" onclick="window.location.href='index.html'">← Kembali</button>
+      </nav>
+      <div class="form-page-wrap">
+        <div class="form-kop">
+          <div style="font-size:36px;flex-shrink:0">🏥</div>
+          <div>
+            <div class="kop-title">Formulir Pelaporan Insiden Keselamatan Pasien</div>
+            <div class="kop-sub">Di Rumah Sakit Umum Daerah Dokter Soedarso</div>
+          </div>
+        </div>
+        <div class="form-judul">
+          <div class="jd-main">Laporan Insiden<br><span style="font-weight:400">(Internal)</span></div>
+          <div class="jd-rah">RAHASIA — DILAPORKAN <span style="color:#dc2626;font-weight:800">MAKSIMAL</span> 2 x 24 JAM</div>
+        </div>
+        <div class="ff-sec">A. Data Pasien</div>
+        <div class="ff-body" id="ff-pasien"></div>
+        <div class="ff-sec">B. Rincian Kejadian</div>
+        <div class="ff-body" id="ff-kejadian-a"></div>
+        <div class="ff-sec">C. Data Pelapor</div>
+        <div class="ff-body" id="ff-pelapor-a"></div>
+        <div class="ff-close"></div>
+        <div class="ff-actions">
+          <button class="ff-clean" onclick="resetFormPublic()">↺ Bersihkan</button>
+          <button class="ff-send" onclick="submitFormPublic()">✈ Kirim Formulir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="Script.js"></script>
+  <script>
+    // Overriding showPage agar setelah submit diarahkan kembali ke index.html
+    const originalShowPage = showPage;
+    showPage = function(id) {
+      if(id === 'landing') {
+        window.location.href = 'index.html';
+      } else {
+        originalShowPage(id);
+      }
+    };
+  </script>
+</body>
+</html>
